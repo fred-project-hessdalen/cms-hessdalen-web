@@ -10,3 +10,5 @@ using sanity CMS and react/node as a frontend/backend solution
 October: New menusystem
 
 Use the dataset: testing
+
+Add Latest news
