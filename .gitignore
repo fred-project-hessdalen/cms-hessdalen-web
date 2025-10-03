@@ -1,0 +1,38 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log
+*.swp
+.idea/
+.vscode/
+
+# Node / package managers
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-store/
+.pnp.*
+.cache/
+dist/
+.out/
+.next/
+.svelte-kit/
+.build/
+.vercel/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Tests / coverage
+coverage/
+.junit/
+
+# Sanity / Next specifics (shared)
+.sanity/
+.sanity/**
+
+# Keep empty dirs if you need them
+# (create a .gitkeep file in those dirs)
