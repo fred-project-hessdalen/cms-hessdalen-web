@@ -37,6 +37,13 @@ export const NEWS_LIST_QUERY = defineQuery(`
   }
 `);
 
+export const LATEST_NEWS_LIST_QUERY = `
+*[_type == "news"] | order(publishedHereDate desc)[0...4] {
+  ${NEWS_FIELDS}
+}
+`;
+
+
 export const NEWS_BY_SLUG_QUERY = defineQuery(`
   *[_type == "news" && slug.current == $slug][0]{
     ${NEWS_FIELDS}

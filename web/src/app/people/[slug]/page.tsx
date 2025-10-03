@@ -32,21 +32,21 @@ export default async function PersonPage({
 
                     <div className="mx-auto max-w-3xl py-8 flex flex-col items-stretch gap-8 px-4">
                         <div
-                            className="relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/60 shadow-sm hover:shadow-md transition-shadow p-8 flex items-start gap-4 w-full"
+                            className="relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/60 shadow-sm hover:shadow-md transition-shadow p-2 sm:p-8 flex items-start gap-4 w-full"
                         >
                             {/* Avatar */}
                             {people.image ? (
                                 <Image
                                     src={people.image}
                                     alt={people.name}
-                                    width={56}
-                                    height={56}
-                                    className="h-32 w-32 rounded-full object-cover ring-1 ring-gray-200 dark:ring-gray-700"
-                                    sizes="56px"
+                                    width={64}
+                                    height={64}
+                                    className="h-16 w-16 sm:h-32 sm:w-32 rounded-full object-cover ring-1 ring-gray-200 dark:ring-gray-700"
+                                    sizes="(max-width: 640px) 64px, 128px"
                                 />
                             ) : (
-                                <div className="rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-3xl font-semibold text-gray-700 dark:text-gray-200 flex-none"
-                                    style={{ width: 128, height: 128, minWidth: 128, minHeight: 128, maxWidth: 128, maxHeight: 128 }}
+                                <div className="h-16 w-16 sm:h-32 sm:w-32 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-2xl font-semibold text-gray-700 dark:text-gray-200 flex-none"
+                                    style={{ minWidth: 64, minHeight: 64, maxWidth: 128, maxHeight: 128 }}
                                 >
                                     {getInitials(people.name)}
                                 </div>
