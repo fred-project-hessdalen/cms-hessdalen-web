@@ -31,6 +31,8 @@ export default function ClientSiteNavigation({ menuItems }: ClientSiteNavigation
         );
     }
 
+    type colOptions = 1 | 2 | 3;
+
     const hoveredItemData = hoveredItem ? menuItems.find((item) => item.label === hoveredItem) : null;
 
     const handleMouseEnter = (itemLabel: string) => {
@@ -112,7 +114,7 @@ export default function ClientSiteNavigation({ menuItems }: ClientSiteNavigation
                                         <div className={gridClass}>
                                             {usedColumns.map((col) => (
                                                 <div key={col} className="space-y-2">
-                                                    {columnLinks(col).map((link) => (
+                                                    {columnLinks(col as colOptions).map((link) => (
                                                         <div key={`${link.href}-${link.label}`}>
                                                             {link.separator && <hr className="my-3 border-gray-200" />}
                                                             <Link

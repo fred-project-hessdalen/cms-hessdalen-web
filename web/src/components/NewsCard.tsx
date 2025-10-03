@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { NewsType } from "@/lib/sanity/query/news.query";
+import { SimplePortableText } from "./SimplePortableText";
 
 export function NewsCard({ info, current }: { info: NewsType, current?: string }) {
     const isCurrent = current === info.slug;
@@ -33,9 +34,12 @@ export function NewsCard({ info, current }: { info: NewsType, current?: string }
             <h3 className="text-lg font-semibold truncate mb-1">{info.title}</h3>
             {/* Summary (first block only) */}
             {Array.isArray(info.summary) && info.summary.length > 0 && (
-                <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
-                    {info.summary[0]?.children?.[0]?.text}
-                </p>
+                <div className="text-sm text-gray-600 dark:text-gray-400 truncate">
+                    {/* {info.summary[0]?.children?.[0]?.text} */}
+                    {/* <div className="mx-auto max-w-3xl py-4 items-center text-left prose p-4"> */}
+                    <SimplePortableText value={info.summary} />
+                    {/* </div> */}
+                </div>
             )}
             {/* Published date */}
             {info.publishedHereDate && (

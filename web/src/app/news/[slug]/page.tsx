@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { PortableText } from "next-sanity";
 import { fetchAndParse } from "@/lib/sanity/fetch";
 import {
     NEWS_BY_SLUG_QUERY,
@@ -10,6 +9,7 @@ import {
 } from "@/lib/sanity/query/news.query";
 import { NewsCard } from "@/components/NewsCard";
 import { AdvancedPortableText } from "@/components/AdvancedPortableText";
+import { SimplePortableText } from "@/components/SimplePortableText";
 
 export default async function NewsDetailPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
@@ -71,7 +71,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
                             {/* Summary */}
                             {news.summary && news.summary.length > 0 && (
                                 <div className="prose text-center text-md text-gray-700 dark:text-gray-200 mb-4">
-                                    <PortableText value={news.summary} />
+                                    <SimplePortableText value={news.summary} />
                                 </div>
                             )}
                             {/* Categories & Country */}

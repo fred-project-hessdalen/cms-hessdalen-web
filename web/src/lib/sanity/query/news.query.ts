@@ -48,57 +48,58 @@ export const NEWS_BY_SLUG_QUERY = defineQuery(`
 const zStrOpt = z.preprocess(v => (v ?? undefined), z.string().optional());
 const zUrlOpt = z.preprocess(v => (v ?? undefined), z.string().url().optional());
 const zArray = <T extends z.ZodTypeAny>(item: T) =>
-    z.preprocess(v => (v == null ? [] : v), z.array(item));
+  z.preprocess(v => (v == null ? [] : v), z.array(item));
 
 // MainImage type
 const MainImage = z.object({
-    asset: z.object({ url: zUrlOpt }),
-    alt: zStrOpt,
+  asset: z.object({ url: zUrlOpt }),
+  alt: zStrOpt,
 });
 
 // Author (credit object)
 const Author = z.object({
-    role: zStrOpt,
-    note: zStrOpt.optional(),
-    person: z.object({
-        name: zStrOpt,
-        image: z.any().optional(),
-    }).optional(),
+  role: zStrOpt,
+  note: zStrOpt.optional(),
+  person: z.object({
+    name: zStrOpt,
+    image: z.any().optional(),
+  }).optional(),
 });
 
 export const News = z.object({
-    _id: z.string(),
-    _type: z.literal("news"),
-    title: z.string().min(1),
-    slug: z.string().min(1),
-    mainImage: MainImage.optional().nullable(),
-    originalArticleUrl: zUrlOpt,
-    summary: zArray(z.object({
-        _key: z.string(),
-        _type: z.string(),
-        children: z.array(z.object({
-            _key: z.string(),
-            _type: z.string(),
-            text: z.string(),
-            marks: z.array(z.string()).optional(),
-        })).optional(),
-        style: z.string().optional(),
-        markDefs: z.array(z.unknown()).optional(),
-        listItem: z.string().optional(),
-        level: z.number().optional(),
-    })),
-    body: zArray(z.unknown()), // Accept any block for now
-    authors: zArray(Author),
-    originalPublishedDate: zStrOpt,
-    publishedHereDate: zStrOpt,
-    categories: zArray(z.string()),
-    originCountry: zStrOpt,
+  _id: z.string(),
+  _type: z.literal("news"),
+  title: z.string().min(1),
+  slug: z.string().min(1),
+  mainImage: MainImage.optional().nullable(),
+  originalArticleUrl: zUrlOpt,
+  summary: zArray(z.unknown()), // Accept any block for now
+  // summary: zArray(z.object({
+  //     _key: z.string(),
+  //     _type: z.string(),
+  //     children: z.array(z.object({
+  //         _key: z.string(),
+  //         _type: z.string(),
+  //         text: z.string(),
+  //         marks: z.array(z.string()).optional(),
+  //     })).optional(),
+  //     style: z.string().optional(),
+  //     markDefs: z.array(z.unknown()).optional(),
+  //     listItem: z.string().optional(),
+  //     level: z.number().optional(),
+  // })),
+  body: zArray(z.unknown()), // Accept any block for now
+  authors: zArray(Author),
+  originalPublishedDate: zStrOpt,
+  publishedHereDate: zStrOpt,
+  categories: zArray(z.string()),
+  originCountry: zStrOpt,
 });
 
 // TypeScript-only override for PortableText
 export type NewsType = Omit<z.infer<typeof News>, "summary" | "body"> & {
-    summary: PortableTextBlock[];
-    body: PortableTextBlock[];
+  summary: PortableTextBlock[];
+  body: PortableTextBlock[];
 };
 
 export const NewsList = z.array(News);
