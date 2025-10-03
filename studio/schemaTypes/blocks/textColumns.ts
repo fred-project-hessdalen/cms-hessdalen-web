@@ -1,0 +1,33 @@
+// /schemas/blocks/textColumns.ts
+import { defineType, defineField } from 'sanity'
+
+export const textColumns = defineType({
+    name: 'textColumns',
+    title: 'Text columns',
+    type: 'object',
+    fields: [
+        defineField({
+            name: 'cols',
+            title: 'Number of columns',
+            type: 'number',
+            initialValue: 2,
+            validation: (Rule) => Rule.min(2).max(3),
+        }),
+        defineField({
+            name: 'content',
+            title: 'Content',
+            type: 'array',
+            of: [
+                { type: 'block' },
+                { type: 'image', options: { hotspot: true } },
+            ],
+        }),
+    ],
+    preview: {
+        select: { cols: 'cols', first: 'content.0.children.0.text' },
+        prepare: ({ cols, first }) => ({
+            title: `Text columns (${cols})`,
+            subtitle: first || '—',
+        }),
+    },
+})

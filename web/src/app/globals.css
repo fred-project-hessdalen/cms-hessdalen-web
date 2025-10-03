@@ -1,0 +1,41 @@
+/* Tailwind v4 */
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* Base color tokens */
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+/* Map your tokens into Tailwind theme tokens */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* If you're using next/font to set these, they’ll exist; otherwise fall back */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
+    Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo,
+    Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+/* Optional: auto dark mode via media query */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+/* Use Tailwind tokens instead of raw CSS vars */
+html, body {
+  height: 100%;
+}
+
+body {
+  @apply bg-background text-foreground font-sans;
+}
+
+/* Example: invert prose in dark mode automatically */
+.dark .prose { @apply prose-invert; }
