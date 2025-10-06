@@ -20,7 +20,30 @@ const PEOPLE_FIELDS = `
   "image": image.asset->url,
   summary,
   bio[]{
-    ...
+   ...,
+    // top-level image blocks
+    _type == "image" => {
+      ...,
+      asset->{url}
+    },
+
+    // gallery blocks (if you have them)
+    images[]{
+      ...,
+      asset->{url}
+    },
+
+    // textColumns custom block
+    _type == "textColumns" => {
+      ...,
+      content[]{
+        ...,
+        _type == "image" => {
+          ...,
+          asset->{url}
+        }
+      }
+    }
   },
   socials[]{
     label,
@@ -72,20 +95,7 @@ export const People = z.object({
   country: zStrOpt,
 
   // Use PortableTextBlock structure for bio
-  bio: zArray(z.object({
-    _key: z.string(),
-    _type: z.string(),
-    children: z.array(z.object({
-      _key: z.string(),
-      _type: z.string(),
-      text: z.string(),
-      marks: z.array(z.string()).optional(),
-    })).optional(),
-    style: z.string().optional(),
-    markDefs: z.array(z.unknown()).optional(),
-    listItem: z.string().optional(),
-    level: z.number().optional(),
-  })),
+  bio: zArray(z.unknown()),
 
   socials: zArray(SocialLink),
 

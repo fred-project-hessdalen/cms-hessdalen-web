@@ -106,7 +106,6 @@ export const newsType = defineType({
                 { type: 'imageGallery' },
                 { type: 'textColumns' },
                 { type: 'callout' },
-
             ],
         }),
 

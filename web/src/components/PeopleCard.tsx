@@ -2,21 +2,24 @@ import Image from "next/image";
 import Link from "next/link";
 import type { PeopleType } from "@/lib/sanity/query/people.query";
 
-export function PeopleCard({ info }: { info: PeopleType }) {
+export function PeopleCard({ info, current }: { info: PeopleType, current?: string }) {
     const getInitials = (name?: string) =>
         name ? name.split(/\s+/).map(n => n[0]).join("").slice(0, 2).toUpperCase() : "?";
 
+    const isCurrent = current === info.slug;
     return (
         <div
             key={info.slug}
-            className="relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/60 shadow-sm hover:shadow-md transition-shadow p-4 flex items-start gap-4"
+            className={`relative rounded-2xl border-2 ${isCurrent ? 'border-black dark:border-yellow-300' : 'border-gray-200 dark:border-gray-800'} bg-white/70 dark:bg-gray-900/60 shadow-sm hover:shadow-md transition-shadow p-4 flex items-start gap-4 ${!isCurrent ? 'hover:border-blue-500 hover:dark:border-blue-400' : ''}`}
         >
             {/* Stretched link overlay to make the whole card clickable */}
-            <Link
-                href={`/people/${info.slug}`}
-                aria-label={`Open ${info.name}`}
-                className="absolute inset-0 z-10 rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-            />
+            {!isCurrent && (
+                <Link
+                    href={`/people/${info.slug}`}
+                    aria-label={`Open ${info.name}`}
+                    className="absolute inset-0 z-10 rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                />
+            )}
 
             {/* Avatar */}
             {info.image ? (

@@ -66,8 +66,8 @@ const portableTextComponents: PortableTextComponents = {
             const cols = Math.min(Math.max(value?.columns ?? 3, 2), 3);
             const gridCols = cols === 3 ? "grid grid-cols-1 gap-8 md:grid-cols-3" : "grid grid-cols-1 gap-8 md:grid-cols-2";
             return (
-                <div className="relative left-1/2 -translate-x-1/2 w-screen max-w-none px-24 my-6 bg-gray-200 dark:bg-gray-600 ">
-                    <div className={`grid gap-3 ${gridCols}`}>
+                <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-gray-200 dark:bg-gray-600">
+                    <div className="mx-auto max-w-screen-2xl px-12 my-12">                    <div className={`grid gap-3 ${gridCols}`}>
                         {value?.images?.map((img: {
                             asset: { url: string };
                             alt?: string;
@@ -92,6 +92,7 @@ const portableTextComponents: PortableTextComponents = {
                                 </figure>
                             );
                         })}
+                    </div>
                     </div>
                 </div>
             );
@@ -125,17 +126,17 @@ const portableTextComponents: PortableTextComponents = {
                     },
                 },
                 block: {
-                    h1: ({ children }) => <h1 className="text-4xl font-bold mt-6 mb-2">{children}</h1>,
-                    h2: ({ children }) => <h2 className="text-2xl font-semibold mt-5 mb-2">{children}</h2>,
-                    h3: ({ children }) => <h3 className="text-xl font-semibold mt-4 mb-2">{children}</h3>,
-                    h4: ({ children }) => <h4 className="text-lg font-semibold mt-3 mb-2">{children}</h4>,
+                    h1: ({ children }) => <h1 className="text-3xl font-bold mt-0 mb-2  md:break-before-column md:first:break-before-auto">{children}</h1>,
+                    h2: ({ children }) => <h2 className="text-2xl font-semibold mt-0 mb-2">{children}</h2>,
+                    h3: ({ children }) => <h3 className="text-xl font-semibold mt-0 mb-2">{children}</h3>,
+                    h4: ({ children }) => <h4 className="text-lg font-semibold mt-0 mb-2">{children}</h4>,
                     blockquote: ({ children }) => <blockquote className="border-l-4 pl-4 italic text-gray-600 dark:text-gray-300 my-4">{children}</blockquote>,
                     normal: ({ children }) => <div className="mb-4">{children}</div>,
                 },
                 marks: {
                     code: ({ children }) => (
                         <div className="border border-gray-300 dark:border-gray-600 rounded p-4 inline-block">
-                            <code className=" text-blue-400 dark:text-blue-300 rounded px-1 py-0.5 text-sm font-mono">{children}</code>
+                            <code className=" text-red-400 dark:text-blue-300 rounded px-1 py-0.5 text-sm font-mono">{children}</code>
                         </div>
                     ),
                 },
@@ -149,8 +150,11 @@ const portableTextComponents: PortableTextComponents = {
                 },
             };
             return (
-                <div className={`relative left-1/2 -translate-x-1/2 w-screen max-w-none px-24 my-6 columns-1 ${mdCols} gap-x-8 [&>*]:break-inside-avoid text-base md:text-[80%]`}>
-                    <PortableText value={value?.content} components={textColumnsComponents} />
+                <div className="bg-white dark:bg-black relative left-1/2 -translate-x-1/2 w-screen p-6">
+                    <div className={`mx-auto max-w-screen-2xl 
+                   columns-1 ${mdCols} gap-x-8
+                   [&>*]:break-inside-avoid text-base md:text-[90%]`}>                    <PortableText value={value?.content} components={textColumnsComponents} />
+                    </div>
                 </div>
             );
         },

@@ -9,6 +9,7 @@ import {
     People, PeopleList,               // <-- keep the Zod schema for parsing
     type PeopleType,      // <-- import the TS type alias
 } from "@/lib/sanity/query/people.query";
+import { AdvancedPortableText } from "@/components/AdvancedPortableText";
 
 export default async function PersonPage({
     params,
@@ -116,8 +117,11 @@ export default async function PersonPage({
 
                     {/* Bio (PortableText) */}
                     {people.bio && people.bio.length > 0 && (
-                        <div className=" mx-auto max-w-6xl py-4 items-center text-left prose p-4">
-                            <PortableText value={people.bio} />
+                        // <div className=" mx-auto max-w-6xl py-4 items-center text-left prose p-4">
+                        //     <PortableText value={people.bio} />
+                        // </div>
+                        <div className="mx-auto max-w-3xl py-4 items-center text-left prose p-4">
+                            <AdvancedPortableText value={people.bio} />
                         </div>
                     )}
                 </div>
@@ -132,7 +136,7 @@ export default async function PersonPage({
             <div className="mx-auto px-4 not-prose py-8 bg-gray-100 dark:bg-gray-700 ">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {peoples.map((p) => (
-                        <PeopleCard key={p.slug} info={p} />
+                        <PeopleCard key={p.slug} info={p} current={people?.slug} />
                     ))}
                 </div>
             </div>

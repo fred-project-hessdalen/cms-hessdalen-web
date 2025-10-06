@@ -91,7 +91,34 @@ export const personType = defineType({
         defineField({
             name: "bio",
             type: "array",
-            of: [{ type: "block" }],
+            of: [
+                { type: "block" }, // rich text
+                {
+                    type: "image",   // image block
+                    options: { hotspot: true },
+                    fields: [
+                        {
+                            name: 'layout',
+                            title: 'Display',
+                            type: 'string',
+                            options: {
+                                list: [
+                                    { title: 'Standard (1600×900)', value: 'standard' },
+                                    { title: 'Banner (1600×300)', value: 'banner' },
+                                ],
+                                layout: 'radio',
+                                isHighlighted: true, // quick access in the image editor
+                            },
+                            initialValue: 'standard',
+                        },
+                        { name: 'caption', type: 'string', title: 'Caption', options: { isHighlighted: true } },
+                        { name: 'alt', type: 'string', title: 'Alt text', description: 'Alternative text for screen readers' },
+                    ],
+                },
+                { type: 'imageGallery' },
+                { type: 'textColumns' },
+                { type: 'callout' },
+            ],
         }),
         defineField({
             name: "website",
@@ -128,15 +155,16 @@ export const personType = defineType({
     preview: {
         select: {
             title: "name",
+            group: "group",
             country: "country",
             role: "title",
             media: "image",
         },
-        prepare({ title, country, role, media }) {
+        prepare({ title, group, country, role, media }) {
             let subtitle = "";
-            if (country && role) subtitle = `${role} (${country})`;
-            else if (country) subtitle = country;
-            else if (role) subtitle = role;
+            if (country && role) subtitle = `${group}. ${role} (${country})`;
+            else if (country) subtitle = `${group}. (${country})`;
+            else if (role) subtitle = `${group}. (${role})`;
 
             return { title, subtitle, media };
         },

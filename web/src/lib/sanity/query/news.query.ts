@@ -16,10 +16,31 @@ const NEWS_FIELDS = `
   originalArticleUrl,
   summary[]{ ... },
   body[]{
-  ...,
-  asset->{url},
-  images[]{asset->{url}, alt, caption}
-},
+    ...,
+    // top-level image blocks
+    _type == "image" => {
+      ...,
+      asset->{url}
+    },
+
+    // gallery blocks (if you have them)
+    images[]{
+      ...,
+      asset->{url}
+    },
+
+    // textColumns custom block
+    _type == "textColumns" => {
+      ...,
+      content[]{
+        ...,
+        _type == "image" => {
+          ...,
+          asset->{url}
+        }
+      }
+    }
+  },
   authors[]{
     role,
     note,
@@ -30,6 +51,7 @@ const NEWS_FIELDS = `
   categories,
   originCountry
 `;
+
 
 export const NEWS_LIST_QUERY = defineQuery(`
   *[_type == "news"] | order(publishedHereDate desc, originalPublishedDate desc) {
