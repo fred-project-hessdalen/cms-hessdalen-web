@@ -1,4 +1,5 @@
 import { PeopleCard } from "@/components/PeopleCard";
+import type { PortableTextBlock } from "sanity";
 
 import { fetchAndParse } from "@/lib/sanity/fetch";
 import { PEOPLE_LIST_QUERY, PeopleList } from "@/lib/sanity/query/people.query";
@@ -30,7 +31,10 @@ export default async function PersonPage() {
             <div className="mx-auto px-4 not-prose py-8 bg-gray-100 dark:bg-gray-700">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {peoples.map((p) => (
-                        <PeopleCard key={p.slug} info={p} />
+                        <PeopleCard key={p.slug}
+                            info={{ ...p, bio: (p.bio as PortableTextBlock[]) || [] }}
+
+                        />
                     ))}
                 </div>
             </div>

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { PeopleCard } from "@/components/PeopleCard";
-import { PortableText } from "next-sanity";
+import type { PortableTextBlock } from "sanity";
 
 import { fetchAndParse } from "@/lib/sanity/fetch";
 import {
@@ -136,7 +136,10 @@ export default async function PersonPage({
             <div className="mx-auto px-4 not-prose py-8 bg-gray-100 dark:bg-gray-700 ">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {peoples.map((p) => (
-                        <PeopleCard key={p.slug} info={p} current={people?.slug} />
+                        <PeopleCard key={p.slug}
+                            info={{ ...p, bio: (p.bio as PortableTextBlock[]) || [] }}
+
+                            current={people?.slug} />
                     ))}
                 </div>
             </div>
