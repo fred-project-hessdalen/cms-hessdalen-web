@@ -9,6 +9,7 @@ const EXPLICIT = new Set([
     "event",
     "venue",
     "person",
+    "page",
 ]);
 
 const structure: StructureResolver = (S) =>
@@ -27,6 +28,15 @@ const structure: StructureResolver = (S) =>
             S.divider(),
 
             // --- Main content ---
+            S.listItem()
+                .title("Pages")
+                .schemaType("page")
+                .child(
+                    S.documentTypeList("page")
+                        .title("Pages")
+                        .defaultOrdering([{ field: "path", direction: "asc" }]) // or "title"
+                ),
+
             S.listItem()
                 .title("News")
                 .schemaType("news")

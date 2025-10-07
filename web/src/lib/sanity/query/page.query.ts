@@ -1,0 +1,99 @@
+import { z } from "zod";
+import { defineQuery } from "next-sanity";
+import type { PortableTextBlock } from "sanity";
+
+/** ── GROQ ─────────────────────────────────────────────────────────────── */
+
+const PAGE_FIELDS = `
+  _id,
+  _type,
+  title,
+  path,
+  mainImage{
+    asset->{url},
+    alt,
+    layout
+  },
+  summary[]{ ... },
+  body[]{
+    ...,
+    // top-level image blocks
+    _type == "image" => {
+      ...,
+      asset->{url}
+    },
+
+    // gallery blocks (if you have them)
+    images[]{
+      ...,
+      asset->{url}
+    },
+
+    // textColumns custom block
+    _type == "textColumns" => {
+      ...,
+      content[]{
+        ...,
+        _type == "image" => {
+          ...,
+          asset->{url}
+        }
+      }
+    }
+  },
+  authors[]{
+    role,
+    note,
+    person->{name, image}
+  },
+  publishedDate,
+  categories,
+  originCountry
+`;
+
+export const PAGE_BY_PATH_QUERY = defineQuery(`
+  *[_type == "page" && path == $path][0] {
+    ${PAGE_FIELDS}
+  }
+`);
+
+/** ── Zod ──────────────────────────────────────────────────────────────── */
+
+const zStrOpt = z.preprocess(v => (v ?? undefined), z.string().optional());
+const zUrlOpt = z.preprocess(v => (v ?? undefined), z.string().url().optional());
+const zArray = <T extends z.ZodTypeAny>(item: T) =>
+    z.preprocess(v => (v == null ? [] : v), z.array(item));
+
+const MainImage = z.object({
+    asset: z.object({ url: zUrlOpt }),
+    alt: zStrOpt,
+    layout: zStrOpt,
+});
+
+const Author = z.object({
+    role: zStrOpt,
+    note: zStrOpt.optional(),
+    person: z.object({
+        name: zStrOpt,
+        image: z.any().optional(),
+    }).optional(),
+});
+
+export const Page = z.object({
+    _id: z.string(),
+    _type: z.literal("page"),
+    title: z.string().min(1),
+    path: z.string().min(1),
+    mainImage: MainImage.optional().nullable(),
+    summary: zArray(z.unknown()),
+    body: zArray(z.unknown()),
+    authors: zArray(Author),
+    publishedDate: zStrOpt,
+    categories: zArray(z.string()),
+    originCountry: zStrOpt,
+});
+
+export type PageType = Omit<z.infer<typeof Page>, "summary" | "body"> & {
+    summary: PortableTextBlock[];
+    body: PortableTextBlock[];
+};

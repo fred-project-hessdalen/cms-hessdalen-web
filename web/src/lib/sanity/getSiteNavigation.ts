@@ -20,7 +20,7 @@ export async function getSiteNavigation(): Promise<NavMenu> {
         { next: { revalidate: 0, tags: [NAV_TAG] } }
     );
 
-    navCache = nav;
+    navCache = nav ?? { menuItems: [] };
     navCacheTimestamp = now;
-    return nav;
+    return navCache;
 }

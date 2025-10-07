@@ -12,7 +12,7 @@ export default async function IndexPage() {
     NewsList,
     { next: { revalidate: 60 } }
   );
-  const newsList: NewsType[] = newsListRaw.map((n) => ({
+  const newsList: NewsType[] = (newsListRaw ?? []).map((n) => ({
     ...n,
     summary: n.summary as PortableTextBlock[],
     body: n.body as PortableTextBlock[],

@@ -23,7 +23,7 @@ export async function getNews(): Promise<NewsListType> {
     );
 
     // Cast summary and body to PortableTextBlock[] for each item
-    const news: NewsListType = rawNews.map((item: any) => ({
+    const news: NewsListType = (rawNews ?? []).map((item: any) => ({
         ...item,
         summary: item.summary as PortableTextBlock[],
         body: item.body as PortableTextBlock[],

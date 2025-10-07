@@ -13,7 +13,10 @@ export async function fetchAndParse<TSchema extends ZodTypeAny>(
     params: QueryParams = {},
     schema: TSchema,
     options?: RequestOptions & NextFetchOptions
-): Promise<z.infer<TSchema>> {
+): Promise<z.infer<TSchema> | null> {
     const { data } = await sanityFetch<unknown>(query, params, options);
-    return schema.parse(data);
+    if (data == null) return null;
+    const parsed = schema.safeParse(data);
+    if (!parsed.success) throw parsed.error;
+    return parsed.data;
 }

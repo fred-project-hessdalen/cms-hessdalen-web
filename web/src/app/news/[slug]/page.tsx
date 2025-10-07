@@ -100,7 +100,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
             {/* List of other news articles */}
             <div className="mx-auto px-4 not-prose py-8 bg-gray-100 dark:bg-gray-700 ">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {newsList.map((n: any) => (
+                    {(newsList ?? []).map((n: any) => (
                         <NewsCard key={n.slug} info={n} current={news?.slug} />
                     ))}
                 </div>
