@@ -16,15 +16,15 @@ const portableTextComponents: PortableTextComponents = {
             };
             const glyph = (icon && icon.trim()) || fallbackByTone[tone] || "💡";
             const toneClasses: Record<string, string> = {
-                info: "bg-blue-50 border-blue-200 text-blue-900 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-100",
-                success: "bg-green-50 border-green-200 text-green-900 dark:bg-green-900/20 dark:border-green-800 dark:text-green-100",
-                warning: "bg-amber-50 border-amber-200 text-amber-900 dark:bg-amber-900/20 dark:border-amber-800 dark:text-amber-100",
-                danger: "bg-red-50 border-red-200 text-red-900 dark:bg-red-900/20 dark:border-red-800 dark:text-red-100",
+                info: "bg-blue-50 border-blue-200 text-blue-900 dark:bg-blue-900/20 dark:border-blue-100 dark:text-blue-300",
+                success: "bg-green-50 border-green-200 text-green-900 dark:bg-green-900/20 dark:border-green-800 dark:text-green-200",
+                warning: "bg-amber-50 border-amber-200 text-amber-900 dark:bg-amber-900/20 dark:border-amber-800 dark:text-amber-400",
+                danger: "bg-red-50 border-red-200 text-red-900 dark:bg-red-900/20 dark:border-red-800 dark:text-red-600",
             };
 
             return (
-                <div className={`my-6 border rounded-xl ${toneClasses[tone] || toneClasses.info} ${compact ? "py-4 px-4" : "py-12 px-12"}`}>
-                    <div className="flex items-center gap-8">
+                <div className={`my-6 border rounded-xl ${toneClasses[tone] || toneClasses.info} ${compact ? "py-4 px-4" : "py-8 px-8"}`}>
+                    <div className="flex items-center gap-6">
                         <span className="text-8xl leading-none block flex-shrink-0" aria-hidden="true">
                             {glyph}
                         </span>

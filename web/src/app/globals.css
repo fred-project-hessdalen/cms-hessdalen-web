@@ -38,4 +38,9 @@ body {
 }
 
 /* Example: invert prose in dark mode automatically */
+
 .dark .prose { @apply prose-invert; }
+
+.dark .prose img {
+  filter: none !important;
+}

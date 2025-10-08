@@ -6,8 +6,10 @@ import { AdvancedPortableText } from "@/components/AdvancedPortableText";
 import { SimplePortableText } from "@/components/SimplePortableText";
 import { formatDateByLocale } from "@/lib/dateFunctions";
 
-export default async function CatchAllPage({ params }: { params: { slug?: string[] } }) {
-    const path = (params.slug ?? []).join("/");
+export default async function CatchAllPage(props: { params: { slug?: string[] } } | { params: Promise<{ slug?: string[] }> }) {
+    // Await params if it's a Promise (Next.js dynamic API)
+    const rawParams = ("then" in props.params) ? await props.params : props.params;
+    const path = (rawParams.slug ?? []).join("/");
     if (!path) return notFound();
 
     const doc = await fetchAndParse(PAGE_BY_PATH_QUERY, { path }, Page) as PageType | null;
