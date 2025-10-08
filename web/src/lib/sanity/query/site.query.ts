@@ -7,7 +7,7 @@ const BANNER = z.object({
   enabled: z.boolean().optional().default(false),
 
   // accept string | null | undefined, output string | undefined
-  message: z.string().optional(),
+  message: z.preprocess(v => (v == null ? "" : v), z.string()),
 
   // accept null/undefined, default to "info"
   variant: z.preprocess(
@@ -22,7 +22,10 @@ const SOCIAL_LINK = z.object({
   url: z.string().url(),
 });
 
-const SOCIALS = z.array(SOCIAL_LINK).optional();
+const SOCIALS = z.preprocess(
+  v => (v == null ? [] : v),
+  z.array(SOCIAL_LINK)
+);
 
 export const SITE_SETTINGS = z.object({
   siteName: z.string(),

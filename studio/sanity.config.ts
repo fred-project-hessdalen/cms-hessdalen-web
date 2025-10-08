@@ -16,7 +16,7 @@ export default defineConfig({
 
   // These are fine as process.env in Sanity Studio v3+
   projectId: 'rydrzqyk',
-  dataset: 'testing',
+  dataset: 'production',
   // projectId: process.env.SANITY_STUDIO_PROJECT_ID!,
   // dataset: process.env.SANITY_STUDIO_DATASET! || "production",
 
