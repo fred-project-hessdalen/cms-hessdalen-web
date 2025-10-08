@@ -13,16 +13,16 @@ export default async function CatchAllPage({ params }: { params: { slug?: string
     if (!doc) return notFound();
 
     return (
-        <div className="bg-white dark:bg-gray-900 w-full">
+        <div className="bg-white dark:bg-gray-900 w-full ">
             <div className="mx-auto max-w-6xl py-0 flex flex-col gap-8 px-4">
 
                 {doc.mainImage?.asset?.url && (
-                    <div className={`w-full ${doc.mainImage.layout === "banner" ? "aspect-[16/3]" : "aspect-[16/9]"} relative mb-4`}>
+                    <div className={`w-full ${doc.mainImage.layout === "banner" ? "aspect-[16/3]" : "aspect-[16/9]"} relative mb-4 overflow-hidden rounded-b-xl`}>
                         <Image
                             src={doc.mainImage.asset.url}
                             alt={doc.mainImage.alt || doc.title}
                             fill
-                            className="object-cover rounded-xl"
+                            className="object-cover "
                             sizes="100vw"
                         />
                     </div>
@@ -68,7 +68,7 @@ export default async function CatchAllPage({ params }: { params: { slug?: string
                 </div>
             </div>
             {doc.body && doc.body.length > 0 && (
-                <div className="bg-gray-100 dark:bg-gray-700 w-full pt-2 pb-8">
+                <div className="bg-gray-100 dark:bg-gray-700 w-full px-4 pt-2 pb-8">
                     <div className="mx-auto max-w-3xl items-center text-left prose">
                         <AdvancedPortableText value={doc.body} />
                     </div>
