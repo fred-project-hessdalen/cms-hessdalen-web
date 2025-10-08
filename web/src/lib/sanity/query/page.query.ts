@@ -79,7 +79,7 @@ const zArray = <T extends z.ZodTypeAny>(item: T) =>
     z.preprocess(v => (v == null ? [] : v), z.array(item));
 
 const MainImage = z.object({
-    asset: z.object({ url: zUrlOpt }),
+    asset: z.object({ url: zUrlOpt }).optional().nullable(),
     alt: zStrOpt,
     layout: zStrOpt,
 });
