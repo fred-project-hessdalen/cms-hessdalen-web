@@ -4,6 +4,7 @@ import { fetchAndParse } from "@/lib/sanity/fetch";
 import { PAGE_BY_PATH_QUERY, Page, type PageType } from "@/lib/sanity/query/page.query";
 import { AdvancedPortableText } from "@/components/AdvancedPortableText";
 import { SimplePortableText } from "@/components/SimplePortableText";
+import { formatDateByLocale } from "@/lib/dateFunctions";
 
 export default async function CatchAllPage({ params }: { params: { slug?: string[] } }) {
     const path = (params.slug ?? []).join("/");
@@ -47,7 +48,7 @@ export default async function CatchAllPage({ params }: { params: { slug?: string
                 {/* Dates */}
                 <div className="text-xs text-gray-500 mb-1">
                     {doc.publishedDate && (
-                        <span>Published: {new Date(doc.publishedDate).toLocaleDateString()}</span>
+                        <span>Published: {formatDateByLocale(doc.publishedDate)}</span>
                     )}
                 </div>
 

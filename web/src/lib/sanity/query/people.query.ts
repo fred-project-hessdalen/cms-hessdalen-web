@@ -63,6 +63,14 @@ export const PEOPLE_BY_SLUG_QUERY = defineQuery(`
   }
 `);
 
+
+export const PEOPLE_SEARCH_QUERY = defineQuery(`
+  *[_type == "person" && (name match $q || title match $q || email match $q || summary[].children[].text match $q || bio[].children[].text match $q)] | order(name asc)[0...10] {
+    ${PEOPLE_FIELDS}
+  }
+`);
+
+
 /** ── Zod ──────────────────────────────────────────────────────────────── */
 
 // helpers
@@ -95,7 +103,7 @@ export const People = z.object({
   country: zStrOpt,
 
   // Use PortableTextBlock structure for bio
-  bio: zArray(z.unknown()),
+  bio: zArray(z.any()),
 
   socials: zArray(SocialLink),
 
@@ -110,3 +118,4 @@ export type PeopleType = Omit<PeopleZod, "bio"> & { bio: PortableTextBlock[] };
 // CHANGED: Keep Zod list as-is, but export the list item type as PeopleType
 export const PeopleList = z.array(People);
 export type PeopleListType = PeopleType[]; // was: z.infer<typeof PeopleList>
+

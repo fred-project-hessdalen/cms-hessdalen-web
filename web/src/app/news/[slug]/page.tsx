@@ -10,6 +10,7 @@ import {
 import { NewsCard } from "@/components/NewsCard";
 import { AdvancedPortableText } from "@/components/AdvancedPortableText";
 import { SimplePortableText } from "@/components/SimplePortableText";
+import { formatDateByLocale } from "@/lib/dateFunctions";
 
 export default async function NewsDetailPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
@@ -50,10 +51,10 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
                             {/* Dates */}
                             <div className="text-xs text-gray-500 mb-2">
                                 {news.publishedHereDate && (
-                                    <span>Published: {new Date(news.publishedHereDate).toLocaleDateString()}</span>
+                                    <span>Published: {formatDateByLocale(news.publishedHereDate)}</span>
                                 )}
                                 {news.originalPublishedDate && (
-                                    <span className="ml-4">Original: {new Date(news.originalPublishedDate).toLocaleDateString()}</span>
+                                    <span className="ml-4">Original: {formatDateByLocale(news.originalPublishedDate)}</span>
                                 )}
                             </div>
 

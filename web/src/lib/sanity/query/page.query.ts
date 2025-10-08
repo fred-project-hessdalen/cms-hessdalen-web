@@ -1,8 +1,17 @@
+// ...existing code...
+
+// ...existing code...
+
+// Helper declarations (zStrOpt, zUrlOpt, zArray, MainImage, Author) come first
+// ...existing code...
+
 import { z } from "zod";
 import { defineQuery } from "next-sanity";
 import type { PortableTextBlock } from "sanity";
 
 /** ── GROQ ─────────────────────────────────────────────────────────────── */
+
+
 
 const PAGE_FIELDS = `
   _id,
@@ -57,6 +66,11 @@ export const PAGE_BY_PATH_QUERY = defineQuery(`
   }
 `);
 
+export const PAGE_SEARCH_QUERY = defineQuery(`
+  *[_type == "page" && (title match $q || summary[].children[].text match $q || body[].children[].text match $q)] | order(publishedDate desc)[0...10] {
+    ${PAGE_FIELDS}
+  }
+`);
 /** ── Zod ──────────────────────────────────────────────────────────────── */
 
 const zStrOpt = z.preprocess(v => (v ?? undefined), z.string().optional());
@@ -85,15 +99,20 @@ export const Page = z.object({
     title: z.string().min(1),
     path: z.string().min(1),
     mainImage: MainImage.optional().nullable(),
-    summary: zArray(z.unknown()),
-    body: zArray(z.unknown()),
+    summary: zArray(z.any()),
+    body: zArray(z.any()),
     authors: zArray(Author),
     publishedDate: zStrOpt,
     categories: zArray(z.string()),
     originCountry: zStrOpt,
 });
 
+
 export type PageType = Omit<z.infer<typeof Page>, "summary" | "body"> & {
     summary: PortableTextBlock[];
     body: PortableTextBlock[];
 };
+
+
+export const PageList = z.array(Page);
+export type PageListType = PageType[];

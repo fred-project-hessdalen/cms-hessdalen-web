@@ -1,3 +1,4 @@
+// Search query for news
 import { z } from "zod";
 import { defineQuery } from "next-sanity";
 import type { PortableTextBlock } from "sanity";
@@ -72,6 +73,11 @@ export const NEWS_BY_SLUG_QUERY = defineQuery(`
   }
 `);
 
+export const NEWS_SEARCH_QUERY = defineQuery(`
+  *[_type == "news" && (title match $q || summary[].children[].text match $q || body[].children[].text match $q)] | order(publishedHereDate desc)[0...10] {
+    ${NEWS_FIELDS}
+  }
+`);
 /** ── Zod ──────────────────────────────────────────────────────────────── */
 
 const zStrOpt = z.preprocess(v => (v ?? undefined), z.string().optional());
@@ -102,22 +108,8 @@ export const News = z.object({
   slug: z.string().min(1),
   mainImage: MainImage.optional().nullable(),
   originalArticleUrl: zUrlOpt,
-  summary: zArray(z.unknown()), // Accept any block for now
-  // summary: zArray(z.object({
-  //     _key: z.string(),
-  //     _type: z.string(),
-  //     children: z.array(z.object({
-  //         _key: z.string(),
-  //         _type: z.string(),
-  //         text: z.string(),
-  //         marks: z.array(z.string()).optional(),
-  //     })).optional(),
-  //     style: z.string().optional(),
-  //     markDefs: z.array(z.unknown()).optional(),
-  //     listItem: z.string().optional(),
-  //     level: z.number().optional(),
-  // })),
-  body: zArray(z.unknown()), // Accept any block for now
+  summary: zArray(z.any()), // Accept any block for now
+  body: zArray(z.any()), // Accept any block for now
   authors: zArray(Author),
   originalPublishedDate: zStrOpt,
   publishedHereDate: zStrOpt,

@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { NewsType } from "@/lib/sanity/query/news.query";
 import { SimplePortableText } from "./SimplePortableText";
+import { formatDateByLocale } from "@/lib/dateFunctions";
 
 export function NewsCard({ info, current }: { info: NewsType, current?: string }) {
     const isCurrent = current === info.slug;
@@ -44,7 +45,7 @@ export function NewsCard({ info, current }: { info: NewsType, current?: string }
             {/* Published date */}
             {info.publishedHereDate && (
                 <span className="text-xs text-gray-500 mt-2">
-                    {new Date(info.publishedHereDate).toLocaleDateString()}
+                    {formatDateByLocale(info.publishedHereDate)}
                 </span>
             )}
         </div>
