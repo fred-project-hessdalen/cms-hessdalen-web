@@ -9,6 +9,7 @@ import SiteSocialLinks from "@/components/SiteSocialLinks";
 import SiteSearch from "@/components/SiteSearch";
 import SiteLogoAndName from "@/components/SiteLogoAndName";
 import { SanityLive } from "@/lib/sanity/live";
+import SiteFooter from "@/components/SiteFooter";
 import SiteNavigation from "@/components/SiteNavigation";
 
 const varela = Varela_Round({
@@ -80,7 +81,9 @@ export default async function RootLayout({
         className={`${varela.className} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
 
-        <SiteBanner banner={siteSettings.banner} />
+        <div id="top">
+          <SiteBanner banner={siteSettings.banner} />
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-4 p-2 mx-auto container max-w-6xl">
           <SiteLogoAndName logo={siteSettings.logo} siteName={siteSettings.siteName} />
@@ -100,6 +103,9 @@ export default async function RootLayout({
         <main className="flex-1 max-w-full mx-auto p-0 w-full text-center">
           {children}
         </main>
+
+        <SiteFooter />
+
       </body>
     </html>
   );
