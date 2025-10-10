@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { SearchCard } from "@/components/SearchCard";
 import { fetchAndParse } from "@/lib/sanity/fetch";
 import { NEWS_SEARCH_QUERY, NewsList, NewsType } from "@/lib/sanity/query/news.query";

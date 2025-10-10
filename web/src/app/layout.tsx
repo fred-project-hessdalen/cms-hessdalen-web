@@ -104,7 +104,7 @@ export default async function RootLayout({
           {children}
         </main>
 
-        <SiteFooter />
+        <SiteFooter contact={siteSettings.contact} footer={siteSettings.footer} />
 
       </body>
     </html>

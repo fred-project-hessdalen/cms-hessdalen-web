@@ -5,15 +5,21 @@ import { defineQuery } from "next-sanity";
 
 const BANNER = z.object({
   enabled: z.boolean().optional().default(false),
-
-  // accept string | null | undefined, output string | undefined
   message: z.preprocess(v => (v == null ? "" : v), z.string()),
-
-  // accept null/undefined, default to "info"
   variant: z.preprocess(
     v => (v ?? undefined),
     z.enum(["info", "warning", "success", "danger"]).optional().default("info")
   ),
+});
+
+const FOOTER = z.object({
+  copyright: z.string().optional(),
+  footerNote: z.preprocess(v => v == null ? undefined : v, z.string().optional()),
+});
+
+const CONTACT = z.object({
+  email: z.string().optional(),
+  phone: z.string().optional(),
 });
 
 const SOCIAL_LINK = z.object({
@@ -30,30 +36,58 @@ const SOCIALS = z.preprocess(
 export const SITE_SETTINGS = z.object({
   siteName: z.string(),
   tagline: z.string().optional(),
+  logo: z.string().url().optional(),
+  logoDark: z.preprocess(v => v == null ? undefined : v, z.string().url().optional()),
+  favicon: z.string().url().optional(),
+  ogImage: z.string().url().optional(),
   baseUrl: z.string(),
+  seo: z.object({
+    titleTemplate: z.string().optional(),
+    description: z.string().optional(),
+    twitterCard: z.string().optional(),
+  }).optional(),
+  socials: SOCIALS,
+  footer: FOOTER.optional(),
+  contact: CONTACT.optional(),
   locale: z.string().optional(),
   timezone: z.string().optional(),
-  logo: z.string().url().optional(),
-  favicon: z.string().url().optional(),
   banner: BANNER.optional(),
-  socials: SOCIALS,
 });
 export type SiteSettings = z.infer<typeof SITE_SETTINGS>;
 
 export const SITE_SETTINGS_QUERY = defineQuery(`
   *[_type=="siteSettings"][0]{
-    siteName, tagline, baseUrl, locale, timezone,
+    siteName,
+    tagline,
     "logo": logo.asset->url,
+    "logoDark": logoDark.asset->url,
     "favicon": favicon.asset->url,
-    banner{
-      enabled, 
-      message, 
-      variant
+    "ogImage": ogImage.asset->url,
+    baseUrl,
+    seo{
+      titleTemplate,
+      description,
+      twitterCard
     },
     socials[]{
       "logo": logo.asset->url,
       label,
       url
+    },
+    footer{
+      copyright,
+      footerNote
+    },
+    contact{
+      email,
+      phone
+    },
+    locale,
+    timezone,
+    banner{
+      enabled,
+      message,
+      variant
     }
   }
 `);
