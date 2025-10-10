@@ -21,9 +21,9 @@ export default function ClientSiteNavigation({ menuItems }: ClientSiteNavigation
 
     if (!menuItems || !Array.isArray(menuItems) || menuItems.length === 0) {
         return (
-            <div className="relative bg-gray-50 px-4 py-1">
-                <nav className="flex justify-center items-center gap-8">
-                    <div className="text-xs text-gray-500 font-medium uppercase tracking-wide py-2 px-3">
+            <div className="relative bg-gray-50 ">
+                <nav className="flex justify-center items-center gap-4">
+                    <div className="text-xs text-gray-500 font-medium tracking-wide py-2 px-1">
                         Loading navigation...
                     </div>
                 </nav>
@@ -53,7 +53,7 @@ export default function ClientSiteNavigation({ menuItems }: ClientSiteNavigation
     return (
         <div className="relative bg-gray-50 px-4 py-1">
             {/* Main menu bar */}
-            <nav className="flex flex-wrap items-center justify-center gap-3 md:gap-8 mx-auto container max-w-6xl">
+            <nav className="flex flex-wrap items-center justify-center gap-3 mx-auto container max-w-6xl">
                 {menuItems.map((item) => (
                     <div key={item.label}>
                         {item.useDirectLink ? (
@@ -62,7 +62,7 @@ export default function ClientSiteNavigation({ menuItems }: ClientSiteNavigation
                                 href={item.href || "#"}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-xs text-gray-700 hover:text-gray-900 font-medium uppercase tracking-wide py-2 px-3 transition-colors flex items-center gap-1"
+                                className="text-xs text-gray-700 hover:text-gray-900 hover:font-bold hover:underline font-medium tracking-wide py-2 px-1 transition-colors flex items-center gap-1"
                             >
                                 {item.label}
                                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -72,7 +72,7 @@ export default function ClientSiteNavigation({ menuItems }: ClientSiteNavigation
                         ) : (
                             /* Regular menu item with dropdown */
                             <div onMouseEnter={() => handleMouseEnter(item.label)} onMouseLeave={handleMouseLeave}>
-                                <button className="text-xs text-gray-700 hover:text-gray-900 font-medium uppercase tracking-wide py-2 px-3 transition-colors">
+                                <button className="text-xs text-gray-700 hover:text-gray-900 hover:font-bold hover:underline font-medium tracking-wide py-2 px-1 transition-colors">
                                     {item.label}
                                 </button>
                             </div>
@@ -120,7 +120,7 @@ export default function ClientSiteNavigation({ menuItems }: ClientSiteNavigation
                                                             <Link
                                                                 href={link.href}
                                                                 onClick={closeDropdown}
-                                                                className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 rounded-md transition-colors"
+                                                                className="block px-1 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 rounded-md transition-colors"
                                                             >
                                                                 <div>
                                                                     <div>{link.label}</div>
@@ -181,7 +181,7 @@ export default function ClientSiteNavigation({ menuItems }: ClientSiteNavigation
                                             hoveredItemData.info?.buttonLink && (
                                                 <Link
                                                     href={hoveredItemData.info.buttonLink}
-                                                    className="inline-block bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors px-3 py-1.5 text-xs"
+                                                    className="inline-block bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors px-1 py-1.5 text-xs"
                                                 >
                                                     {hoveredItemData.info.buttonLabel}
                                                 </Link>

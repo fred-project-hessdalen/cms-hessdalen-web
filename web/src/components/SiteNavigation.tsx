@@ -18,8 +18,8 @@ export default function SiteNavigation() {
         <Suspense
             fallback={
                 <div className="relative bg-gray-50 px-4 py-1">
-                    <nav className="flex justify-center items-center gap-8">
-                        <div className="text-xs text-gray-500 font-medium uppercase tracking-wide py-2 px-3">
+                    <nav className="flex justify-center items-center gap-4">
+                        <div className="text-xs text-gray-500 font-medium tracking-wide py-2 px-3">
                             Loading navigation...
                         </div>
                     </nav>
