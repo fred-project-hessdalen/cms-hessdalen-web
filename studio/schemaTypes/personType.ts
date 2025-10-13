@@ -37,7 +37,7 @@ export const personType = defineType({
             name: "group",
             title: "Group (for sorting)",
             type: "number",
-            description: "Chairman = 1, Researchers = 2, Organizers = 3, Volunteers = 5, etc.",
+            description: "Chairman = 1, Core team = 2, Team = 3, Board = 4, Volunteers = 5, etc.",
             initialValue: 5,
             validation: (Rule) => Rule.min(0).integer(),
         }),
@@ -93,31 +93,12 @@ export const personType = defineType({
             type: "array",
             of: [
                 { type: "block" }, // rich text
-                {
-                    type: "image",   // image block
-                    options: { hotspot: true },
-                    fields: [
-                        {
-                            name: 'layout',
-                            title: 'Display',
-                            type: 'string',
-                            options: {
-                                list: [
-                                    { title: 'Standard (1600×900)', value: 'standard' },
-                                    { title: 'Banner (1600×300)', value: 'banner' },
-                                ],
-                                layout: 'radio',
-                                isHighlighted: true, // quick access in the image editor
-                            },
-                            initialValue: 'standard',
-                        },
-                        { name: 'caption', type: 'string', title: 'Caption', options: { isHighlighted: true } },
-                        { name: 'alt', type: 'string', title: 'Alt text', description: 'Alternative text for screen readers' },
-                    ],
-                },
+                { type: 'imageBlock' },
                 { type: 'imageGallery' },
                 { type: 'textColumns' },
                 { type: 'callout' },
+                { type: 'collapsible' },
+                { type: 'youtubeVideo' },
             ],
         }),
         defineField({

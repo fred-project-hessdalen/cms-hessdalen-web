@@ -4,10 +4,13 @@ import { eventType } from "./eventType"
 import { personType } from "./personType"
 import { venueType } from "./venueType"
 // Importing custom block types
+import { imageBlock } from "./blocks/imageBlock"
 import { callout } from "./blocks/callout"
+import { collapsible } from "./blocks/collapsible"
 import { credit } from "./blocks/credit"
 import { imageGallery } from "./blocks/imageGallery"
 import { textColumns } from "./blocks/textColumns"
+import { youtubeVideo } from "./blocks/youtubeVideo"
 import { socialLink } from "./objects/socialLink"
 import { siteSettings } from "./singletons/siteSettings"
 import { siteMenu } from "./navigation/siteMenu"
@@ -20,7 +23,7 @@ export const schemaTypes = [
     venueType,
     newsType,
     personType,
-    textColumns, imageGallery, callout, credit,
+    imageBlock, textColumns, imageGallery, callout, collapsible, credit, youtubeVideo,
     socialLink,
     siteSettings,
     siteMenu,

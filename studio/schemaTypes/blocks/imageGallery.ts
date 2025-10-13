@@ -10,8 +10,19 @@ export const imageGallery = defineType({
             name: 'columns',
             title: 'Images per row',
             type: 'number',
-            initialValue: 2,
-            validation: (Rule) => Rule.min(2).max(3),
+            initialValue: 3,
+            options: {
+                list: [
+                    { title: '2', value: 2 },
+                    { title: '3', value: 3 },
+                    { title: '4', value: 4 },
+                    { title: '5', value: 5 },
+                    { title: '6', value: 6 },
+                ],
+                layout: 'radio',
+                direction: 'horizontal',
+            },
+            validation: (Rule) => Rule.required(),
         }),
         defineField({
             name: 'images',
@@ -22,7 +33,35 @@ export const imageGallery = defineType({
                     type: 'image',
                     options: { hotspot: true },
                     fields: [
-                        { name: 'caption', type: 'string', title: 'Caption' },
+                        {
+                            name: 'caption',
+                            type: 'string',
+                            title: 'Caption',
+                            description: 'Short title or heading for the image'
+                        },
+                        {
+                            name: 'description',
+                            type: 'array',
+                            title: 'Description',
+                            description: 'Detailed description with rich text formatting',
+                            of: [{ type: 'block' }],
+                        },
+                        {
+                            name: 'credit',
+                            type: 'string',
+                            title: 'Credit',
+                            description: 'Photo credit or attribution'
+                        },
+                        {
+                            name: 'link',
+                            type: 'url',
+                            title: 'Link',
+                            description: 'URL to link this image to (optional)',
+                            validation: (Rule) => Rule.uri({
+                                scheme: ['http', 'https', 'mailto', 'tel'],
+                                allowRelative: true
+                            })
+                        },
                         {
                             name: 'alt',
                             type: 'string',

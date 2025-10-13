@@ -5,7 +5,8 @@ export interface PTImageBlock {
     asset: { url: string };
     alt?: string;
     caption?: string;
-    layout?: "standard" | "banner";
+    layout?: "standard" | "banner" | "banner-top" | "banner-bottom" | "original";
+    link?: string;
 }
 
 export interface PTImageGalleryBlock {
@@ -15,6 +16,9 @@ export interface PTImageGalleryBlock {
         asset: { url: string };
         alt?: string;
         caption?: string;
+        description?: PortableTextBlock[];
+        credit?: string;
+        link?: string;
     }>;
 }
 
@@ -31,4 +35,18 @@ export interface PTCalloutBlock {
     title?: string;
     content?: PortableTextBlock[]; // Usually PortableTextBlock[]
     compact?: boolean;
+}
+
+export interface PTYouTubeBlock {
+    _type: "youtubeVideo";
+    url: string;
+    title?: string;
+    aspectRatio?: "16:9" | "4:3" | "21:9";
+}
+
+export interface PTCollapsibleBlock {
+    _type: "collapsible";
+    header: string;
+    content?: PortableTextBlock[];
+    defaultOpen?: boolean;
 }

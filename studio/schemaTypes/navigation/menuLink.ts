@@ -36,8 +36,16 @@ export const menuLink = defineType({
         }),
         defineField({
             name: "column",
-            type: "number",
-            options: { list: [1, 2, 3] },
+            type: "string",
+            options: {
+                list: [
+                    { title: "1", value: "1" },
+                    { title: "2", value: "2" },
+                    { title: "3", value: "3" },
+                ],
+                layout: "radio",
+                direction: "horizontal",
+            },
             description: "Column placement in mega menu",
         }),
         defineField({

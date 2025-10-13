@@ -117,29 +117,72 @@ export default function ClientSiteNavigation({ menuItems }: ClientSiteNavigation
                                                     {columnLinks(col as colOptions).map((link) => (
                                                         <div key={`${link.href}-${link.label}`}>
                                                             {link.separator && <hr className="my-3 border-gray-200" />}
-                                                            <Link
-                                                                href={link.href}
-                                                                onClick={closeDropdown}
-                                                                className="block px-1 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 rounded-md transition-colors"
-                                                            >
-                                                                <div>
-                                                                    <div>{link.label}</div>
-                                                                    {link.description && <div className="text-xs text-gray-500 mt-1">{link.description}</div>}
-                                                                </div>
-                                                            </Link>
+                                                            {link.href.includes("://") ? (
+                                                                <a
+                                                                    href={link.href}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    onClick={closeDropdown}
+                                                                    className="block px-1 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 rounded-md transition-colors"
+                                                                >
+                                                                    <div>
+                                                                        <div className="flex items-center gap-1">
+                                                                            {link.label}
+                                                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                                            </svg>
+                                                                        </div>
+                                                                        {link.description && <div className="text-xs text-gray-500 mt-1">{link.description}</div>}
+                                                                    </div>
+                                                                </a>
+                                                            ) : (
+                                                                <Link
+                                                                    href={link.href}
+                                                                    onClick={closeDropdown}
+                                                                    className="block px-1 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 rounded-md transition-colors"
+                                                                >
+                                                                    <div>
+                                                                        <div className="flex items-center gap-1">
+                                                                            {link.label}
+                                                                        </div>
+                                                                        {link.description && <div className="text-xs text-gray-500 mt-1">{link.description}</div>}
+                                                                    </div>
+                                                                </Link>
+                                                            )}
 
                                                             {link.subItems && (
                                                                 <div className="ml-4 mt-1 space-y-1">
                                                                     {link.subItems.map((sub) => (
-                                                                        <Link
-                                                                            key={`${sub.href}-${sub.label}`}
-                                                                            href={sub.href || "#"}
-                                                                            onClick={closeDropdown}
-                                                                            className="block px-2 py-1 text-xs text-gray-600 hover:bg-gray-50 hover:text-gray-800 rounded transition-colors"
-                                                                        >
-                                                                            • {sub.label}
-                                                                            {sub.description && <div className="text-xs text-gray-500 mt-1 px-2">{sub.description}</div>}
-                                                                        </Link>
+                                                                        sub.href?.includes("://") ? (
+                                                                            <a
+                                                                                key={`${sub.href}-${sub.label}`}
+                                                                                href={sub.href}
+                                                                                target="_blank"
+                                                                                rel="noopener noreferrer"
+                                                                                onClick={closeDropdown}
+                                                                                className="block px-2 py-1 text-xs text-gray-600 hover:bg-gray-50 hover:text-gray-800 rounded transition-colors"
+                                                                            >
+                                                                                <span className="flex items-center gap-1">
+                                                                                    • {sub.label}
+                                                                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                                                    </svg>
+                                                                                </span>
+                                                                                {sub.description && <div className="text-xs text-gray-500 mt-1 px-2">{sub.description}</div>}
+                                                                            </a>
+                                                                        ) : (
+                                                                            <Link
+                                                                                key={`${sub.href}-${sub.label}`}
+                                                                                href={sub.href || "#"}
+                                                                                onClick={closeDropdown}
+                                                                                className="block px-2 py-1 text-xs text-gray-600 hover:bg-gray-50 hover:text-gray-800 rounded transition-colors"
+                                                                            >
+                                                                                <span className="flex items-center gap-1">
+                                                                                    • {sub.label}
+                                                                                </span>
+                                                                                {sub.description && <div className="text-xs text-gray-500 mt-1 px-2">{sub.description}</div>}
+                                                                            </Link>
+                                                                        )
                                                                     ))}
                                                                 </div>
                                                             )}

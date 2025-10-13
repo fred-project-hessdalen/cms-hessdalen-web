@@ -11,7 +11,16 @@ export const textColumns = defineType({
             title: 'Number of columns',
             type: 'number',
             initialValue: 2,
-            validation: (Rule) => Rule.min(2).max(3),
+            options: {
+                list: [
+                    { title: '2', value: 2 },
+                    { title: '3', value: 3 },
+                    { title: '4', value: 4 },
+                ],
+                layout: 'radio',
+                direction: 'horizontal',
+            },
+            validation: (Rule) => Rule.required(),
         }),
         defineField({
             name: 'content',

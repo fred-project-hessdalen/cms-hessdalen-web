@@ -8,6 +8,11 @@ const URL_OPT = z.string().url().nullish().transform(v => (v == null ? undefined
 const NUM_OPT = z.number().int().nullish().transform(v => (v == null ? undefined : v));
 const BOOL_DFALSE = z.boolean().nullish().transform(v => Boolean(v));              // null/undefined -> false
 const ARR = <T extends z.ZodTypeAny>(s: T) => z.array(s).nullish().default([]);
+// Accept both string and number for column (backward compatibility), convert to number
+const COL_OPT = z.union([z.string(), z.number()]).nullish().transform(v => {
+  if (v == null) return undefined;
+  return typeof v === 'string' ? parseInt(v, 10) : v;
+});
 
 // Allow missing/empty hrefs but give a safe fallback for rendering
 const HREF_DEFAULT = z
@@ -27,7 +32,7 @@ export type NavSubItem = z.infer<typeof NAV_SUB_ITEM>;
 export const NAV_LINK = z.object({
   label: STR,
   href: HREF_DEFAULT,                     // null -> "#"
-  column: NUM_OPT,                        // null/undefined ok
+  column: COL_OPT,                        // accepts string or number, null/undefined ok
   separator: BOOL_DFALSE,                 // null -> false
   description: STR_OPT,                   // null/undefined ok
   subItems: ARR(NAV_SUB_ITEM),            // null -> []

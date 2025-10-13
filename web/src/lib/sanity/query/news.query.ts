@@ -18,20 +18,30 @@ const NEWS_FIELDS = `
   summary[]{ ... },
   body[]{
     ...,
-    // top-level image blocks
-    _type == "image" => {
+    _type == "imageBlock" => {
       ...,
-      asset->{url}
+      asset->{url},
+      link
     },
-
-    // gallery blocks (if you have them)
     images[]{
       ...,
-      asset->{url}
+      asset->{url},
+      description[]{ ... },
+      caption,
+      credit,
+      link
     },
-
-    // textColumns custom block
     _type == "textColumns" => {
+      ...,
+      content[]{
+        ...,
+        _type == "image" => {
+          ...,
+          asset->{url}
+        }
+      }
+    },
+    _type == "collapsible" => {
       ...,
       content[]{
         ...,
