@@ -51,7 +51,7 @@ export default function ClientSiteNavigation({ menuItems }: ClientSiteNavigation
     const handleDropdownMouseLeave = () => setHoveredItem(null);
 
     return (
-        <div className="relative bg-gray-50 px-4 py-1">
+        <div className="relative bg-gray-50 px-4 pt-2">
             {/* Main menu bar */}
             <nav className="flex flex-wrap items-center justify-center gap-3 mx-auto container max-w-6xl">
                 {menuItems.map((item) => (
@@ -62,7 +62,7 @@ export default function ClientSiteNavigation({ menuItems }: ClientSiteNavigation
                                 href={item.href || "#"}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-xs text-gray-700 hover:text-gray-900 hover:font-bold hover:underline font-medium tracking-wide py-2 px-1 transition-colors flex items-center gap-1"
+                                className="text-md text-gray-700 hover:text-gray-900 hover:font-bold hover:underline font-medium tracking-wide py-0 px-1 transition-colors flex items-center gap-1"
                             >
                                 {item.label}
                                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -72,7 +72,7 @@ export default function ClientSiteNavigation({ menuItems }: ClientSiteNavigation
                         ) : (
                             /* Regular menu item with dropdown */
                             <div onMouseEnter={() => handleMouseEnter(item.label)} onMouseLeave={handleMouseLeave}>
-                                <button className="text-xs text-gray-700 hover:text-gray-900 hover:font-bold hover:underline font-medium tracking-wide py-2 px-1 transition-colors">
+                                <button className="text-md text-gray-700 hover:text-gray-900 hover:font-bold hover:underline font-medium tracking-wide py-0 px-1 transition-colors">
                                     {item.label}
                                 </button>
                             </div>

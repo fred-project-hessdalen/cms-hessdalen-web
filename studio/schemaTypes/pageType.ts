@@ -71,6 +71,12 @@ export const pageType = defineType({
                         }
                     }),
         }),
+        defineField({
+            name: "redirectTo",
+            title: "Redirect To (optional)",
+            type: "string",
+            description: 'Internal path (e.g., "other-page") or external URL (e.g., "https://example.com"). Leave empty for no redirect.',
+        }),
         // Tile / Cover image
         defineField({
             name: "mainImage",

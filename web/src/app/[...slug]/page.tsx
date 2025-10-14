@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Image from "next/image";
 import { fetchAndParse } from "@/lib/sanity/fetch";
 import { PAGE_BY_PATH_QUERY, Page, type PageType } from "@/lib/sanity/query/page.query";
@@ -14,6 +14,17 @@ export default async function CatchAllPage(props: { params: { slug?: string[] } 
 
     const doc = await fetchAndParse(PAGE_BY_PATH_QUERY, { path }, Page) as PageType | null;
     if (!doc) return notFound();
+
+    // Handle redirect if redirectTo is set
+    if (doc.redirectTo) {
+        // Check if it's an external URL (contains ://)
+        const isExternal = doc.redirectTo.includes("://");
+        if (isExternal) {
+            redirect(doc.redirectTo);
+        } else {
+            redirect(`/${doc.redirectTo}`);
+        }
+    }
 
     return (
         <div className="bg-white dark:bg-gray-900 w-full ">

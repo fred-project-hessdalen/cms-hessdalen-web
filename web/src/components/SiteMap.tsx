@@ -30,6 +30,14 @@ export default async function SiteMap() {
                         {page.publishedDate && (
                             <span className="text-xs text-gray-500 dark:text-gray-400">{formatDateByLocale(page.publishedDate)}</span>
                         )}
+                        {page.redirectTo && (
+                            <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
+                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                </svg>
+                                {page.redirectTo.includes("://") ? page.redirectTo : `/${page.redirectTo}`}
+                            </span>
+                        )}
                     </li>
                 ))}
             </ul>

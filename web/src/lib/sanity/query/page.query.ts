@@ -18,6 +18,7 @@ const PAGE_FIELDS = `
   _type,
   title,
   path,
+  redirectTo,
   mainImage{
     asset->{url},
     alt,
@@ -114,6 +115,7 @@ export const Page = z.object({
   _type: z.literal("page"),
   title: z.string().min(1),
   path: z.string().min(1),
+  redirectTo: zStrOpt,
   mainImage: MainImage.optional().nullable(),
   summary: zArray(z.any()),
   body: zArray(z.any()),
