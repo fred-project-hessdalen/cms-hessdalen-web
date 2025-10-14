@@ -82,7 +82,7 @@ const portableTextComponents: PortableTextComponents = {
                             <img
                                 src={url}
                                 alt={value?.alt || "Article image"}
-                                className="max-w-full h-auto p-0 m-0"
+                                className="max-w-full h-auto !mt-0"
                             />
                             {value?.caption && (
                                 <figcaption className="-mt-4 text-sm text-gray-500 dark:text-gray-400 text-center">{value.caption}</figcaption>
@@ -190,16 +190,17 @@ const portableTextComponents: PortableTextComponents = {
 
                                 const imageElement = (
                                     <div className="flex flex-col">
-                                        <div className="relative w-full aspect-square overflow-hidden rounded-lg">
+                                        <figure className="overflow-hidden !m-0 !p-0 rounded-lg" style={{ aspectRatio: "16 / 9" }}>
                                             <Image
                                                 src={url}
                                                 alt={img?.alt || ""}
-                                                fill
-                                                className="object-contain"
+                                                width={800}
+                                                height={800}
+                                                className="w-full h-full object-cover"
                                                 sizes="(min-width: 1024px) 400px, 100vw"
                                             />
-                                        </div>
-                                        {img?.caption && <div className="mt-1 text-lg font-semibold text-center text-gray-500 dark:text-gray-500">{img.caption}</div>}
+                                        </figure>
+                                        {img?.caption && <div className="mt-1 text-2xl font-semibold text-center text-gray-500 dark:text-gray-500">{img.caption}</div>}
                                         {img?.description && (
                                             <div className="mt-2 text-sm text-center text-gray-600 dark:text-gray-400 prose prose-sm dark:prose-invert max-w-none">
                                                 <PortableText value={img.description} />
