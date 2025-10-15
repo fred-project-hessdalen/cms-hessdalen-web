@@ -31,7 +31,13 @@ export const pageType = defineType({
         defineField({
             name: "title",
             type: "string",
-            validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+            name: "hidden",
+            title: "Hidden",
+            type: "boolean",
+            description: "Hide this page from navigation and sitemaps",
+            initialValue: false,
         }),
         defineField({
             name: "path",
@@ -46,8 +52,8 @@ export const pageType = defineType({
                     .custom(async (value, ctx) => {
                         if (!value) return true; // handled by required()
 
-                        // ✅ use getClient + previewDrafts to see both published and drafts
-                        const client = ctx.getClient({ apiVersion: "2024-05-01", perspective: "previewDrafts" });
+                        // ✅ use getClient to see both published and drafts
+                        const client = ctx.getClient({ apiVersion: "2024-05-01" });
 
                         // Current doc id without drafts. prefix
                         const baseId = (ctx.document?._id || "").replace(/^drafts\./, "");
@@ -133,6 +139,13 @@ export const pageType = defineType({
         })
         ,
         defineField({
+            name: "partsBeforeContent",
+            title: "Parts Before Content",
+            type: "array",
+            of: [{ type: 'reference', to: [{ type: 'part' }] }],
+            description: "Add part blocks to display before the main content",
+        }),
+        defineField({
             name: "body",
             title: "Article Content",
             type: "array",
@@ -146,6 +159,13 @@ export const pageType = defineType({
                 { type: 'collapsible' },
                 { type: 'youtubeVideo' },
             ],
+        }),
+        defineField({
+            name: "partsAfterContent",
+            title: "Parts After Content",
+            type: "array",
+            of: [{ type: 'reference', to: [{ type: 'part' }] }],
+            description: "Add part blocks to display after the main content",
         }),
 
 

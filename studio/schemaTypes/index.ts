@@ -2,6 +2,7 @@ import { pageType } from "./pageType";
 import { newsType } from "./newsType"
 import { eventType } from "./eventType"
 import { personType } from "./personType"
+import { partType } from "./partType"
 import { venueType } from "./venueType"
 // Importing custom block types
 import { imageBlock } from "./blocks/imageBlock"
@@ -24,6 +25,7 @@ export const schemaTypes = [
     venueType,
     newsType,
     personType,
+    partType,
     imageBlock, textColumns, imageGallery, imageList, callout, collapsible, credit, youtubeVideo,
     socialLink,
     siteSettings,

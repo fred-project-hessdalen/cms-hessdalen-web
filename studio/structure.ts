@@ -10,6 +10,7 @@ const EXPLICIT = new Set([
     "venue",
     "person",
     "page",
+    "part",
 ]);
 
 const structure: StructureResolver = (S) =>
@@ -35,6 +36,15 @@ const structure: StructureResolver = (S) =>
                     S.documentTypeList("page")
                         .title("Pages")
                         .defaultOrdering([{ field: "path", direction: "asc" }]) // or "title"
+                ),
+
+            S.listItem()
+                .title("Parts")
+                .schemaType("part")
+                .child(
+                    S.documentTypeList("part")
+                        .title("Parts")
+                        .defaultOrdering([{ field: "title", direction: "asc" }])
                 ),
 
             S.listItem()

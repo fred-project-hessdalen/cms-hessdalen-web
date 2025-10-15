@@ -15,7 +15,7 @@ export default async function SiteMap() {
         ...p,
         summary: p.summary as PortableTextBlock[],
         body: p.body as PortableTextBlock[],
-    }));
+    })).filter((p) => !p.hidden);
 
     return (
         <div className="mx-auto max-w-4xl p-4 items-center">

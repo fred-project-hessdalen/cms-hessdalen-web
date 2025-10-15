@@ -42,6 +42,10 @@ export const SITE_SETTINGS = z.object({
   ogImage: z.string().url().optional(),
   notFoundImage: z.preprocess(v => v == null ? undefined : v, z.string().url().optional()),
   baseUrl: z.string(),
+  homepagePages: z.preprocess(v => (v == null ? [] : v), z.array(z.any())),
+  partsOnTopOfPage: z.preprocess(v => (v == null ? [] : v), z.array(z.any())),
+  partsBeforeSiteMap: z.preprocess(v => (v == null ? [] : v), z.array(z.any())),
+  partsOnBottomOfPage: z.preprocess(v => (v == null ? [] : v), z.array(z.any())),
   seo: z.object({
     titleTemplate: z.string().optional(),
     description: z.string().optional(),
@@ -66,6 +70,172 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
     "ogImage": ogImage.asset->url,
     "notFoundImage": notFoundImage.asset->url,
     baseUrl,
+    homepagePages[]->{
+      _id,
+      _type,
+      title,
+      hidden,
+      path,
+      redirectTo,
+      mainImage{
+        asset->{url},
+        alt,
+        layout
+      },
+      summary[]{ ... },
+      partsBeforeContent[]->{
+        _id,
+        name,
+        title,
+        description[]{ ... },
+        image{
+          "url": asset->url,
+          alt
+        },
+        aspect,
+        imageURL,
+        buttons[]{
+          name,
+          url,
+          style
+        },
+        align,
+        layout
+      },
+      body[]{
+        ...,
+        _type == "imageBlock" => {
+          ...,
+          asset->{url},
+          link
+        },
+        images[]{
+          ...,
+          asset->{url},
+          description[]{ ... },
+          caption,
+          credit,
+          link
+        },
+        _type == "imageList" => {
+          ...,
+          description[]{ ... },
+          highlight,
+          items[]{
+            title,
+            description[]{ ... },
+            link,
+            "icon": {
+              "url": icon.asset->url
+            }
+          }
+        },
+        _type == "textColumns" => {
+          ...,
+          content[]{
+            ...,
+            _type == "image" => {
+              ...,
+              asset->{url}
+            }
+          }
+        },
+        _type == "collapsible" => {
+          ...,
+          content[]{
+            ...,
+            _type == "image" => {
+              ...,
+              asset->{url}
+            }
+          }
+        }
+      },
+      partsAfterContent[]->{
+        _id,
+        name,
+        title,
+        description[]{ ... },
+        image{
+          "url": asset->url,
+          alt
+        },
+        aspect,
+        imageURL,
+        buttons[]{
+          name,
+          url,
+          style
+        },
+        align,
+        layout
+      },
+      authors[]{
+        role,
+        note,
+        person->{name, image}
+      },
+      publishedDate,
+      categories,
+      originCountry
+    },
+    partsOnTopOfPage[]->{
+      _id,
+      name,
+      title,
+      description[]{ ... },
+      image{
+        "url": asset->url,
+        alt
+      },
+      aspect,
+      imageURL,
+      buttons[]{
+        name,
+        url,
+        style
+      },
+      align,
+      layout
+    },
+    partsBeforeSiteMap[]->{
+      _id,
+      name,
+      title,
+      description[]{ ... },
+      image{
+        "url": asset->url,
+        alt
+      },
+      aspect,
+      imageURL,
+      buttons[]{
+        name,
+        url,
+        style
+      },
+      align,
+      layout
+    },
+    partsOnBottomOfPage[]->{
+      _id,
+      name,
+      title,
+      description[]{ ... },
+      image{
+        "url": asset->url,
+        alt
+      },
+      aspect,
+      imageURL,
+      buttons[]{
+        name,
+        url,
+        style
+      },
+      align,
+      layout
+    },
     seo{
       titleTemplate,
       description,

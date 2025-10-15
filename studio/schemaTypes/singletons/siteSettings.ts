@@ -51,6 +51,42 @@ export const siteSettings = defineType({
             validation: R => R.required().uri({ allowRelative: false, scheme: ["http", "https"] }),
         }),
 
+        // Homepage
+        defineField({
+            name: 'homepagePages',
+            title: 'Homepage Pages',
+            type: 'array',
+            of: [{
+                type: 'reference',
+                to: [{ type: 'page' }]
+            }],
+            description: 'Select pages to display on the homepage (in order)'
+        }),
+
+        defineField({
+            name: "partsOnTopOfPage",
+            title: "Parts on Top of Page",
+            type: "array",
+            of: [{ type: 'reference', to: [{ type: 'part' }] }],
+            description: "Add part blocks to display at the top of the homepage",
+        }),
+
+        defineField({
+            name: "partsBeforeSiteMap",
+            title: "Parts Before SiteMap",
+            type: "array",
+            of: [{ type: 'reference', to: [{ type: 'part' }] }],
+            description: "Add part blocks to display before the sitemap",
+        }),
+
+        defineField({
+            name: "partsOnBottomOfPage",
+            title: "Parts on Bottom of Page",
+            type: "array",
+            of: [{ type: 'reference', to: [{ type: 'part' }] }],
+            description: "Add part blocks to display at the bottom of the homepage",
+        }),
+
         // SEO
         defineField({
             name: "seo",

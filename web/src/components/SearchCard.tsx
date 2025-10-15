@@ -4,7 +4,7 @@ import React from "react";
 interface SearchCardProps {
     link: string;
     label: string;
-    title: string;
+    title?: string;
 }
 
 export function SearchCard({ link, label, title }: SearchCardProps) {
@@ -15,7 +15,7 @@ export function SearchCard({ link, label, title }: SearchCardProps) {
                     <span className="text-blue-600 hover:underline">{link}</span>
                     <span className="text-sm text-gray-500">{label}</span>
                 </div>
-                <h1 className="text-2xl font-bold mb-2 text-left">{title}</h1>
+                {title && <h1 className="text-2xl font-bold mb-2 text-left">{title}</h1>}
             </div>
         </Link>
     );

@@ -33,5 +33,13 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     siteSettingsCache = siteSettings;
     cacheTimestamp = now;
 
-    return siteSettings ?? { siteName: "", baseUrl: "", socials: [] };
+    return siteSettings ?? {
+        siteName: "",
+        baseUrl: "",
+        homepagePages: [],
+        partsOnTopOfPage: [],
+        partsBeforeSiteMap: [],
+        partsOnBottomOfPage: [],
+        socials: []
+    };
 }
