@@ -22,6 +22,19 @@ export interface PTImageGalleryBlock {
     }>;
 }
 
+export interface PTImageListBlock {
+    _type: "imageList";
+    title?: string;
+    description?: PortableTextBlock[];
+    highlight?: boolean;
+    items: Array<{
+        icon: { url: string };
+        title: string;
+        description?: PortableTextBlock[];
+        link?: string;
+    }>;
+}
+
 export interface PTTextColumnsBlock {
     _type: "textColumns";
     cols?: number;

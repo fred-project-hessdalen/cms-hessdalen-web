@@ -95,6 +95,7 @@ export const personType = defineType({
                 { type: "block" }, // rich text
                 { type: 'imageBlock' },
                 { type: 'imageGallery' },
+                { type: 'imageList' },
                 { type: 'textColumns' },
                 { type: 'callout' },
                 { type: 'collapsible' },

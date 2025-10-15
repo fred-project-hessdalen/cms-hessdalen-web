@@ -40,6 +40,7 @@ export const SITE_SETTINGS = z.object({
   logoDark: z.preprocess(v => v == null ? undefined : v, z.string().url().optional()),
   favicon: z.string().url().optional(),
   ogImage: z.string().url().optional(),
+  notFoundImage: z.preprocess(v => v == null ? undefined : v, z.string().url().optional()),
   baseUrl: z.string(),
   seo: z.object({
     titleTemplate: z.string().optional(),
@@ -63,6 +64,7 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
     "logoDark": logoDark.asset->url,
     "favicon": favicon.asset->url,
     "ogImage": ogImage.asset->url,
+    "notFoundImage": notFoundImage.asset->url,
     baseUrl,
     seo{
       titleTemplate,

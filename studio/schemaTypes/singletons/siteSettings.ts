@@ -35,6 +35,13 @@ export const siteSettings = defineType({
             options: { hotspot: true },
             description: "Fallback Open Graph image for pages without their own",
         }),
+        defineField({
+            name: "notFoundImage",
+            title: "404 Not Found Image",
+            type: "image",
+            options: { hotspot: true },
+            description: "Image displayed on 404 error pages",
+        }),
 
         defineField({
             name: "baseUrl",

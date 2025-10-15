@@ -2,7 +2,7 @@ import { PortableText, PortableTextComponents } from "next-sanity";
 import type { PortableTextBlock } from "sanity";
 import Image from "next/image";
 import Link from "next/link";
-import type { PTImageBlock, PTImageGalleryBlock, PTTextColumnsBlock, PTCalloutBlock, PTYouTubeBlock, PTCollapsibleBlock } from "@/lib/sanity/portableTextTypes";
+import type { PTImageBlock, PTImageGalleryBlock, PTImageListBlock, PTTextColumnsBlock, PTCalloutBlock, PTYouTubeBlock, PTCollapsibleBlock } from "@/lib/sanity/portableTextTypes";
 import { getYouTubeVideoId } from "@/lib/youtubeHelper";
 import { CollapsibleSection } from "./CollapsibleSection";
 
@@ -250,6 +250,83 @@ const portableTextComponents: PortableTextComponents = {
                 </div>
             );
         },
+        imageList: ({ value }: { value: PTImageListBlock }) => {
+            // Determine background color based on highlight prop
+            const bgClass = value?.highlight
+                ? "bg-gray-200 dark:bg-gray-700"  // More prominent when highlighted
+                : "bg-gray-50 dark:bg-gray-900";   // Subtle when not highlighted
+
+            return (
+                <div className={`relative left-1/2 right-1/2 -mx-[50vw] w-screen ${bgClass} pt-1 pb-12`}>
+                    <div className="mx-auto max-w-screen-xl px-4">
+                        {value?.title && (
+                            <h3 className="text-2xl font-semibold mb-2">{value.title}</h3>
+                        )}
+                        {value?.description && (
+                            <div className="text-base mb-6 prose prose-zinc dark:prose-invert max-w-none">
+                                <PortableText value={value.description} />
+                            </div>
+                        )}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 auto-rows-fr">
+                            {value?.items?.map((item, i) => {
+                                const iconUrl = item?.icon?.url ?? null;
+                                if (!iconUrl) return null;
+
+                                const iconElement = (
+                                    <Image
+                                        src={iconUrl}
+                                        alt={item?.title || ""}
+                                        width={120}
+                                        height={120}
+                                        className="w-30 h-30 object-cover rounded"
+                                    />
+                                );
+
+                                return (
+                                    <div key={i} className="h-full">
+                                        <div className="flex flex-col h-full gap-4 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+                                            <div className="flex gap-4 items-start">
+                                                <div className="flex-shrink-0">
+                                                    {item?.link ? (
+                                                        item.link.includes("://") ? (
+                                                            <a
+                                                                href={item.link}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="block no-underline hover:opacity-80 transition-opacity"
+                                                            >
+                                                                {iconElement}
+                                                            </a>
+                                                        ) : (
+                                                            <Link
+                                                                href={item.link}
+                                                                className="block no-underline hover:opacity-80 transition-opacity"
+                                                            >
+                                                                {iconElement}
+                                                            </Link>
+                                                        )
+                                                    ) : (
+                                                        iconElement
+                                                    )}
+                                                </div>
+                                                <div className="flex-1">
+                                                    <h4 className="font-semibold text-lg">{item.title}</h4>
+                                                    {item?.description && (
+                                                        <div className="text-sm text-gray-600 dark:text-gray-400 mt-1 prose prose-sm dark:prose-invert max-w-none">
+                                                            <PortableText value={item.description} />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+            );
+        },
         textColumns: ({ value }: { value: PTTextColumnsBlock }) => {
             const count = value?.cols ?? value?.columns ?? 2;
             const mdCols = count === 4 ? "md:columns-4" : count === 3 ? "md:columns-3" : count === 2 ? "md:columns-2" : "md:columns-1";
@@ -262,7 +339,7 @@ const portableTextComponents: PortableTextComponents = {
                         const width = 1600;
                         const height = 900;
                         return (
-                            <figure className="my-4 w-full">
+                            <figure className="!my-0 w-full">
                                 <Image
                                     src={url}
                                     alt={value?.alt || "Article image"}
@@ -279,12 +356,12 @@ const portableTextComponents: PortableTextComponents = {
                     },
                 },
                 block: {
-                    h1: ({ children }) => <h1 className="text-3xl font-bold mt-0 mb-2  md:break-before-column md:first:break-before-auto">{children}</h1>,
-                    h2: ({ children }) => <h2 className="text-2xl font-semibold mt-0 mb-2">{children}</h2>,
-                    h3: ({ children }) => <h3 className="text-xl font-semibold mt-0 mb-2">{children}</h3>,
-                    h4: ({ children }) => <h4 className="text-lg font-semibold mt-0 mb-2">{children}</h4>,
+                    h1: ({ children }) => <h1 className="text-2xl font-bold mt-0 mb-1  md:break-before-column md:first:break-before-auto">{children}</h1>,
+                    h2: ({ children }) => <h2 className="text-xl font-semibold mt-0 mb-1">{children}</h2>,
+                    h3: ({ children }) => <h3 className="text-lg font-semibold mt-0 mb-1">{children}</h3>,
+                    h4: ({ children }) => <h4 className="text-lg font-semibold mt-0 mb-1">{children}</h4>,
                     blockquote: ({ children }) => <blockquote className="border-l-4 pl-4 italic text-gray-600 dark:text-gray-300 my-4">{children}</blockquote>,
-                    normal: ({ children }) => <div className="mb-4">{children}</div>,
+                    normal: ({ children }) => <div className="my-2">{children}</div>,
                 },
                 marks: {
                     code: ({ children }) => (
@@ -294,8 +371,8 @@ const portableTextComponents: PortableTextComponents = {
                     ),
                 },
                 list: {
-                    bullet: ({ children }) => <ul className="list-disc ml-6 mb-4">{children}</ul>,
-                    number: ({ children }) => <ol className="list-decimal ml-6 mb-4">{children}</ol>,
+                    bullet: ({ children }) => <ul className="list-disc ml-6 mb-2">{children}</ul>,
+                    number: ({ children }) => <ol className="list-decimal ml-6 mb-2">{children}</ol>,
                 },
                 listItem: {
                     bullet: ({ children }) => <li className="mb-1">{children}</li>,

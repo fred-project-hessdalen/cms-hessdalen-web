@@ -40,6 +40,19 @@ const PAGE_FIELDS = `
       credit,
       link
     },
+    _type == "imageList" => {
+      ...,
+      description[]{ ... },
+      highlight,
+      items[]{
+        title,
+        description[]{ ... },
+        link,
+        "icon": {
+          "url": icon.asset->url
+        }
+      }
+    },
     _type == "textColumns" => {
       ...,
       content[]{
