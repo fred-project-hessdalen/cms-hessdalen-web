@@ -12,6 +12,7 @@ export interface PTImageBlock {
 export interface PTImageGalleryBlock {
     _type: "imageGallery";
     columns?: number;
+    aspect?: "video" | "square";
     images: Array<{
         asset: { url: string };
         alt?: string;

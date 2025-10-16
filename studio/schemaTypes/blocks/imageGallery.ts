@@ -25,6 +25,20 @@ export const imageGallery = defineType({
             validation: (Rule) => Rule.required(),
         }),
         defineField({
+            name: 'aspect',
+            title: 'Image Aspect Ratio',
+            type: 'string',
+            options: {
+                list: [
+                    { title: 'Video (16:9)', value: 'video' },
+                    { title: 'Square (1:1)', value: 'square' },
+                ],
+                layout: 'radio',
+            },
+            initialValue: 'video',
+            description: 'Choose the aspect ratio for the image',
+        }),
+        defineField({
             name: 'images',
             title: 'Images',
             type: 'array',

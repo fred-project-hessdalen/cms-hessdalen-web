@@ -180,6 +180,10 @@ const portableTextComponents: PortableTextComponents = {
                 6: "grid grid-cols-2 gap-4 md:grid-cols-6",
             };
             const gridCols = gridColsMap[cols] || gridColsMap[3];
+
+            // Determine aspect ratio
+            const aspectRatio = value?.aspect === 'square' ? '1 / 1' : '16 / 9';
+
             return (
                 <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-gray-200 dark:bg-gray-600 py-12">
                     <div className="mx-auto max-w-screen-2xl px-12">
@@ -190,7 +194,7 @@ const portableTextComponents: PortableTextComponents = {
 
                                 const imageElement = (
                                     <div className="flex flex-col">
-                                        <figure className="overflow-hidden !m-0 !p-0 rounded-lg" style={{ aspectRatio: "16 / 9" }}>
+                                        <figure className="overflow-hidden !m-0 !p-0 rounded-lg" style={{ aspectRatio }}>
                                             <Image
                                                 src={url}
                                                 alt={img?.alt || ""}
