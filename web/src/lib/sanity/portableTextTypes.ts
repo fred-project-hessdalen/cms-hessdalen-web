@@ -12,7 +12,7 @@ export interface PTImageBlock {
 export interface PTImageGalleryBlock {
     _type: "imageGallery";
     columns?: number;
-    aspect?: "video" | "square";
+    aspect?: "video" | "portrait" | "square";
     images: Array<{
         asset: { url: string };
         alt?: string;
@@ -28,11 +28,38 @@ export interface PTImageListBlock {
     title?: string;
     description?: PortableTextBlock[];
     highlight?: boolean;
+    aspect?: "video" | "portrait" | "square";
     items: Array<{
         icon: { url: string };
         title: string;
         description?: PortableTextBlock[];
         link?: string;
+    }>;
+}
+
+export interface PTPartsListBlock {
+    _type: "partsList";
+    title?: string;
+    description?: PortableTextBlock[];
+    highlight?: boolean;
+    items: Array<{
+        _id: string;
+        name: string;
+        title?: string;
+        description: PortableTextBlock[];
+        image?: {
+            url?: string;
+            alt?: string;
+        } | null;
+        aspect: 'video' | 'portrait' | 'square';
+        imageURL?: string;
+        buttons: Array<{
+            name: string;
+            url: string;
+            style?: 'default' | 'highlight' | 'text-only';
+        }>;
+        align?: 'left' | 'center' | 'right';
+        layout?: 'plain' | 'framed' | 'featured' | 'card';
     }>;
 }
 

@@ -38,14 +38,6 @@ export default async function IndexPage() {
       ...p,
       summary: p.summary as PortableTextBlock[],
       body: p.body as PortableTextBlock[],
-      partsBeforeContent: ((p.partsBeforeContent ?? []) as Record<string, unknown>[]).map((part) => ({
-        ...part,
-        description: part.description as PortableTextBlock[],
-      })),
-      partsAfterContent: ((p.partsAfterContent ?? []) as Record<string, unknown>[]).map((part) => ({
-        ...part,
-        description: part.description as PortableTextBlock[],
-      })),
     } as PageType;
   });
 
@@ -58,7 +50,7 @@ export default async function IndexPage() {
       title: p.title as string | undefined,
       description: p.description as PortableTextBlock[],
       image: p.image as { url?: string; alt?: string } | null | undefined,
-      aspect: (p.aspect as 'video' | 'square') || 'video',
+      aspect: (p.aspect as 'video' | 'portrait' | 'square') || 'video',
       imageURL: p.imageURL as string | undefined,
       buttons: ((p.buttons as unknown[]) ?? []).map((btn: unknown) => {
         const b = btn as Record<string, unknown>;

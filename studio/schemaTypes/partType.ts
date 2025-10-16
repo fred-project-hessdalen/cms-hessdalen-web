@@ -24,6 +24,7 @@ export const partType = defineType({
             title: 'Description',
             type: 'array',
             of: [{ type: 'block' }],
+            description: 'Optional description to display on the website',
         }),
         defineField({
             name: 'image',

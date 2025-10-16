@@ -139,13 +139,6 @@ export const pageType = defineType({
         })
         ,
         defineField({
-            name: "partsBeforeContent",
-            title: "Parts Before Content",
-            type: "array",
-            of: [{ type: 'reference', to: [{ type: 'part' }] }],
-            description: "Add part blocks to display before the main content",
-        }),
-        defineField({
             name: "body",
             title: "Article Content",
             type: "array",
@@ -154,20 +147,13 @@ export const pageType = defineType({
                 { type: 'imageBlock' },
                 { type: 'imageGallery' },
                 { type: 'imageList' },
+                { type: 'partsList' },
                 { type: 'textColumns' },
                 { type: 'callout' },
                 { type: 'collapsible' },
                 { type: 'youtubeVideo' },
             ],
         }),
-        defineField({
-            name: "partsAfterContent",
-            title: "Parts After Content",
-            type: "array",
-            of: [{ type: 'reference', to: [{ type: 'part' }] }],
-            description: "Add part blocks to display after the main content",
-        }),
-
 
         // Multiple authors
         defineField({

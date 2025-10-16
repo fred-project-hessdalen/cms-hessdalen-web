@@ -27,6 +27,22 @@ export const imageList = defineType({
             initialValue: false,
         }),
         defineField({
+            name: 'aspect',
+            title: 'Image Aspect Ratio',
+            type: 'string',
+            options: {
+                list: [
+                    { title: 'Video (16:9)', value: 'video' },
+                    { title: 'Portrait (9:16)', value: 'portrait' },
+                    { title: 'Square (1:1)', value: 'square' },
+                ],
+                layout: 'radio',
+            },
+            initialValue: 'square',
+            description: 'Choose the aspect ratio for the image',
+        }),
+
+        defineField({
             name: 'items',
             title: 'List Items',
             type: 'array',
@@ -79,11 +95,12 @@ export const imageList = defineType({
     preview: {
         select: {
             title: 'title',
-            n: 'items.length',
+            highlight: 'highlight',
+            aspect: 'aspect',
         },
-        prepare: ({ title, n = 0 }) => ({
-            title: title || 'Image List',
-            subtitle: `${n} item${n === 1 ? '' : 's'}`,
+        prepare: ({ title, highlight, aspect }) => ({
+            title: 'Image List: ' + (title || 'Untitled'),
+            subtitle: `${highlight ? 'Highlighted' : 'Normal'} • ${aspect || 'square'}`,
         }),
     },
 })

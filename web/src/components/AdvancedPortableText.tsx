@@ -2,9 +2,10 @@ import { PortableText, PortableTextComponents } from "next-sanity";
 import type { PortableTextBlock } from "sanity";
 import Image from "next/image";
 import Link from "next/link";
-import type { PTImageBlock, PTImageGalleryBlock, PTImageListBlock, PTTextColumnsBlock, PTCalloutBlock, PTYouTubeBlock, PTCollapsibleBlock } from "@/lib/sanity/portableTextTypes";
+import type { PTImageBlock, PTImageGalleryBlock, PTImageListBlock, PTPartsListBlock, PTTextColumnsBlock, PTCalloutBlock, PTYouTubeBlock, PTCollapsibleBlock } from "@/lib/sanity/portableTextTypes";
 import { getYouTubeVideoId } from "@/lib/youtubeHelper";
 import { CollapsibleSection } from "./CollapsibleSection";
+import { PartsGrid } from "./PartsGrid";
 
 
 const portableTextComponents: PortableTextComponents = {
@@ -181,8 +182,11 @@ const portableTextComponents: PortableTextComponents = {
             };
             const gridCols = gridColsMap[cols] || gridColsMap[3];
 
-            // Determine aspect ratio
-            const aspectRatio = value?.aspect === 'square' ? '1 / 1' : '16 / 9';
+            // Determine aspect ratio (default: video)
+            const aspect = value?.aspect || 'video';
+            let aspectRatio = '16 / 9'; // video
+            if (aspect === 'square') aspectRatio = '1 / 1';
+            if (aspect === 'portrait') aspectRatio = '9 / 16';
 
             return (
                 <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-gray-200 dark:bg-gray-600 py-12">
@@ -260,6 +264,12 @@ const portableTextComponents: PortableTextComponents = {
                 ? "bg-gray-200 dark:bg-gray-700"  // More prominent when highlighted
                 : "bg-gray-50 dark:bg-gray-900";   // Subtle when not highlighted
 
+            // Determine aspect ratio for icons (default: square)
+            const aspect = value?.aspect || 'square';
+            let aspectRatio = '1 / 1'; // square
+            if (aspect === 'video') aspectRatio = '16 / 9';
+            if (aspect === 'portrait') aspectRatio = '9 / 16';
+
             return (
                 <div className={`relative left-1/2 right-1/2 -mx-[50vw] w-screen ${bgClass} pt-1 pb-12`}>
                     <div className="mx-auto max-w-screen-xl px-4">
@@ -283,6 +293,7 @@ const portableTextComponents: PortableTextComponents = {
                                         width={120}
                                         height={120}
                                         className="w-30 h-30 object-cover rounded"
+                                        style={{ aspectRatio }}
                                     />
                                 );
 
@@ -328,6 +339,36 @@ const portableTextComponents: PortableTextComponents = {
                             })}
                         </div>
                     </div>
+                </div>
+            );
+        },
+        partsList: ({ value }: { value: PTPartsListBlock }) => {
+            // Determine background color based on highlight prop
+            const bgClass = value?.highlight
+                ? "bg-gray-200 dark:bg-gray-700"  // More prominent when highlighted
+                : "bg-gray-50 dark:bg-gray-900";   // Subtle when not highlighted
+
+            // Convert PTPartsListBlock items to PartsGrid format
+            const parts = (value?.items ?? []).map((part) => ({
+                ...part,
+                description: part.description as unknown as PortableTextBlock[],
+            }));
+
+            return (
+                <div className={`not-prose relative left-1/2 right-1/2 -mx-[50vw] w-screen ${bgClass} pt-4 pb-12`}>
+                    {(value?.title || value?.description) && (
+                        <div className="mx-auto max-w-screen-xl px-4 mb-8">
+                            {value?.title && (
+                                <h3 className="text-2xl font-semibold mb-2">{value.title}</h3>
+                            )}
+                            {value?.description && (
+                                <div className="text-base prose prose-zinc dark:prose-invert max-w-none">
+                                    <PortableText value={value.description} />
+                                </div>
+                            )}
+                        </div>
+                    )}
+                    <PartsGrid parts={parts} />
                 </div>
             );
         },

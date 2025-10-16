@@ -38,6 +38,7 @@ const PEOPLE_FIELDS = `
       ...,
       description[]{ ... },
       highlight,
+      aspect,
       items[]{
         title,
         description[]{ ... },
@@ -45,6 +46,30 @@ const PEOPLE_FIELDS = `
         "icon": {
           "url": icon.asset->url
         }
+      }
+    },
+    _type == "partsList" => {
+      ...,
+      description[]{ ... },
+      highlight,
+      items[]->{
+        _id,
+        name,
+        title,
+        description[]{ ... },
+        "image": {
+          "url": image.asset->url,
+          "alt": image.alt
+        },
+        aspect,
+        imageURL,
+        buttons[]{
+          name,
+          url,
+          style
+        },
+        align,
+        layout
       }
     },
     _type == "textColumns" => {

@@ -31,6 +31,7 @@ export const imageGallery = defineType({
             options: {
                 list: [
                     { title: 'Video (16:9)', value: 'video' },
+                    { title: 'Portrait (9:16)', value: 'portrait' },
                     { title: 'Square (1:1)', value: 'square' },
                 ],
                 layout: 'radio',

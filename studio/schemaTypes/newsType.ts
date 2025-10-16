@@ -84,6 +84,7 @@ export const newsType = defineType({
                 { type: 'imageBlock' },
                 { type: 'imageGallery' },
                 { type: 'imageList' },
+                { type: 'partsList' },
                 { type: 'textColumns' },
                 { type: 'callout' },
                 { type: 'collapsible' },

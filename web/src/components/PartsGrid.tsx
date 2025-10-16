@@ -10,7 +10,7 @@ interface PartType {
         url?: string;
         alt?: string;
     } | null;
-    aspect: 'video' | 'square';
+    aspect: 'video' | 'portrait' | 'square';
     imageURL?: string;
     buttons: Array<{
         name: string;

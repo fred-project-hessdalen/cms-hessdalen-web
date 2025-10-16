@@ -26,25 +26,6 @@ const PAGE_FIELDS = `
     layout
   },
   summary[]{ ... },
-  partsBeforeContent[]->{
-    _id,
-    name,
-    title,
-    description[]{ ... },
-    image{
-      "url": asset->url,
-      alt
-    },
-    aspect,
-    imageURL,
-    buttons[]{
-      name,
-      url,
-      style
-    },
-    align,
-    layout
-  },
   body[]{
     ...,
     _type == "imageBlock" => {
@@ -64,6 +45,7 @@ const PAGE_FIELDS = `
       ...,
       description[]{ ... },
       highlight,
+      aspect,
       items[]{
         title,
         description[]{ ... },
@@ -71,6 +53,30 @@ const PAGE_FIELDS = `
         "icon": {
           "url": icon.asset->url
         }
+      }
+    },
+    _type == "partsList" => {
+      ...,
+      description[]{ ... },
+      highlight,
+      items[]->{
+        _id,
+        name,
+        title,
+        description[]{ ... },
+        "image": {
+          "url": image.asset->url,
+          "alt": image.alt
+        },
+        aspect,
+        imageURL,
+        buttons[]{
+          name,
+          url,
+          style
+        },
+        align,
+        layout
       }
     },
     _type == "textColumns" => {
@@ -93,25 +99,6 @@ const PAGE_FIELDS = `
         }
       }
     }
-  },
-  partsAfterContent[]->{
-    _id,
-    name,
-    title,
-    description[]{ ... },
-    image{
-      "url": asset->url,
-      alt
-    },
-    aspect,
-    imageURL,
-    buttons[]{
-      name,
-      url,
-      style
-    },
-    align,
-    layout
   },
   authors[]{
     role,
@@ -162,28 +149,6 @@ const Author = z.object({
   }).optional(),
 });
 
-const PartButton = z.object({
-  name: z.string(),
-  url: z.string(),
-  style: z.enum(['default', 'highlight', 'text-only']).optional(),
-});
-
-const Part = z.object({
-  _id: z.string(),
-  name: z.string(),
-  title: zStrOpt,
-  description: zArray(z.any()),
-  image: z.object({
-    url: zUrlOpt,
-    alt: zStrOpt,
-  }).optional().nullable(),
-  aspect: z.preprocess(v => v ?? 'video', z.enum(['video', 'square'])),
-  imageURL: zStrOpt,
-  buttons: zArray(PartButton),
-  align: z.enum(['left', 'center', 'right']).optional(),
-  layout: z.enum(['plain', 'framed', 'featured', 'card']).optional(),
-});
-
 export const Page = z.object({
   _id: z.string(),
   _type: z.literal("page"),
@@ -193,9 +158,7 @@ export const Page = z.object({
   redirectTo: zStrOpt,
   mainImage: MainImage.optional().nullable(),
   summary: zArray(z.any()),
-  partsBeforeContent: zArray(Part),
   body: zArray(z.any()),
-  partsAfterContent: zArray(Part),
   authors: zArray(Author),
   publishedDate: zStrOpt,
   categories: zArray(z.string()),
@@ -203,47 +166,9 @@ export const Page = z.object({
 });
 
 
-export type PageType = Omit<z.infer<typeof Page>, "summary" | "body" | "partsBeforeContent" | "partsAfterContent"> & {
+export type PageType = Omit<z.infer<typeof Page>, "summary" | "body"> & {
   summary: PortableTextBlock[];
   body: PortableTextBlock[];
-  partsBeforeContent: Array<{
-    _id: string;
-    name: string;
-    title?: string;
-    description: PortableTextBlock[];
-    image?: {
-      url?: string;
-      alt?: string;
-    } | null;
-    aspect: 'video' | 'square';
-    imageURL?: string;
-    buttons: Array<{
-      name: string;
-      url: string;
-      style?: 'default' | 'highlight' | 'text-only';
-    }>;
-    align?: 'left' | 'center' | 'right';
-    layout?: 'plain' | 'framed' | 'featured' | 'card';
-  }>;
-  partsAfterContent: Array<{
-    _id: string;
-    name: string;
-    title?: string;
-    description: PortableTextBlock[];
-    image?: {
-      url?: string;
-      alt?: string;
-    } | null;
-    aspect: 'video' | 'square';
-    imageURL?: string;
-    buttons: Array<{
-      name: string;
-      url: string;
-      style?: 'default' | 'highlight' | 'text-only';
-    }>;
-    align?: 'left' | 'center' | 'right';
-    layout?: 'plain' | 'framed' | 'featured' | 'card';
-  }>;
 };
 
 

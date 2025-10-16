@@ -11,6 +11,7 @@ import { collapsible } from "./blocks/collapsible"
 import { credit } from "./blocks/credit"
 import { imageGallery } from "./blocks/imageGallery"
 import { imageList } from "./blocks/imageList"
+import { partsList } from "./blocks/partsList"
 import { textColumns } from "./blocks/textColumns"
 import { youtubeVideo } from "./blocks/youtubeVideo"
 import { socialLink } from "./objects/socialLink"
@@ -26,7 +27,7 @@ export const schemaTypes = [
     newsType,
     personType,
     partType,
-    imageBlock, textColumns, imageGallery, imageList, callout, collapsible, credit, youtubeVideo,
+    imageBlock, textColumns, imageGallery, imageList, partsList, callout, collapsible, credit, youtubeVideo,
     socialLink,
     siteSettings,
     siteMenu,

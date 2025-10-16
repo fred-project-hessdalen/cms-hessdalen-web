@@ -2,7 +2,6 @@ import Image from "next/image";
 import { PageType } from "@/lib/sanity/query/page.query";
 import { AdvancedPortableText } from "@/components/AdvancedPortableText";
 import { SimplePortableText } from "@/components/SimplePortableText";
-import { PartsGrid } from "@/components/PartsGrid";
 import { formatDateByLocale } from "@/lib/dateFunctions";
 
 interface PageRendererProps {
@@ -13,7 +12,6 @@ interface PageRendererProps {
     showMetadata?: boolean;
     showSummary?: boolean;
     showBody?: boolean;
-    showParts?: boolean;
 }
 
 export function PageRenderer({
@@ -24,7 +22,6 @@ export function PageRenderer({
     showMetadata = true,
     showSummary = true,
     showBody = true,
-    showParts = true,
 }: PageRendererProps) {
     return (
         <div className="bg-white dark:bg-gray-900 w-full">
@@ -89,11 +86,6 @@ export function PageRenderer({
                 )}
             </div>
 
-            {/* Parts Before Content */}
-            {showParts && page.partsBeforeContent && page.partsBeforeContent.length > 0 && (
-                <PartsGrid parts={page.partsBeforeContent} />
-            )}
-
             {/* Body Content */}
             {showBody && page.body && page.body.length > 0 && (
                 <div className="bg-gray-100 dark:bg-gray-700 w-full px-4 pt-2 pb-8">
@@ -101,11 +93,6 @@ export function PageRenderer({
                         <AdvancedPortableText value={page.body} />
                     </div>
                 </div>
-            )}
-
-            {/* Parts After Content */}
-            {showParts && page.partsAfterContent && page.partsAfterContent.length > 0 && (
-                <PartsGrid parts={page.partsAfterContent} />
             )}
         </div>
     );

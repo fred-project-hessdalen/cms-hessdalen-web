@@ -83,25 +83,6 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
         layout
       },
       summary[]{ ... },
-      partsBeforeContent[]->{
-        _id,
-        name,
-        title,
-        description[]{ ... },
-        image{
-          "url": asset->url,
-          alt
-        },
-        aspect,
-        imageURL,
-        buttons[]{
-          name,
-          url,
-          style
-        },
-        align,
-        layout
-      },
       body[]{
         ...,
         _type == "imageBlock" => {
@@ -121,6 +102,7 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
           ...,
           description[]{ ... },
           highlight,
+          aspect,
           items[]{
             title,
             description[]{ ... },
@@ -128,6 +110,30 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
             "icon": {
               "url": icon.asset->url
             }
+          }
+        },
+        _type == "partsList" => {
+          ...,
+          description[]{ ... },
+          highlight,
+          items[]->{
+            _id,
+            name,
+            title,
+            description[]{ ... },
+            "image": {
+              "url": image.asset->url,
+              "alt": image.alt
+            },
+            aspect,
+            imageURL,
+            buttons[]{
+              name,
+              url,
+              style
+            },
+            align,
+            layout
           }
         },
         _type == "textColumns" => {
@@ -150,25 +156,6 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
             }
           }
         }
-      },
-      partsAfterContent[]->{
-        _id,
-        name,
-        title,
-        description[]{ ... },
-        image{
-          "url": asset->url,
-          alt
-        },
-        aspect,
-        imageURL,
-        buttons[]{
-          name,
-          url,
-          style
-        },
-        align,
-        layout
       },
       authors[]{
         role,

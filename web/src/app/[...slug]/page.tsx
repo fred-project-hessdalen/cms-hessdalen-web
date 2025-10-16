@@ -23,5 +23,9 @@ export default async function CatchAllPage(props: { params: { slug?: string[] } 
         }
     }
 
-    return <PageRenderer page={doc} />;
+    return (
+        <div className="flex flex-col gap-8">
+            <PageRenderer page={doc} />
+        </div>
+    );
 }

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { SimplePortableText } from "./SimplePortableText";
 import type { PortableTextBlock } from "sanity";
 
-interface PartProps {
+export interface PartProps {
     part: {
         _id: string;
         name: string;
@@ -13,7 +13,7 @@ interface PartProps {
             url?: string;
             alt?: string;
         } | null;
-        aspect: 'video' | 'square';
+        aspect: 'video' | 'portrait' | 'square';
         imageURL?: string;
         buttons: Array<{
             name: string;
@@ -41,6 +41,7 @@ export function Part({ part }: PartProps) {
 
     const aspectClass = {
         video: 'aspect-video',
+        portrait: 'aspect-[9/16]',
         square: 'aspect-square',
     }[part.aspect || 'video'];
 
@@ -55,28 +56,27 @@ export function Part({ part }: PartProps) {
         }
     };
 
-    const imageContent = part.image ? (
+    const imageContent = part.image?.url ? (
         <div className={`w-full ${aspectClass} relative overflow-hidden rounded-lg mb-2`}>
             <Image
-                src={part.image.url!}
+                src={part.image.url}
                 alt={part.image.alt || part.title || part.name}
                 fill
-                className="object-cover"
+                className="object-cover absolute inset-0"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
             />
-
         </div>
     ) : null;
 
     return (
         <div className={`w-full h-full ${layoutClass}`}>
-            <div className={`flex flex-col gap-2 h-full ${alignClass}`}>
+            <div className={`flex flex-col gap-2 ${alignClass}`}>
                 {/* Image */}
                 {imageContent}
 
                 {/* Title */}
                 {part.title && (
-                    <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                    <h2 className="!p-0 !m-0 text-lg font-bold text-gray-900 dark:text-gray-100">
                         {part.title}
                     </h2>
                 )}
