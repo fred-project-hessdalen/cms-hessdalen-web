@@ -158,12 +158,23 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
         }
       },
       authors[]{
-        role,
+        role->{
+          _id,
+          title,
+          "slug": slug.current,
+          category
+        },
         note,
         person->{name, image}
       },
       publishedDate,
-      categories,
+      categories[]->{
+        _id,
+        title,
+        "slug": slug.current,
+        description,
+        color
+      },
       originCountry
     },
     partsOnTopOfPage[]->{

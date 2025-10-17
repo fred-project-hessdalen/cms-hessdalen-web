@@ -4,6 +4,8 @@ import { eventType } from "./eventType"
 import { personType } from "./personType"
 import { partType } from "./partType"
 import { venueType } from "./venueType"
+import { categoryType } from "./categoryType"
+import { roleType } from "./roleType"
 // Importing custom block types
 import { imageBlock } from "./blocks/imageBlock"
 import { callout } from "./blocks/callout"
@@ -29,6 +31,8 @@ export const schemaTypes = [
     newsType,
     personType,
     partType,
+    categoryType,
+    roleType,
     imageBlock, textColumns, imageGallery, imageList, partsList, callout, collapsible, credit, youtubeVideo, googleSlidesEmbed, googleDocumentEmbed,
     socialLink,
     siteSettings,

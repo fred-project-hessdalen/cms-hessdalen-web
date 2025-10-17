@@ -1,5 +1,4 @@
 import { defineType, defineField } from "sanity";
-import { newsCategoryList } from "./lists/newsCategoryList";
 import { countryList } from "./lists/countryList";
 
 export const pageType = defineType({
@@ -181,10 +180,12 @@ export const pageType = defineType({
             name: "categories",
             title: "Article Categories",
             type: "array",
-            of: [{ type: "string" }],
-            options: {
-                list: newsCategoryList,
-            },
+            of: [
+                {
+                    type: "reference",
+                    to: [{ type: "category" }],
+                }
+            ],
         }),
 
         // Single origin country

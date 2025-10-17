@@ -2,6 +2,7 @@ import Image from "next/image";
 import { PageType } from "@/lib/sanity/query/page.query";
 import { AdvancedPortableText } from "@/components/AdvancedPortableText";
 import { SimplePortableText } from "@/components/SimplePortableText";
+import { CategoryList } from "@/components/CategoryList";
 import { formatDateByLocale } from "@/lib/dateFunctions";
 
 interface PageRendererProps {
@@ -45,10 +46,10 @@ export function PageRenderer({
                         <div className="mx-auto max-w-6xl py-0 flex flex-col gap-8 px-4">
                             <div
                                 className={`w-full ${page.mainImage.layout === 'banner' ||
-                                        page.mainImage.layout === 'banner-top' ||
-                                        page.mainImage.layout === 'banner-bottom'
-                                        ? 'aspect-[16/3]'
-                                        : 'aspect-[16/9]'
+                                    page.mainImage.layout === 'banner-top' ||
+                                    page.mainImage.layout === 'banner-bottom'
+                                    ? 'aspect-[16/3]'
+                                    : 'aspect-[16/9]'
                                     } relative mb-4 overflow-hidden rounded-b-xl`}
                             >
                                 <Image
@@ -84,7 +85,7 @@ export function PageRenderer({
                     <div className="text-sm text-gray-600 mb-1">
                         By {page.authors.map((author, idx) => (
                             <span key={idx} className="mr-2">
-                                {author.person?.name}{author.role ? ` (${author.role})` : ""}
+                                {author.person?.name}{author.role?.title ? ` (${author.role.title})` : ""}
                                 {idx < page.authors.length - 1 ? "," : ""}
                             </span>
                         ))}
@@ -92,9 +93,14 @@ export function PageRenderer({
                 )}
 
                 {/* Dates */}
-                {showMetadata && page.publishedDate && (
+                {showMetadata && (page.publishedDate || page.originCountry) && (
                     <div className="text-xs text-gray-500 mb-1">
-                        <span>Published: {formatDateByLocale(page.publishedDate)}</span>
+                        {page.publishedDate && (
+                            <span>Published: {formatDateByLocale(page.publishedDate)}</span>
+                        )}
+                        {page.originCountry && (
+                            <span className="ml-4">Country: {page.originCountry}</span>
+                        )}
                     </div>
                 )}
 
@@ -105,15 +111,10 @@ export function PageRenderer({
                     </div>
                 )}
 
-                {/* Categories & Country */}
-                {showMetadata && (page.categories?.length > 0 || page.originCountry) && (
-                    <div className="text-xs text-gray-500 mb-2">
-                        {page.categories && page.categories.length > 0 && (
-                            <span>Categories: {page.categories.join(", ")}</span>
-                        )}
-                        {page.originCountry && (
-                            <span className="ml-4">Country: {page.originCountry}</span>
-                        )}
+                {/* Categories */}
+                {showMetadata && page.categories?.length > 0 && (
+                    <div className="flex justify-center mb-2">
+                        <CategoryList categories={page.categories} />
                     </div>
                 )}
             </div>

@@ -101,12 +101,23 @@ const PAGE_FIELDS = `
     }
   },
   authors[]{
-    role,
+    role->{
+      _id,
+      title,
+      "slug": slug.current,
+      category
+    },
     note,
     person->{name, image}
   },
   publishedDate,
-  categories,
+  categories[]->{
+    _id,
+    title,
+    "slug": slug.current,
+    description,
+    color
+  },
   originCountry
 `;
 
@@ -127,6 +138,12 @@ export const PAGE_ALL_QUERY = defineQuery(`
     ${PAGE_FIELDS}
   }
 `);
+
+export const PAGE_BY_TAG_QUERY = `
+  *[_type == "page" && references(*[_type == "category" && slug.current == $tag][0]._id)] | order(publishedDate desc)[0...50] {
+    ${PAGE_FIELDS}
+  }
+`;
 /** ── Zod ──────────────────────────────────────────────────────────────── */
 
 const zStrOpt = z.preprocess(v => (v ?? undefined), z.string().optional());
@@ -141,7 +158,15 @@ const MainImage = z.object({
 });
 
 const Author = z.object({
-  role: zStrOpt,
+  role: z.preprocess(
+    (val) => val ?? undefined,
+    z.object({
+      _id: z.string(),
+      title: z.string(),
+      slug: z.string(),
+      category: zStrOpt,
+    }).optional()
+  ),
   note: zStrOpt.optional(),
   person: z.object({
     name: zStrOpt,
@@ -161,7 +186,16 @@ export const Page = z.object({
   body: zArray(z.any()),
   authors: zArray(Author),
   publishedDate: zStrOpt,
-  categories: zArray(z.string()),
+  categories: z.preprocess(
+    (val) => Array.isArray(val) ? val.filter(Boolean) : [],
+    zArray(z.object({
+      _id: z.string(),
+      title: z.string(),
+      slug: z.string(),
+      description: zStrOpt,
+      color: zStrOpt,
+    }))
+  ),
   originCountry: zStrOpt,
 });
 

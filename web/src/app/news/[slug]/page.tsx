@@ -10,6 +10,7 @@ import {
 import { NewsCard } from "@/components/NewsCard";
 import { AdvancedPortableText } from "@/components/AdvancedPortableText";
 import { SimplePortableText } from "@/components/SimplePortableText";
+import { CategoryList } from "@/components/CategoryList";
 import { formatDateByLocale } from "@/lib/dateFunctions";
 
 export default async function NewsDetailPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -42,7 +43,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
                                 <div className="text-sm text-gray-600 mb-2">
                                     By {news.authors.map((author, idx) => (
                                         <span key={idx} className="mr-2">
-                                            {author.person?.name}{author.role ? ` (${author.role})` : ""}
+                                            {author.person?.name}{author.role?.title ? ` (${author.role.title})` : ""}
                                             {idx < news.authors.length - 1 ? "," : ""}
                                         </span>
                                     ))}
@@ -55,6 +56,9 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
                                 )}
                                 {news.originalPublishedDate && (
                                     <span className="ml-4">Original: {formatDateByLocale(news.originalPublishedDate)}</span>
+                                )}
+                                {news.originCountry && (
+                                    <span className="ml-4">Country: {news.originCountry}</span>
                                 )}
                             </div>
 
@@ -76,12 +80,9 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
                                 </div>
                             )}
                             {/* Categories & Country */}
-                            <div className="text-xs text-gray-500 mb-2">
+                            <div className="flex justify-center mb-2">
                                 {news.categories && news.categories.length > 0 && (
-                                    <span>Categories: {news.categories.join(", ")}</span>
-                                )}
-                                {news.originCountry && (
-                                    <span className="ml-4">Country: {news.originCountry}</span>
+                                    <CategoryList categories={news.categories} />
                                 )}
                             </div>
                         </div>

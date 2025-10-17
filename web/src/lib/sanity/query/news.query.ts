@@ -91,13 +91,24 @@ const NEWS_FIELDS = `
     }
   },
   authors[]{
-    role,
+    role->{
+      _id,
+      title,
+      "slug": slug.current,
+      category
+    },
     note,
     person->{name, image}
   },
   originalPublishedDate,
   publishedHereDate,
-  categories,
+  categories[]->{
+    _id,
+    title,
+    "slug": slug.current,
+    description,
+    color
+  },
   originCountry
 `;
 
@@ -126,6 +137,12 @@ export const NEWS_SEARCH_QUERY = defineQuery(`
     ${NEWS_FIELDS}
   }
 `);
+
+export const NEWS_BY_TAG_QUERY = `
+  *[_type == "news" && references(*[_type == "category" && slug.current == $tag][0]._id)] | order(publishedHereDate desc)[0...50] {
+    ${NEWS_FIELDS}
+  }
+`;
 /** ── Zod ──────────────────────────────────────────────────────────────── */
 
 const zStrOpt = z.preprocess(v => (v ?? undefined), z.string().optional());
@@ -141,7 +158,15 @@ const MainImage = z.object({
 
 // Author (credit object)
 const Author = z.object({
-  role: zStrOpt,
+  role: z.preprocess(
+    (val) => val ?? undefined,
+    z.object({
+      _id: z.string(),
+      title: z.string(),
+      slug: z.string(),
+      category: zStrOpt,
+    }).optional()
+  ),
   note: zStrOpt.optional(),
   person: z.object({
     name: zStrOpt,
@@ -161,7 +186,16 @@ export const News = z.object({
   authors: zArray(Author),
   originalPublishedDate: zStrOpt,
   publishedHereDate: zStrOpt,
-  categories: zArray(z.string()),
+  categories: z.preprocess(
+    (val) => Array.isArray(val) ? val.filter(Boolean) : [],
+    zArray(z.object({
+      _id: z.string(),
+      title: z.string(),
+      slug: z.string(),
+      description: zStrOpt,
+      color: zStrOpt,
+    }))
+  ),
   originCountry: zStrOpt,
 });
 
