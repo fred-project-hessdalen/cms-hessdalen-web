@@ -76,7 +76,27 @@ export default async function RootLayout({
   const siteSettings: SiteSettings = await getSiteSettings();
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme') || 'auto';
+                  var isDark = theme === 'dark' || 
+                    (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                  if (isDark) {
+                    document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body
         className={`${varela.className} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
@@ -95,8 +115,8 @@ export default async function RootLayout({
 
         <SiteNavigation />
 
-        <div className="sm:block px-4 py-1 text-center w-full bg-gray-50">
-          <p className="text-xs text-gray-400">{siteSettings.tagline}</p>
+        <div className="sm:block px-4 py-1 text-center w-full bg-gray-50 dark:bg-gray-800">
+          <p className="text-xs text-gray-400 dark:text-gray-500">{siteSettings.tagline}</p>
         </div>
         <SanityLive />
 
