@@ -7,7 +7,7 @@ export default function StatusPage() {
     async function handleInvalidate(e: React.FormEvent) {
         e.preventDefault();
         setStatus("Invalidating...");
-        const res = await fetch("/api/incalidate-cache", { method: "POST" });
+        const res = await fetch("/api/invalidate-cache", { method: "POST" });
         if (res.ok) {
             setStatus("Cache invalidated!");
         } else {

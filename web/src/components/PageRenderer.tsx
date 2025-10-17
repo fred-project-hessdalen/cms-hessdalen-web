@@ -27,24 +27,56 @@ export function PageRenderer({
         <div className="bg-white dark:bg-gray-900 w-full">
             {/* Main Image */}
             {showMainImage && page.mainImage?.asset?.url && (
-                <div className="mx-auto max-w-6xl py-0 flex flex-col gap-8 px-4">
-                    <div className={`w-full ${page.mainImage.layout === "banner" ? "aspect-[16/3]" : "aspect-[16/9]"} relative mb-4 overflow-hidden rounded-b-xl`}>
-                        <Image
-                            src={page.mainImage.asset.url}
-                            alt={page.mainImage.alt || page.title || "Page image"}
-                            fill
-                            className="object-cover"
-                            sizes="100vw"
-                        />
-                    </div>
-                </div>
+                <>
+                    {page.mainImage.layout === 'original' ? (
+                        // Original layout - display as is (no aspect ratio constraint)
+                        <div className="mx-auto max-w-6xl py-0 flex flex-col gap-8 px-4">
+                            <figure className="max-w-fit mx-auto">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                    src={page.mainImage.asset.url}
+                                    alt={page.mainImage.alt || page.title || "Page image"}
+                                    className="max-w-full h-auto rounded-xl"
+                                />
+                            </figure>
+                        </div>
+                    ) : (
+                        // Standard and Banner layouts with aspect ratio
+                        <div className="mx-auto max-w-6xl py-0 flex flex-col gap-8 px-4">
+                            <div
+                                className={`w-full ${page.mainImage.layout === 'banner' ||
+                                        page.mainImage.layout === 'banner-top' ||
+                                        page.mainImage.layout === 'banner-bottom'
+                                        ? 'aspect-[16/3]'
+                                        : 'aspect-[16/9]'
+                                    } relative mb-4 overflow-hidden rounded-b-xl`}
+                            >
+                                <Image
+                                    src={page.mainImage.asset.url}
+                                    alt={page.mainImage.alt || page.title || "Page image"}
+                                    fill
+                                    className="object-cover"
+                                    style={{
+                                        objectPosition:
+                                            page.mainImage.layout === 'banner-top'
+                                                ? 'top'
+                                                : page.mainImage.layout === 'banner-bottom'
+                                                    ? 'bottom'
+                                                    : 'center',
+                                    }}
+                                    sizes="100vw"
+                                />
+                            </div>
+                        </div>
+                    )}
+                </>
             )}
 
             {/* Header Section */}
             <div className="mx-auto max-w-3xl py-0 flex flex-col gap-1 px-4 text-center">
                 {/* Title */}
                 {showTitle && page.title && (
-                    <h1 className="text-3xl font-semibold mt-4 mb-2">{page.title}</h1>
+                    <h1 className="text-5xl font-semibold mt-4 mb-2">{page.title}</h1>
                 )}
 
                 {/* Authors */}

@@ -6,6 +6,8 @@ export interface PTImageBlock {
     alt?: string;
     caption?: string;
     layout?: "standard" | "banner" | "banner-top" | "banner-bottom" | "original";
+    align?: "left" | "center" | "right";
+    width?: "column" | "full" | "screen";
     link?: string;
 }
 

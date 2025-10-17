@@ -102,11 +102,14 @@ export const pageType = defineType({
                     type: "string",
                     options: {
                         list: [
-                            { title: "Standard (1600×900)", value: "standard" },
-                            { title: "Banner (1600×300)", value: "banner" },
+                            { title: "Standard (16:9)", value: "standard" },
+                            { title: "Banner (16:3) - Top", value: "banner-top" },
+                            { title: "Banner (16:3) - Middle", value: "banner" },
+                            { title: "Banner (16:3) - Bottom", value: "banner-bottom" },
+                            { title: "Original (As Is)", value: "original" },
                         ],
                         layout: "radio",
-                        isHighlighted: true,
+                        direction: "vertical",
                     },
                     initialValue: "standard",
                 },

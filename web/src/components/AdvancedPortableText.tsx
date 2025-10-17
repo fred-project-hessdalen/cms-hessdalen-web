@@ -77,9 +77,36 @@ const portableTextComponents: PortableTextComponents = {
 
             // Original layout - display as is (no aspect ratio constraint, no upscaling)
             if (layout === "original") {
+                const align = value?.align ?? "left";
+                const width = value?.width ?? "column";
+
+                // Alignment classes
+                const alignClasses = {
+                    left: "mr-auto",
+                    center: "mx-auto",
+                    right: "ml-auto",
+                };
+                const alignClass = alignClasses[align] || alignClasses.left;
+
+                // Width classes (only apply when centered)
+                const isCenter = align === "center";
+                let containerClass = "";
+
+                if (isCenter) {
+                    if (width === "screen") {
+                        // Full screen width - break out of prose container
+                        containerClass = "relative left-1/2 right-1/2 -mx-[50vw] w-screen";
+                    } else if (width === "full") {
+                        // Breakout to max-w-screen-2xl
+                        containerClass = "relative left-1/2 right-1/2 -mx-[50vw] w-screen";
+                    }
+                    // width === "column" stays within prose container (no extra class needed)
+                }
+
                 const imageElement = (
-                    <figure className="max-w-fit inline-block align-top mr-4">
+                    <figure className={`max-w-fit block ${alignClass}`}>
                         <div className="flex flex-col items-center">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                                 src={url}
                                 alt={value?.alt || "Article image"}
@@ -91,6 +118,67 @@ const portableTextComponents: PortableTextComponents = {
                         </div>
                     </figure>
                 );
+
+                // Apply container wrapper if needed
+                if (containerClass) {
+                    if (width === "full") {
+                        // Breakout with max-w-screen-2xl constraint
+                        return (
+                            <div className={containerClass}>
+                                <div className="mx-auto max-w-screen-2xl px-4">
+                                    {value?.link ? (
+                                        value.link.includes("://") ? (
+                                            <a
+                                                href={value.link}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="no-underline hover:opacity-80 transition-opacity"
+                                            >
+                                                {imageElement}
+                                            </a>
+                                        ) : (
+                                            <Link
+                                                href={value.link}
+                                                className="no-underline hover:opacity-80 transition-opacity"
+                                            >
+                                                {imageElement}
+                                            </Link>
+                                        )
+                                    ) : (
+                                        imageElement
+                                    )}
+                                </div>
+                            </div>
+                        );
+                    } else {
+                        // Screen width - no max-w constraint
+                        return (
+                            <div className={containerClass}>
+                                {value?.link ? (
+                                    value.link.includes("://") ? (
+                                        <a
+                                            href={value.link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="no-underline hover:opacity-80 transition-opacity"
+                                        >
+                                            {imageElement}
+                                        </a>
+                                    ) : (
+                                        <Link
+                                            href={value.link}
+                                            className="no-underline hover:opacity-80 transition-opacity"
+                                        >
+                                            {imageElement}
+                                        </Link>
+                                    )
+                                ) : (
+                                    imageElement
+                                )}
+                            </div>
+                        );
+                    }
+                }
 
                 // Wrap in link if provided
                 if (value?.link) {

@@ -25,6 +25,38 @@ export const imageBlock = defineType({
             initialValue: 'standard',
         }),
         defineField({
+            name: 'align',
+            title: 'Alignment',
+            type: 'string',
+            options: {
+                list: [
+                    { title: 'Left', value: 'left' },
+                    { title: 'Center', value: 'center' },
+                    { title: 'Right', value: 'right' },
+                ],
+                layout: 'radio',
+            },
+            initialValue: 'left',
+            description: 'Only applies when Display is set to "Original (As Is)"',
+            hidden: ({ parent }) => parent?.layout !== 'original',
+        }),
+        defineField({
+            name: 'width',
+            title: 'Width',
+            type: 'string',
+            options: {
+                list: [
+                    { title: 'Text column', value: 'column' },
+                    { title: 'Breakout', value: 'full' },
+                    { title: 'Screen width', value: 'screen' },
+                ],
+                layout: 'radio',
+            },
+            initialValue: 'column',
+            description: 'Only applies when Display is "Original (As Is)" and Alignment is "Center"',
+            hidden: ({ parent }) => parent?.layout !== 'original' || parent?.align !== 'center',
+        }),
+        defineField({
             name: 'caption',
             type: 'string',
             title: 'Caption',

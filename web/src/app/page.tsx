@@ -99,7 +99,6 @@ export default async function IndexPage() {
           {homepagePages.map((page) => (
             <div key={page._id}>
               <PageRenderer page={page} />
-              <div className="h-px bg-gray-200 dark:bg-gray-700 mx-auto max-w-6xl my-8" />
             </div>
           ))}
         </div>
