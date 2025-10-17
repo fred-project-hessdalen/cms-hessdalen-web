@@ -89,6 +89,8 @@ export const newsType = defineType({
                 { type: 'callout' },
                 { type: 'collapsible' },
                 { type: 'youtubeVideo' },
+                { type: 'googleSlidesEmbed' },
+                { type: 'googleDocumentEmbed' },
             ],
         }),
 

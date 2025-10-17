@@ -93,3 +93,20 @@ export interface PTCollapsibleBlock {
     content?: PortableTextBlock[];
     defaultOpen?: boolean;
 }
+
+export interface PTGoogleSlidesBlock {
+    _type: "googleSlidesEmbed";
+    title?: string;
+    embedUrl: string;
+    autoplay?: boolean;
+    loop?: boolean;
+    delaySec?: number;
+    aspect?: "video" | "landscape" | "square";
+}
+
+export interface PTGoogleDocumentBlock {
+    _type: "googleDocumentEmbed";
+    title?: string;
+    embedUrl: string;
+    aspect?: "landscape" | "square" | "portrait";
+}

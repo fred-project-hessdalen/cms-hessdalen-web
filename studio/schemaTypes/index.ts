@@ -14,6 +14,8 @@ import { imageList } from "./blocks/imageList"
 import { partsList } from "./blocks/partsList"
 import { textColumns } from "./blocks/textColumns"
 import { youtubeVideo } from "./blocks/youtubeVideo"
+import { googleSlidesEmbed } from "./blocks/googleSlidesEmbed"
+import { googleDocumentEmbed } from "./blocks/googleDocumentEmbed"
 import { socialLink } from "./objects/socialLink"
 import { siteSettings } from "./singletons/siteSettings"
 import { siteMenu } from "./navigation/siteMenu"
@@ -27,7 +29,7 @@ export const schemaTypes = [
     newsType,
     personType,
     partType,
-    imageBlock, textColumns, imageGallery, imageList, partsList, callout, collapsible, credit, youtubeVideo,
+    imageBlock, textColumns, imageGallery, imageList, partsList, callout, collapsible, credit, youtubeVideo, googleSlidesEmbed, googleDocumentEmbed,
     socialLink,
     siteSettings,
     siteMenu,

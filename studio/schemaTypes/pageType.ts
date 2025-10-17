@@ -155,6 +155,8 @@ export const pageType = defineType({
                 { type: 'callout' },
                 { type: 'collapsible' },
                 { type: 'youtubeVideo' },
+                { type: 'googleSlidesEmbed' },
+                { type: 'googleDocumentEmbed' },
             ],
         }),
 

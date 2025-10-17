@@ -101,6 +101,8 @@ export const personType = defineType({
                 { type: 'callout' },
                 { type: 'collapsible' },
                 { type: 'youtubeVideo' },
+                { type: 'googleSlidesEmbed' },
+                { type: 'googleDocumentEmbed' },
             ],
         }),
         defineField({

@@ -2,7 +2,7 @@ import { PortableText, PortableTextComponents } from "next-sanity";
 import type { PortableTextBlock } from "sanity";
 import Image from "next/image";
 import Link from "next/link";
-import type { PTImageBlock, PTImageGalleryBlock, PTImageListBlock, PTPartsListBlock, PTTextColumnsBlock, PTCalloutBlock, PTYouTubeBlock, PTCollapsibleBlock } from "@/lib/sanity/portableTextTypes";
+import type { PTImageBlock, PTImageGalleryBlock, PTImageListBlock, PTPartsListBlock, PTTextColumnsBlock, PTCalloutBlock, PTYouTubeBlock, PTCollapsibleBlock, PTGoogleSlidesBlock, PTGoogleDocumentBlock } from "@/lib/sanity/portableTextTypes";
 import { getYouTubeVideoId } from "@/lib/youtubeHelper";
 import { CollapsibleSection } from "./CollapsibleSection";
 import { PartsGrid } from "./PartsGrid";
@@ -553,6 +553,115 @@ const portableTextComponents: PortableTextComponents = {
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                             referrerPolicy="strict-origin-when-cross-origin"
                             allowFullScreen
+                            className="absolute top-0 left-0 w-full h-full"
+                        />
+                    </div>
+                </figure>
+            );
+        },
+        googleSlidesEmbed: ({ value }: { value: PTGoogleSlidesBlock }) => {
+            const embedUrl = value?.embedUrl;
+            if (!embedUrl) {
+                return (
+                    <div className="my-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                        <p className="text-red-900 dark:text-red-300">Invalid Google Slides URL</p>
+                    </div>
+                );
+            }
+
+            // Convert /pub URL to /embed URL for iframe compatibility
+            // Example: .../pub?start=false → .../embed?start=false
+            const embedCompatibleUrl = embedUrl.replace('/pub?', '/embed?');
+
+            // Build URL with query parameters, replacing defaults from publish URL
+            const url = new URL(embedCompatibleUrl);
+            const params = new URLSearchParams(url.search);
+
+            // Replace autoplay parameter (start)
+            params.set('start', value?.autoplay ? 'true' : 'false');
+
+            // Replace loop parameter
+            params.set('loop', value?.loop ? 'true' : 'false');
+
+            // Replace delay in milliseconds (delaySec * 1000)
+            const delaySec = value?.delaySec ?? 3;
+            params.set('delayms', String(delaySec * 1000));
+
+            url.search = params.toString();
+            const finalUrl = url.toString();
+
+            // Determine aspect ratio based on aspect field
+            const aspect = value?.aspect || 'video';
+            const aspectRatios = {
+                video: "aspect-video",       // 16:9
+                landscape: "aspect-[297/210]", // A4 Landscape 29.7:21cm
+                square: "aspect-square",     // 1:1
+            };
+            const aspectClass = aspectRatios[aspect] || aspectRatios.video;
+
+            return (
+                <figure className="my-8">
+                    {value?.title && (
+                        <figcaption className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                            {value.title}
+                        </figcaption>
+                    )}
+                    <div className={`relative w-full ${aspectClass} rounded-xl overflow-hidden shadow-lg`}>
+                        <iframe
+                            src={finalUrl}
+                            title={value?.title || "Google Slides presentation"}
+                            allowFullScreen
+                            className="absolute top-0 left-0 w-full h-full"
+                        />
+                    </div>
+                </figure>
+            );
+        },
+        googleDocumentEmbed: ({ value }: { value: PTGoogleDocumentBlock }) => {
+            const embedUrl = value?.embedUrl;
+            if (!embedUrl) {
+                return (
+                    <div className="my-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                        <p className="text-red-900 dark:text-red-300">Invalid Google Docs URL</p>
+                    </div>
+                );
+            }
+
+            // Extract document ID from URL
+            // URL format: https://docs.google.com/document/d/[ID]/edit
+            const docIdMatch = embedUrl.match(/\/document\/d\/([^/]+)/);
+            if (!docIdMatch) {
+                return (
+                    <div className="my-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                        <p className="text-red-900 dark:text-red-300">Could not extract document ID from URL</p>
+                    </div>
+                );
+            }
+
+            const docId = docIdMatch[1];
+            // Build embed URL: https://docs.google.com/document/d/[ID]/preview
+            const embedCompatibleUrl = `https://docs.google.com/document/d/${docId}/preview`;
+
+            // Determine aspect ratio based on aspect field
+            const aspect = value?.aspect || 'portrait';
+            const aspectRatios = {
+                landscape: "aspect-[297/210]",   // Narrow (A4 Landscape)
+                square: "aspect-square",         // Square (1:1)
+                portrait: "aspect-[210/297]",    // Tall (A4 Portrait)
+            };
+            const aspectClass = aspectRatios[aspect] || aspectRatios.portrait;
+
+            return (
+                <figure className="my-8">
+                    {value?.title && (
+                        <figcaption className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                            {value.title}
+                        </figcaption>
+                    )}
+                    <div className={`relative w-full ${aspectClass} rounded-xl overflow-hidden shadow-lg`}>
+                        <iframe
+                            src={embedCompatibleUrl}
+                            title={value?.title || "Google Document"}
                             className="absolute top-0 left-0 w-full h-full"
                         />
                     </div>
