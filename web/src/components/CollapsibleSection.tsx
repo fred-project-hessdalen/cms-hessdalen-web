@@ -1,20 +1,21 @@
 'use client';
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { PortableText } from "next-sanity";
 import type { PortableTextBlock } from "@portabletext/types";
 
 interface CollapsibleSectionProps {
     header: string;
     content?: PortableTextBlock[];
+    children?: ReactNode;
     defaultOpen?: boolean;
 }
 
-export function CollapsibleSection({ header, content, defaultOpen = false }: CollapsibleSectionProps) {
+export function CollapsibleSection({ header, content, children, defaultOpen = false }: CollapsibleSectionProps) {
     const [isOpen, setIsOpen] = useState(defaultOpen);
 
     return (
-        <div className="my-6 border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
+        <div className="my-2 border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="w-full flex items-center justify-between px-6 py-4 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
@@ -32,9 +33,10 @@ export function CollapsibleSection({ header, content, defaultOpen = false }: Col
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
             </button>
-            {isOpen && content && (
+            {isOpen && (
                 <div className="px-6 py-4 prose prose-zinc dark:prose-invert max-w-none">
-                    <PortableText value={content} />
+                    {content && <PortableText value={content} />}
+                    {children}
                 </div>
             )}
         </div>

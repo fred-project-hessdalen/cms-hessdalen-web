@@ -32,20 +32,69 @@ export const personType = defineType({
             validation: (Rule) => Rule.required(),
         }),
 
-        // NEW: group for sorting
+        // Sorting group (1-10 slider)
         defineField({
             name: "group",
-            title: "Group (for sorting)",
+            title: "Overall sorting Group",
             type: "number",
-            description: "Chairman = 1, Core team = 2, Team = 3, Board = 4, Volunteers = 5, etc.",
+            description: "Priority for sorting (1 = highest priority, 10 = lowest). Chairman = 1, Core team = 2, Team = 3, Board = 4, Volunteers = 5, etc.",
             initialValue: 5,
-            validation: (Rule) => Rule.min(0).integer(),
+            validation: (Rule) => Rule.required().min(1).max(10).integer(),
+            options: {
+                list: [
+                    { title: "1 (Highest Priority)", value: 1 },
+                    { title: "2", value: 2 },
+                    { title: "3", value: 3 },
+                    { title: "4", value: 4 },
+                    { title: "5 (Default)", value: 5 },
+                    { title: "6", value: 6 },
+                    { title: "7", value: 7 },
+                    { title: "8", value: 8 },
+                    { title: "9", value: 9 },
+                    { title: "10 (Lowest Priority)", value: 10 },
+                ],
+                layout: "dropdown",
+            },
         }),
 
+
+        // Organization fields
         defineField({
-            name: "title",
-            type: "string",
-            description: "Job title / role (e.g., Researcher, Organizer)",
+            name: "membershipType",
+            title: "Membership Type",
+            type: "reference",
+            to: [{ type: "membershipType" }],
+            description: "How they belong to the organization (mutually exclusive)",
+        }),
+        defineField({
+            name: "organizationalRoles",
+            title: "Organizational Roles",
+            type: "array",
+            of: [{ type: "reference", to: [{ type: "organizationalRole" }] }],
+            description: "Function(s) they hold within the structure (can have multiple)",
+        }),
+        defineField({
+            name: "affiliations",
+            title: "Affiliations / Groups",
+            type: "array",
+            of: [{ type: "reference", to: [{ type: "affiliationType" }] }],
+            description: "Which team(s)/unit(s) they belong to (many-to-many)",
+        }),
+
+        // Professional fields
+        defineField({
+            name: "professionalTitle",
+            title: "Professional Title",
+            type: "reference",
+            to: [{ type: "professionalTitle" }],
+            description: "Job title or specialization (optional, from CV or external job)",
+        }),
+        defineField({
+            name: "professionalAffiliations",
+            title: "Professional Affiliations",
+            type: "array",
+            of: [{ type: "professionalAffiliation" }],
+            description: "External employment history and professional positions",
         }),
 
         // NEW: short summary above bio
@@ -142,14 +191,15 @@ export const personType = defineType({
             title: "name",
             group: "group",
             country: "country",
-            role: "title",
+            professionalTitle: "professionalTitle.title",
+            membershipType: "membershipType.title",
             media: "image",
         },
-        prepare({ title, group, country, role, media }) {
-            let subtitle = "";
-            if (country && role) subtitle = `${group}. ${role} (${country})`;
-            else if (country) subtitle = `${group}. (${country})`;
-            else if (role) subtitle = `${group}. (${role})`;
+        prepare({ title, group, country, professionalTitle, membershipType, media }) {
+            let subtitle = `${group}`;
+            if (membershipType) subtitle += ` • ${membershipType}`;
+            if (professionalTitle) subtitle += ` • ${professionalTitle}`;
+            if (country) subtitle += ` • ${country}`;
 
             return { title, subtitle, media };
         },

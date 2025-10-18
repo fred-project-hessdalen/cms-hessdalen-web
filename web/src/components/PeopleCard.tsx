@@ -46,18 +46,20 @@ export function PeopleCard({ info, current }: { info: PeopleType, current?: stri
                     <h3 className="text-base font-semibold flex-1 truncate">
                         {info.name}
                     </h3>
-                    {info.country && (
-                        <span className="text-xs ml-2 mr-4 text-right">
-                            {info.country}
+                    {info.membershipType && (
+                        <span className="inline-flex items-center rounded-md bg-blue-100 dark:bg-blue-900 px-2 py-0.5 text-xs font-medium text-blue-700 dark:text-blue-300 mt-1">
+                            {info.membershipType.title}
                         </span>
                     )}
                 </div>
 
-                {info.title && (
+                {info.professionalTitle && (
                     <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
-                        {info.title}
+                        {info.professionalTitle.title}
                     </p>
                 )}
+
+
 
                 {info.email && (
                     <a

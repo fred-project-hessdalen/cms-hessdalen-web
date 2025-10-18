@@ -1,5 +1,7 @@
 import Image from "next/image";
+import Link from "next/link";
 import { PeopleCard } from "@/components/PeopleCard";
+import { CollapsibleSection } from "@/components/CollapsibleSection";
 import type { PortableTextBlock } from "sanity";
 
 import { fetchAndParse } from "@/lib/sanity/fetch";
@@ -59,6 +61,24 @@ export default async function PersonPage({
                                     <h3 className="text-3xl font-semibold flex-1 truncate">
                                         {people.name}
                                     </h3>
+                                    {/* Membership Type */}
+                                    {people.membershipType && (
+                                        <div className="mb-2">
+                                            <span className="inline-flex items-center rounded-md bg-blue-100 dark:bg-blue-900 px-2 py-1 text-xs font-medium text-blue-700 dark:text-blue-300">
+                                                {people.membershipType.title}
+                                            </span>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Professional Title */}
+                                <div className="flex items-center justify-between gap-2 w-full">
+                                    {people.professionalTitle && (
+                                        <p className="text-md text-gray-600 dark:text-gray-400 pb-2">
+                                            {people.professionalTitle.title}
+                                        </p>
+                                    )}
+
                                     {people.country && (
                                         <span className="text-md ml-2 mr-4 text-right">
                                             {people.country}
@@ -66,11 +86,41 @@ export default async function PersonPage({
                                     )}
                                 </div>
 
-                                {people.title && (
-                                    <p className="text-md text-gray-600 dark:text-gray-400 truncate pb-4">
-                                        {people.title}
-                                    </p>
+                                {/* Organizational Roles */}
+                                {people.organizationalRoles && people.organizationalRoles.length > 0 && (
+                                    <div className="mb-2">
+                                        <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 mr-2">Roles:</span>
+                                        {people.organizationalRoles.map((role) => (
+                                            <Link
+                                                key={role._id}
+                                                href={`/people?role=${role.slug}`}
+                                                className="inline-flex items-center rounded-md bg-green-100 dark:bg-green-900 px-2 py-1 text-xs font-medium text-green-700 dark:text-green-300 mr-1 hover:bg-green-200 dark:hover:bg-green-800 transition-colors"
+                                            >
+                                                {role.title}
+                                            </Link>
+                                        ))}
+                                    </div>
                                 )}
+
+                                {/* Affiliations / Groups */}
+                                {people.affiliations && people.affiliations.length > 0 && (
+                                    <div className="mb-3">
+                                        <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 mr-2">
+                                            Groups:
+                                        </span>
+                                        {people.affiliations.map((affiliation) => (
+                                            <Link
+                                                key={affiliation._id}
+                                                href={`/people?group=${affiliation.slug}`}
+                                                className="inline-flex items-center rounded-md bg-purple-100 dark:bg-purple-900 px-2 py-1 text-xs font-medium text-purple-700 dark:text-purple-300 mr-1 hover:bg-purple-200 dark:hover:bg-purple-800 transition-colors"
+                                            >
+                                                {affiliation.title}
+                                            </Link>
+                                        ))}
+                                    </div>
+                                )}
+
+
 
                                 {people.email && (
                                     <a
@@ -109,6 +159,68 @@ export default async function PersonPage({
                                         {people.summary}
                                     </p>
                                 )}
+
+
+                                {/* Professional Affiliations */}
+                                {people.professionalAffiliations && people.professionalAffiliations.length > 0 && (
+                                    <CollapsibleSection header="Affiliations" defaultOpen={false}>
+                                        <div className="space-y-4">
+                                            {people.professionalAffiliations.map((aff, idx) => (
+                                                <div
+                                                    key={idx}
+                                                    className="border-l-4 border-blue-500 dark:border-blue-400 pl-4 py-1"
+                                                >
+                                                    <div className="flex items-start justify-between">
+                                                        <div>
+                                                            {aff.title && (
+                                                                <h3 className="font-semibold text-lg">
+                                                                    {aff.title}
+                                                                    {aff.organization && (
+                                                                        <span className="text-gray-600 dark:text-gray-400">
+                                                                            {" @ "}
+                                                                            {aff.organizationUrl ? (
+                                                                                <a
+                                                                                    href={aff.organizationUrl}
+                                                                                    target="_blank"
+                                                                                    rel="noopener noreferrer"
+                                                                                    className="text-blue-600 hover:underline"
+                                                                                >
+                                                                                    {aff.organization}
+                                                                                </a>
+                                                                            ) : (
+                                                                                aff.organization
+                                                                            )}
+                                                                        </span>
+                                                                    )}
+                                                                </h3>
+                                                            )}
+                                                            {(aff.startDate || aff.endDate) && (
+                                                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                                                    {aff.startDate || ""}
+                                                                    {" – "}
+                                                                    {aff.endDate || "Present"}
+                                                                </p>
+                                                            )}
+                                                            {aff.description && (
+                                                                <p className="mt-2 text-gray-700 dark:text-gray-300">
+                                                                    {aff.description}
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                        {aff.isPrimary && (
+                                                            <span className="ml-2 inline-flex items-center rounded-full bg-blue-100 dark:bg-blue-900 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:text-blue-200">
+                                                                Primary
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </CollapsibleSection>
+                                )}
+
+
+
                             </div>
                         </div>
 
@@ -117,13 +229,11 @@ export default async function PersonPage({
 
                     {/* Bio (PortableText) */}
                     {people.bio && people.bio.length > 0 && (
-                        // <div className=" mx-auto max-w-6xl py-4 items-center text-left prose p-4">
-                        //     <PortableText value={people.bio} />
-                        // </div>
                         <div className="mx-auto max-w-3xl py-4 items-center text-left prose p-4">
                             <AdvancedPortableText value={people.bio} />
                         </div>
                     )}
+
                 </div>
             ) : (
                 <div className="mb-8 mx-auto max-w-6xl prose text-left" >

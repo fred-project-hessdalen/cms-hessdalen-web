@@ -10,7 +10,6 @@ const PEOPLE_FIELDS = `
   _type,
   name,
   "slug": slug.current,
-  title,
   email,
   "mobile": select(canShowMobileNumber == true => mobileNumber, null),
   country,
@@ -19,6 +18,41 @@ const PEOPLE_FIELDS = `
   group,
   "image": image.asset->url,
   summary,
+  professionalTitle->{
+    _id,
+    title,
+    "slug": slug.current
+  },
+  membershipType->{
+    _id,
+    title,
+    "slug": slug.current,
+    description
+  },
+  organizationalRoles[]->{
+    _id,
+    title,
+    "slug": slug.current,
+    description,
+    order
+  },
+  affiliations[]->{
+    _id,
+    title,
+    "slug": slug.current,
+    description,
+    type,
+    color
+  },
+  professionalAffiliations[]{
+    title,
+    organization,
+    organizationUrl,
+    startDate,
+    endDate,
+    isPrimary,
+    description
+  },
   bio[]{
    ...,
     _type == "imageBlock" => {
@@ -113,7 +147,40 @@ export const PEOPLE_BY_SLUG_QUERY = defineQuery(`
 
 
 export const PEOPLE_SEARCH_QUERY = defineQuery(`
-  *[_type == "person" && (name match $q || title match $q || email match $q || summary[].children[].text match $q || bio[].children[].text match $q)] | order(name asc)[0...10] {
+  *[_type == "person" && (name match $q || email match $q || summary[].children[].text match $q || bio[].children[].text match $q)] | order(name asc)[0...10] {
+    ${PEOPLE_FIELDS}
+  }
+`);
+
+export const ALL_ORGANIZATIONAL_ROLES_QUERY = defineQuery(`
+  *[_type == "organizationalRole" && isActive == true] | order(order asc, title asc) {
+    _id,
+    title,
+    "slug": slug.current,
+    description,
+    order
+  }
+`);
+
+export const ALL_AFFILIATIONS_QUERY = defineQuery(`
+  *[_type == "affiliationType" && isActive == true] | order(title asc) {
+    _id,
+    title,
+    "slug": slug.current,
+    description,
+    type,
+    color
+  }
+`);
+
+export const PEOPLE_BY_ROLE_QUERY = defineQuery(`
+  *[_type == "person" && $roleSlug in organizationalRoles[]->slug.current] | order(group asc, name asc) {
+    ${PEOPLE_FIELDS}
+  }
+`);
+
+export const PEOPLE_BY_AFFILIATION_QUERY = defineQuery(`
+  *[_type == "person" && $groupSlug in affiliations[]->slug.current] | order(group asc, name asc) {
     ${PEOPLE_FIELDS}
   }
 `);
@@ -132,6 +199,48 @@ export const SocialLink = z.object({
   url: zUrlOpt,
 });
 
+const ReferenceWithTitle = z.object({
+  _id: z.string(),
+  title: z.string(),
+  slug: z.preprocess(
+    v => {
+      // Handle both "string" and { current: "string" } formats
+      if (typeof v === 'string') return v;
+      if (v && typeof v === 'object' && 'current' in v) return v.current;
+      return undefined;
+    },
+    z.string()
+  ),
+});
+
+const MembershipType = z.preprocess(
+  v => v ?? undefined,
+  ReferenceWithTitle.extend({
+    description: zStrOpt,
+  }).optional()
+);
+
+const OrganizationalRole = ReferenceWithTitle.extend({
+  description: zStrOpt,
+  order: z.number().optional(),
+});
+
+const Affiliation = ReferenceWithTitle.extend({
+  description: zStrOpt,
+  type: zStrOpt,
+  color: zStrOpt,
+});
+
+const ProfessionalAffiliation = z.object({
+  title: zStrOpt,
+  organization: zStrOpt,
+  organizationUrl: zUrlOpt,
+  startDate: zStrOpt,
+  endDate: zStrOpt,
+  isPrimary: z.boolean().optional(),
+  description: zStrOpt,
+});
+
 // person doc
 export const People = z.object({
   _id: z.string(),
@@ -139,7 +248,6 @@ export const People = z.object({
   name: z.string().min(1),
   slug: z.string().min(1),
 
-  title: zStrOpt,
   email: z.preprocess(v => (v ?? undefined), z.string().email().optional()),
 
   // NEW: summary + mobile (GROQ can return null → treat as undefined)
@@ -149,6 +257,14 @@ export const People = z.object({
   image: zUrlOpt,
   website: zUrlOpt,
   country: zStrOpt,
+  group: z.preprocess(v => v ?? undefined, z.number().int().min(1).max(10).optional()),
+
+  // Organization fields
+  professionalTitle: z.preprocess(v => v ?? undefined, ReferenceWithTitle.optional()),
+  membershipType: MembershipType,
+  organizationalRoles: zArray(OrganizationalRole),
+  affiliations: zArray(Affiliation),
+  professionalAffiliations: zArray(ProfessionalAffiliation),
 
   // Use PortableTextBlock structure for bio
   bio: zArray(z.any()),
@@ -167,3 +283,9 @@ export type PeopleType = Omit<PeopleZod, "bio"> & { bio: PortableTextBlock[] };
 export const PeopleList = z.array(People);
 export type PeopleListType = PeopleType[]; // was: z.infer<typeof PeopleList>
 
+// Organizational Roles and Affiliations lists
+export const OrganizationalRolesList = z.array(OrganizationalRole);
+export type OrganizationalRolesListType = z.infer<typeof OrganizationalRolesList>;
+
+export const AffiliationsList = z.array(Affiliation);
+export type AffiliationsListType = z.infer<typeof AffiliationsList>;

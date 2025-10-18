@@ -7,8 +7,10 @@ export const roleType = defineType({
     fields: [
         defineField({
             name: "title",
-            title: "Role Title",
+            title: "Role / Contribution",
             type: "string",
+            description:
+                "Defines this person's contribution — for example: Author, Editor, Speaker, Organizer, Photographer, or Researcher.",
             validation: (Rule) => Rule.required(),
         }),
         defineField({
@@ -27,27 +29,11 @@ export const roleType = defineType({
             type: "text",
             rows: 3,
         }),
-        defineField({
-            name: "category",
-            title: "Category",
-            type: "string",
-            options: {
-                list: [
-                    { title: "Creative", value: "creative" },
-                    { title: "Technical", value: "technical" },
-                    { title: "Research & Development", value: "research_development" },
-                    { title: "Leadership", value: "leadership" },
-                    { title: "Support", value: "support" },
-                    { title: "Media", value: "media" },
-                    { title: "Other", value: "other" },
-                ],
-            },
-        }),
     ],
     preview: {
         select: {
             title: "title",
-            subtitle: "category",
+            subtitle: "description",
         },
     },
 });

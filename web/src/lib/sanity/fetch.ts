@@ -17,6 +17,10 @@ export async function fetchAndParse<TSchema extends ZodTypeAny>(
     const { data } = await sanityFetch<unknown>(query, params, options);
     if (data == null) return null;
     const parsed = schema.safeParse(data);
-    if (!parsed.success) throw parsed.error;
+    if (!parsed.success) {
+        console.error('Zod validation failed:', JSON.stringify(parsed.error, null, 2));
+        console.error('Data that failed:', JSON.stringify(data, null, 2));
+        throw parsed.error;
+    }
     return parsed.data;
 }
