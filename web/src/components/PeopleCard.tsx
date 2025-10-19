@@ -42,16 +42,9 @@ export function PeopleCard({ info, current }: { info: PeopleType, current?: stri
 
             {/* Text */}
             <div className="min-w-0 text-left w-full">
-                <div className="flex items-center justify-between gap-2 w-full">
-                    <h3 className="text-base font-semibold flex-1 truncate">
-                        {info.name}
-                    </h3>
-                    {info.membershipType && (
-                        <span className="inline-flex items-center rounded-md bg-blue-100 dark:bg-blue-900 px-2 py-0.5 text-xs font-medium text-blue-700 dark:text-blue-300 mt-1">
-                            {info.membershipType.title}
-                        </span>
-                    )}
-                </div>
+                <h3 className="text-base font-semibold truncate">
+                    {info.name}
+                </h3>
 
                 {info.professionalTitle && (
                     <p className="text-sm text-gray-600 dark:text-gray-400 truncate">

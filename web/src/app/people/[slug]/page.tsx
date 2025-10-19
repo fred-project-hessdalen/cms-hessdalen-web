@@ -27,6 +27,39 @@ export default async function PersonPage({
     const people = await fetchAndParse(PEOPLE_BY_SLUG_QUERY, { slug }, People) as PeopleType | null;
     const peoples = await fetchAndParse(PEOPLE_LIST_QUERY, {}, PeopleList);
 
+    // Group people by membershipType
+    type MembershipGroup = {
+        membershipType: {
+            _id: string;
+            title: string;
+            slug: string;
+            description?: string;
+            order?: number;
+        } | null | undefined;
+        people: NonNullable<typeof peoples>;
+    };
+
+    const groupedPeople = (peoples ?? []).reduce((acc, person) => {
+        const membershipKey = person.membershipType?._id || 'no-membership';
+        if (!acc[membershipKey]) {
+            acc[membershipKey] = {
+                membershipType: person.membershipType,
+                people: []
+            };
+        }
+        acc[membershipKey]!.people.push(person);
+        return acc;
+    }, {} as Record<string, MembershipGroup>);
+
+    // Sort groups by membershipType order (or put no-membership last)
+    const sortedGroups = Object.entries(groupedPeople).sort(([keyA, groupA], [keyB, groupB]) => {
+        if (keyA === 'no-membership') return 1;
+        if (keyB === 'no-membership') return -1;
+        const orderA = groupA.membershipType?.order ?? 999;
+        const orderB = groupB.membershipType?.order ?? 999;
+        return orderA - orderB;
+    });
+
     return (
         <div className="bg-gray-100 dark:bg-gray-700 w-full">
 
@@ -242,13 +275,44 @@ export default async function PersonPage({
             )
             }
 
+            {/* List all people cards */}
+            <div className="mx-auto px-4 not-prose py-8 bg-gray-100 dark:bg-gray-700">
+                {/* Grouped people by membershipType */}
+                <div className="mx-auto space-y-12">
+                    {sortedGroups.map(([key, group]) => (
+                        <div key={key} className="space-y-4">
+                            {/* Membership Type Header */}
+                            {group.membershipType && (
+                                <div className="text-center mb-6">
+                                    <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                                        {group.membershipType.title}
+                                    </h2>
+                                    {group.membershipType.description && (
+                                        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                                            {group.membershipType.description}
+                                        </p>
+                                    )}
+                                </div>
+                            )}
+                            {!group.membershipType && (
+                                <div className="text-center mb-6">
+                                    <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                                        Other Members
+                                    </h2>
+                                </div>
+                            )}
 
-            <div className="mx-auto px-4 not-prose py-8 bg-gray-100 dark:bg-gray-700 ">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {(peoples ?? []).map((p) => (
-                        <PeopleCard key={p.slug}
-                            info={{ ...p, bio: (p.bio as PortableTextBlock[]) || [] }}
-                            current={people?.slug} />
+                            {/* People Cards Grid */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                {group.people.map((p) => (
+                                    <PeopleCard
+                                        key={p.slug}
+                                        info={{ ...p, bio: (p.bio as PortableTextBlock[]) || [] }}
+                                        current={people?.slug}
+                                    />
+                                ))}
+                            </div>
+                        </div>
                     ))}
                 </div>
             </div>

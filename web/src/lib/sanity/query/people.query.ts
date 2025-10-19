@@ -27,7 +27,8 @@ const PEOPLE_FIELDS = `
     _id,
     title,
     "slug": slug.current,
-    description
+    description,
+    order
   },
   organizationalRoles[]->{
     _id,
@@ -217,6 +218,7 @@ const MembershipType = z.preprocess(
   v => v ?? undefined,
   ReferenceWithTitle.extend({
     description: zStrOpt,
+    order: z.number().optional(),
   }).optional()
 );
 
