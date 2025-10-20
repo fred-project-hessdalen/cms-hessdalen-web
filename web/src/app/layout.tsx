@@ -11,6 +11,7 @@ import SiteLogoAndName from "@/components/SiteLogoAndName";
 import { SanityLive } from "@/lib/sanity/live";
 import SiteFooter from "@/components/SiteFooter";
 import SiteNavigation from "@/components/SiteNavigation";
+import { Analytics } from "@vercel/analytics/next"
 
 const varela = Varela_Round({
   subsets: ["latin"],
@@ -122,6 +123,7 @@ export default async function RootLayout({
 
         <main className="flex-1 max-w-full mx-auto p-0 w-full text-center">
           {children}
+          <Analytics />
         </main>
 
         <SiteFooter contact={siteSettings.contact} footer={siteSettings.footer} />
