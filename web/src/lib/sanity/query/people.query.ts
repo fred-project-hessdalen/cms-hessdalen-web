@@ -138,7 +138,7 @@ const PEOPLE_FIELDS = `
 `;
 
 export const PEOPLE_LIST_QUERY = defineQuery(`
-  *[_type == "person" && isPublic == true] | order(group asc, name asc) {
+  *[_type == "person" && (isPublic == true || !defined(isPublic))] | order(group asc, name asc) {
     ${PEOPLE_FIELDS}
   }
 `);
@@ -151,7 +151,7 @@ export const PEOPLE_BY_SLUG_QUERY = defineQuery(`
 
 
 export const PEOPLE_SEARCH_QUERY = defineQuery(`
-  *[_type == "person" && isPublic == true && (name match $q || email match $q || summary[].children[].text match $q || bio[].children[].text match $q)] | order(name asc)[0...10] {
+  *[_type == "person" && (isPublic == true || !defined(isPublic)) && (name match $q || email match $q || summary[].children[].text match $q || bio[].children[].text match $q)] | order(name asc)[0...10] {
     ${PEOPLE_FIELDS}
   }
 `);
@@ -178,13 +178,13 @@ export const ALL_AFFILIATIONS_QUERY = defineQuery(`
 `);
 
 export const PEOPLE_BY_ROLE_QUERY = defineQuery(`
-  *[_type == "person" && isPublic == true && $roleSlug in organizationalRoles[]->slug.current] | order(group asc, name asc) {
+  *[_type == "person" && (isPublic == true || !defined(isPublic)) && $roleSlug in organizationalRoles[]->slug.current] | order(group asc, name asc) {
     ${PEOPLE_FIELDS}
   }
 `);
 
 export const PEOPLE_BY_AFFILIATION_QUERY = defineQuery(`
-  *[_type == "person" && isPublic == true && $groupSlug in affiliations[]->slug.current] | order(group asc, name asc) {
+  *[_type == "person" && (isPublic == true || !defined(isPublic)) && $groupSlug in affiliations[]->slug.current] | order(group asc, name asc) {
     ${PEOPLE_FIELDS}
   }
 `);
