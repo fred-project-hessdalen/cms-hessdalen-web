@@ -121,10 +121,35 @@ export const personType = defineType({
                 ),
         }),
         defineField({
+            name: "isPublic",
+            title: "Show on Public Website",
+            type: "boolean",
+            initialValue: true,
+            description: "If unchecked, your profile will only be visible to site administrators, not on the public website",
+        }),
+        defineField({
             name: "canShowMobileNumber",
             title: "Show mobile number on site",
             type: "boolean",
             initialValue: false,
+            description: "Allow your mobile number to be displayed publicly on the website",
+            hidden: ({ document }) => !document?.isPublic,
+        }),
+        defineField({
+            name: "canShowEmail",
+            title: "Show email address on site",
+            type: "boolean",
+            initialValue: false,
+            description: "Allow your email to be displayed publicly on the website",
+            hidden: ({ document }) => !document?.isPublic,
+        }),
+        defineField({
+            name: "profileToken",
+            title: "Profile Edit Token",
+            type: "string",
+            readOnly: true,
+            hidden: false,
+            description: "Secure token for self-service profile editing (auto-generated)",
         }),
 
         defineField({

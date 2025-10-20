@@ -155,7 +155,7 @@ export default async function PersonPage({
 
 
 
-                                {people.email && (
+                                {people.canShowEmail && people.email && (
                                     <a
                                         href={`mailto:${people.email}`}
                                         className="relative z-20 text-md text-blue-600 hover:underline break-all"
@@ -163,7 +163,7 @@ export default async function PersonPage({
                                         {people.email}
                                     </a>
                                 )}
-                                {people.mobile && (
+                                {people.canShowMobileNumber && people.mobile && (
                                     <a
                                         href={`tel:${people.mobile.replace(/\s+/g, "")}`}
                                         className="relative z-20 text-md text-blue-600 hover:underline break-all ml-4"

@@ -12,6 +12,9 @@ const PEOPLE_FIELDS = `
   "slug": slug.current,
   email,
   "mobile": select(canShowMobileNumber == true => mobileNumber, null),
+  canShowEmail,
+  canShowMobileNumber,
+  isPublic,
   country,
   website,
   isActive,
@@ -135,7 +138,7 @@ const PEOPLE_FIELDS = `
 `;
 
 export const PEOPLE_LIST_QUERY = defineQuery(`
-  *[_type == "person"] | order(group asc, name asc) {
+  *[_type == "person" && isPublic == true] | order(group asc, name asc) {
     ${PEOPLE_FIELDS}
   }
 `);
@@ -148,7 +151,7 @@ export const PEOPLE_BY_SLUG_QUERY = defineQuery(`
 
 
 export const PEOPLE_SEARCH_QUERY = defineQuery(`
-  *[_type == "person" && (name match $q || email match $q || summary[].children[].text match $q || bio[].children[].text match $q)] | order(name asc)[0...10] {
+  *[_type == "person" && isPublic == true && (name match $q || email match $q || summary[].children[].text match $q || bio[].children[].text match $q)] | order(name asc)[0...10] {
     ${PEOPLE_FIELDS}
   }
 `);
@@ -175,13 +178,13 @@ export const ALL_AFFILIATIONS_QUERY = defineQuery(`
 `);
 
 export const PEOPLE_BY_ROLE_QUERY = defineQuery(`
-  *[_type == "person" && $roleSlug in organizationalRoles[]->slug.current] | order(group asc, name asc) {
+  *[_type == "person" && isPublic == true && $roleSlug in organizationalRoles[]->slug.current] | order(group asc, name asc) {
     ${PEOPLE_FIELDS}
   }
 `);
 
 export const PEOPLE_BY_AFFILIATION_QUERY = defineQuery(`
-  *[_type == "person" && $groupSlug in affiliations[]->slug.current] | order(group asc, name asc) {
+  *[_type == "person" && isPublic == true && $groupSlug in affiliations[]->slug.current] | order(group asc, name asc) {
     ${PEOPLE_FIELDS}
   }
 `);
@@ -255,6 +258,11 @@ export const People = z.object({
   // NEW: summary + mobile (GROQ can return null → treat as undefined)
   summary: zStrOpt,
   mobile: zStrOpt,
+
+  // Privacy fields
+  canShowEmail: z.preprocess(v => v ?? false, z.boolean()),
+  canShowMobileNumber: z.preprocess(v => v ?? false, z.boolean()),
+  isPublic: z.preprocess(v => v ?? true, z.boolean()),
 
   image: zUrlOpt,
   website: zUrlOpt,

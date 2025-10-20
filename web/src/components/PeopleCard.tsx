@@ -54,7 +54,7 @@ export function PeopleCard({ info, current }: { info: PeopleType, current?: stri
 
 
 
-                {info.email && (
+                {info.canShowEmail && info.email && (
                     <a
                         href={`mailto:${info.email}`}
                         className="relative z-20 text-sm text-blue-600 hover:underline break-all"
@@ -62,7 +62,7 @@ export function PeopleCard({ info, current }: { info: PeopleType, current?: stri
                         {info.email}
                     </a>
                 )}
-                {info.mobile && (
+                {info.canShowMobileNumber && info.mobile && (
                     <a
                         href={`tel:${info.mobile.replace(/\s+/g, "")}`}
                         className="relative z-20 text-sm text-blue-600 hover:underline break-all ml-2"
