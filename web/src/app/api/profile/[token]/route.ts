@@ -24,6 +24,7 @@ export async function PATCH(
 
         // Only allow updating specific fields
         const allowedFields = {
+            summary: body.summary,
             mobileNumber: body.mobileNumber,
             isPublic: body.isPublic,
             canShowEmail: body.canShowEmail,

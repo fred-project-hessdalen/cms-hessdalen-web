@@ -106,11 +106,9 @@ export default async function PersonPage({
 
                                 {/* Professional Title */}
                                 <div className="flex items-center justify-between gap-2 w-full">
-                                    {people.professionalTitle && (
-                                        <p className="text-md text-gray-600 dark:text-gray-400 pb-2">
-                                            {people.professionalTitle.title}
-                                        </p>
-                                    )}
+                                    <p className="text-md text-gray-600 dark:text-gray-400 pb-2">
+                                        {people.professionalTitle ? people.professionalTitle.title : " "}
+                                    </p>
 
                                     {people.country && (
                                         <span className="text-md ml-2 mr-4 text-right">

@@ -150,6 +150,10 @@ export const personType = defineType({
             readOnly: true,
             hidden: false,
             description: "Secure token for self-service profile editing (auto-generated)",
+            initialValue: () => {
+                // Generate UUID when creating a new person
+                return crypto.randomUUID();
+            },
         }),
 
         defineField({

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 type ProfileData = {
     name: string
     email: string
+    summary?: string
     mobileNumber?: string
     isPublic: boolean
     canShowEmail: boolean
@@ -24,6 +25,7 @@ export function ProfileEditForm({
     const [message, setMessage] = useState("")
 
     const [formData, setFormData] = useState({
+        summary: person.summary || "",
         mobileNumber: person.mobileNumber || "",
         isPublic: person.isPublic ?? true,
         canShowEmail: person.canShowEmail ?? false,
@@ -71,6 +73,26 @@ export function ProfileEditForm({
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6" suppressHydrationWarning>
+                {/* Summary */}
+                <div>
+                    <label htmlFor="summary" className="block text-sm font-medium mb-2 text-left">
+                        Short Summary
+                    </label>
+                    <textarea
+                        id="summary"
+                        value={formData.summary}
+                        onChange={(e) => setFormData({ ...formData, summary: e.target.value })}
+                        placeholder="A few lines about yourself..."
+                        rows={3}
+                        maxLength={280}
+                        className="w-full px-4 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 text-left resize-none"
+                        suppressHydrationWarning
+                    />
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-left">
+                        {formData.summary.length}/280 characters
+                    </p>
+                </div>
+
                 {/* Mobile Number */}
                 <div>
                     <label htmlFor="mobileNumber" className="block text-sm font-medium mb-2 text-left">
@@ -83,6 +105,7 @@ export function ProfileEditForm({
                         onChange={(e) => setFormData({ ...formData, mobileNumber: e.target.value })}
                         placeholder="+47 400 00 000"
                         className="w-full px-4 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 text-left"
+                        suppressHydrationWarning
                     />
                 </div>
 
@@ -145,7 +168,7 @@ export function ProfileEditForm({
                 <button
                     type="submit"
                     disabled={saving}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-md disabled:opacity-50 transition-colors"
+                    className=" bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-md disabled:opacity-50 transition-colors"
                 >
                     {saving ? "Saving..." : "Save Changes"}
                 </button>
