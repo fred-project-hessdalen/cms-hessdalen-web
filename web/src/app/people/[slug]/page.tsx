@@ -314,9 +314,6 @@ export default async function PersonPage({
                     ))}
                 </div>
             </div>
-
-
-
         </div >
     )
 }

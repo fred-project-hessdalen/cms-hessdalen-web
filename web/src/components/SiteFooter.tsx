@@ -22,7 +22,7 @@ export default function SiteFooter({ contact, footer }: SiteFooterProps) {
         <footer className="w-full bg-gray-200 dark:bg-gray-800 py-4 mt-0 text-center text-sm text-gray-600 dark:text-gray-300">
             {/* Footer Note */}
             {footer?.footerNote && (
-                <div className="mb-2 w-full md:w-auto text-lg text-gray-500 dark:text-gray-400 text-center">
+                <div className="mb-4 w-full md:w-auto text-lg text-gray-500 dark:text-gray-400 text-center">
                     {footer.footerNote}
                 </div>
             )}
