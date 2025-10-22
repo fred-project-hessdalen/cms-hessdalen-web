@@ -17,6 +17,15 @@ export const personType = defineType({
                 { field: "name", direction: "asc" },
             ],
         },
+        {
+            title: "Active ↑, Public ↑",
+            name: "activeAscPublicAsc",
+            by: [
+                { field: "isActive", direction: "desc" },
+                { field: "isPublic", direction: "desc" },
+                { field: "name", direction: "asc" },
+            ],
+        },
     ],
 
     fields: [
@@ -31,7 +40,11 @@ export const personType = defineType({
             options: { source: "name" },
             validation: (Rule) => Rule.required(),
         }),
-
+        defineField({
+            name: "email",
+            type: "string",
+            validation: (Rule) => Rule.required().email(),
+        }),
         // Sorting group (1-10 slider)
         defineField({
             name: "group",
@@ -164,11 +177,7 @@ export const personType = defineType({
             description: "Linked authenticated user ID from NextAuth (auto-linked when user signs in)",
         }),
 
-        defineField({
-            name: "email",
-            type: "string",
-            validation: (Rule) => Rule.required().email(),
-        }),
+
         defineField({
             name: "image",
             type: "image",
@@ -231,9 +240,19 @@ export const personType = defineType({
             professionalTitle: "professionalTitle.title",
             membershipType: "membershipType.title",
             media: "image",
+            isActive: "isActive",
+            isPublic: "isPublic",
         },
-        prepare({ title, group, country, professionalTitle, membershipType, media }) {
-            let subtitle = `${group}`;
+        prepare({ title, group, country, professionalTitle, membershipType, media, isActive, isPublic }) {
+            let subtitle = "";
+            if (isActive === false) {
+                subtitle = "not active: ";
+            } else if (isPublic === false) {
+                subtitle = "not public: ";
+            } else {
+                subtitle = "";
+            }
+            subtitle += `${group}`;
             if (membershipType) subtitle += ` • ${membershipType}`;
             if (professionalTitle) subtitle += ` • ${professionalTitle}`;
             if (country) subtitle += ` • ${country}`;

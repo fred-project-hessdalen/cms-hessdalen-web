@@ -20,6 +20,10 @@ const PAGE_FIELDS = `
   hidden,
   path,
   redirectTo,
+  menu[]{
+    name,
+    link
+  },
   mainImage{
     asset->{url},
     alt,
@@ -181,6 +185,13 @@ export const Page = z.object({
   hidden: z.preprocess((val) => val ?? false, z.boolean()),
   path: z.string().min(1),
   redirectTo: zStrOpt,
+  menu: z.preprocess(
+    (val) => (val == null ? [] : val),
+    z.array(z.object({
+      name: z.string(),
+      link: z.string(),
+    }))
+  ).optional(),
   mainImage: MainImage.optional().nullable(),
   summary: zArray(z.any()),
   body: zArray(z.any()),
@@ -203,6 +214,7 @@ export const Page = z.object({
 export type PageType = Omit<z.infer<typeof Page>, "summary" | "body"> & {
   summary: PortableTextBlock[];
   body: PortableTextBlock[];
+  menu?: { name: string; link: string }[];
 };
 
 

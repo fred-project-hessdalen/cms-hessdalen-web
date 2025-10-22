@@ -82,6 +82,29 @@ export const pageType = defineType({
             type: "string",
             description: 'Internal path (e.g., "other-page") or external URL (e.g., "https://example.com"). Leave empty for no redirect.',
         }),
+
+        defineField({
+            name: "menu",
+            title: "Menu",
+            type: "array",
+            of: [
+                {
+                    type: "object",
+                    name: "menuItem",
+                    title: "Menu Item",
+                    fields: [
+                        { name: "name", type: "string", title: "Name" },
+                        { name: "link", type: "string", title: "Link" }, // or type: "url" if you want to restrict to URLs
+                    ],
+                    preview: {
+                        select: { title: "name", subtitle: "link" }
+                    }
+                }
+            ],
+            description: "Optional menu for this page. Each item has a name and a link."
+        }),
+
+
         // Tile / Cover image
         defineField({
             name: "mainImage",

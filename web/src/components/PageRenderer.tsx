@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { PageType } from "@/lib/sanity/query/page.query";
 import { AdvancedPortableText } from "@/components/AdvancedPortableText";
 import { SimplePortableText } from "@/components/SimplePortableText";
@@ -73,6 +74,7 @@ export function PageRenderer({
                 </>
             )}
 
+
             {/* Header Section */}
             <div className="mx-auto max-w-3xl py-0 flex flex-col gap-1 px-4 text-center">
                 {/* Title */}
@@ -118,6 +120,37 @@ export function PageRenderer({
                     </div>
                 )}
             </div>
+
+            {/* Sticky Menu Section */}
+            {page.menu && page.menu.length > 0 && (
+                <div className="sticky top-0 z-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-sm">
+                    <nav className="mx-auto max-w-3xl flex justify-center gap-6 px-4 py-2">
+                        {page.menu.map((item, idx) => (
+                            item.link.includes('://') ? (
+
+                                <a
+                                    key={idx}
+                                    href={item.link}
+                                    className="font-medium text-blue-600 hover:underline"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <div className="flex items-center gap-1">
+                                        {item.name}
+                                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                        </svg>
+                                    </div>
+                                </a>
+                            ) : (
+                                <Link key={idx} href={item.link} className="font-medium text-blue-600 hover:underline">
+                                    {item.name}
+                                </Link>
+                            )
+                        ))}
+                    </nav>
+                </div>
+            )}
 
             {/* Body Content */}
             {showBody && page.body && page.body.length > 0 && (
