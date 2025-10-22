@@ -1,0 +1,5 @@
+{
+    "scripts": {
+        "migrate:deploy": "prisma migrate deploy"
+    }
+}

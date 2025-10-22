@@ -110,19 +110,9 @@ export default async function MemberProfilePage() {
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Member Profile</h1>
                 </div>
 
-                {/* Profile Edit Form in CollapsibleSection */}
-                <CollapsibleSection header="Your Profile" defaultOpen={false}>
-                    <p className="text-gray-600 dark:text-gray-400 mb-6">
-                        Manage your profile information and privacy settings
-                    </p>
-                    <ProfileEditForm person={person} token="member" />
-                </CollapsibleSection>
-
                 {/* People Card Section */}
-                <div className="mt-8">
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                        Profile Preview
-                    </h2>
+                <div className="max-w-2xl mx-auto">
+
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                         This is how your profile appears to others on the website
                     </p>
@@ -134,19 +124,13 @@ export default async function MemberProfilePage() {
                         }}
                     />
                 </div>
-
-                {/* Info Box */}
-                <div className="mt-8 p-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                    <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
-                        📝 Member Profile Features
-                    </h3>
-                    <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-2">
-                        <li>✅ Signed in as: <strong>{session.user.email}</strong></li>
-                        <li>✅ Edit your summary and contact info</li>
-                        <li>✅ Control privacy settings</li>
-                        <li>🔜 More features coming soon (events, notifications, etc.)</li>
-                    </ul>
+                {/* Profile Edit Form in CollapsibleSection */}
+                <div className="mt-8">
+                    <ProfileEditForm person={person} token="member" />
                 </div>
+
+
+
             </div>
         </div>
     )
