@@ -155,6 +155,14 @@ export const personType = defineType({
                 return crypto.randomUUID();
             },
         }),
+        defineField({
+            name: "authUserId",
+            title: "Auth User ID",
+            type: "string",
+            readOnly: true,
+            hidden: false,
+            description: "Linked authenticated user ID from NextAuth (auto-linked when user signs in)",
+        }),
 
         defineField({
             name: "email",

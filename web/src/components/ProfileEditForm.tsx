@@ -38,14 +38,19 @@ export function ProfileEditForm({
         setMessage("")
 
         try {
-            const response = await fetch(`/api/profile/${token}`, {
+            // Use different API endpoint for member vs token-based editing
+            const apiUrl = token === "member"
+                ? "/api/member/profile"
+                : `/api/profile/${token}`
+
+            const response = await fetch(apiUrl, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
             })
 
             if (response.ok) {
-                setMessage("✅ Profile updated successfully!")
+                setMessage("✅ Profile updated successfully! Note: Changes may take a few minutes to appear due to caching.")
                 router.refresh()
             } else {
                 const error = await response.json()

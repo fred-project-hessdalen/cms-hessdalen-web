@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { PeopleCard } from "@/components/PeopleCard";
 import type { PortableTextBlock } from "sanity";
+import { auth } from "@/lib/auth";
 
 import { fetchAndParse } from "@/lib/sanity/fetch";
 import {
@@ -24,6 +25,9 @@ export default async function PersonPage({
     const params = await searchParams;
     const roleSlug = params.role;
     const groupSlug = params.group;
+
+    // Check if user is logged in
+    const session = await auth();
 
     // Fetch people based on filters or show all
     let peoples;
@@ -76,16 +80,9 @@ export default async function PersonPage({
     return (
         <div>
             <div className="bg-gray-100 dark:bg-gray-700 w-full">
-                <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-8 py-8 items-center">
-                    {/* Left column: heading and description */}
-                    <div className="prose text-left px-8 md:col-span-2">
-                        <h1 className="text-3xl font-semibold tracking-tight">
-                            People in {siteSettings?.siteName || "Project Hessdalen"}
-                        </h1>
-
-                    </div>
-                    {/* Right column: image */}
-                    <div className="flex justify-center md:col-span-1">
+                <div className="mx-auto max-w-6xl flex items-center justify-between gap-8 py-8 px-1">
+                    {/* Left side: Logo and Site Name */}
+                    <div className="flex items-center gap-4">
                         {siteSettings?.logo ? (
                             <Image
                                 src={siteSettings.logo}
@@ -96,6 +93,34 @@ export default async function PersonPage({
                             />
                         ) : (
                             <div className="h-32 w-32" />
+                        )}
+                        <h1 className="text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
+                            Members of {siteSettings?.siteName || "the organization"}
+                        </h1>
+                    </div>
+
+                    {/* Right side: Member Login Link */}
+                    <div className="flex-shrink-0">
+                        {session ? (
+                            <Link
+                                href="/member/dashboard"
+                                className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-md transition-colors text-sm"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Member Dashboard
+                            </Link>
+                        ) : (
+                            <Link
+                                href="/auth/signin"
+                                className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-md transition-colors text-sm"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                                Member Login
+                            </Link>
                         )}
                     </div>
                 </div>
