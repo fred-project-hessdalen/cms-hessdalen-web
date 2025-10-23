@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import { PageType } from "@/lib/sanity/query/page.query";
@@ -5,6 +6,7 @@ import { AdvancedPortableText } from "@/components/AdvancedPortableText";
 import { SimplePortableText } from "@/components/SimplePortableText";
 import { CategoryList } from "@/components/CategoryList";
 import { formatDateByLocale } from "@/lib/dateFunctions";
+import React, { useEffect, useRef, useState } from "react";
 
 interface PageRendererProps {
     page: PageType;
@@ -25,6 +27,22 @@ export function PageRenderer({
     showSummary = true,
     showBody = true,
 }: PageRendererProps) {
+    const [showStickyTitle, setShowStickyTitle] = useState(false);
+    const sentinelRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const sentinel = sentinelRef.current;
+        if (!sentinel) return;
+        const observer = new window.IntersectionObserver(
+            ([entry]) => {
+                setShowStickyTitle(!entry.isIntersecting);
+            },
+            { threshold: 0 }
+        );
+        observer.observe(sentinel);
+        return () => observer.disconnect();
+    }, []);
+
     return (
         <div className="bg-white dark:bg-gray-900 w-full">
             {/* Main Image */}
@@ -121,10 +139,21 @@ export function PageRenderer({
                 )}
             </div>
 
-            {/* Sticky Menu Section */}
-            {page.menu && page.menu.length > 0 && (
-                <div className="sticky top-0 z-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-sm">
-                    <nav className="mx-auto flex flex-wrap justify-center gap-6 px-4 py-2">
+            {/* Sentinel for sticky menu */}
+            <div ref={sentinelRef} aria-hidden="true" style={{ height: 1 }} />
+            {/* Sticky Menu Section (title always, menu only if present) */}
+            <div className="sticky top-0 z-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-sm">
+                {showStickyTitle && (
+                    <div className="w-full bg-gray-100 dark:bg-gray-900/90 border-b border-gray-200 dark:border-gray-700 shadow-sm backdrop-blur-sm">
+                        <div className="max-w-3xl mx-auto px-4 py-1 text-center">
+                            <span className="truncate block font-semibold text-blue-900 dark:text-blue-200 text-sm">
+                                {page.title}
+                            </span>
+                        </div>
+                    </div>
+                )}
+                {page.menu && page.menu.length > 0 && (
+                    <nav className="mx-auto flex flex-wrap justify-center gap-4 ">
                         {page.menu.map((item, idx) => {
                             if (!item.link) {
                                 return (
@@ -158,8 +187,9 @@ export function PageRenderer({
                             }
                         })}
                     </nav>
-                </div>
-            )}
+                )}
+            </div>
+
 
             {/* Body Content */}
             {showBody && page.body && page.body.length > 0 && (

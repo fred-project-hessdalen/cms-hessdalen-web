@@ -6,11 +6,14 @@ export function getBrowserLocale(fallback = 'en-US'): string {
     return fallback;
 }
 // Format a date string according to the user's browser locale
-export function formatDateByLocale(date: string | Date, fallbackLocale = 'en-US'): string {
-    const locale = getBrowserLocale(fallbackLocale);
+export function formatDateByLocale(date: string | Date): string {
+    // Always use a fixed locale and format for SSR/CSR consistency
     const d = typeof date === 'string' ? new Date(date) : date;
     if (isNaN(d.getTime())) return '';
-
-    // Use Intl.DateTimeFormat for other locales
-    return d.toLocaleDateString(locale);
+    // Example: 23/10/2025 (day/month/year)
+    return d.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+    });
 }
