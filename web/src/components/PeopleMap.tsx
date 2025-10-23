@@ -32,7 +32,7 @@ export default function PeopleMap({ members }: PeopleMapProps) {
     return (
         <MapContainer
             center={defaultPosition}
-            zoom={3}
+            zoom={2}
             style={{ height: "400px", width: "100%", margin: "2rem 0" }}
             scrollWheelZoom={true}
         >
