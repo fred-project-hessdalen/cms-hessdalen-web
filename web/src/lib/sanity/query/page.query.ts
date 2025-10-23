@@ -214,7 +214,7 @@ export const Page = z.object({
 export type PageType = Omit<z.infer<typeof Page>, "summary" | "body"> & {
   summary: PortableTextBlock[];
   body: PortableTextBlock[];
-  menu?: { name: string; link: string }[];
+  menu?: { name: string; link?: string | null }[];
 };
 
 
