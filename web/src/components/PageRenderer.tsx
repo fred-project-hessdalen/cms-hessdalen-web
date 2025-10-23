@@ -79,7 +79,7 @@ export function PageRenderer({
             <div className="mx-auto max-w-3xl py-0 flex flex-col gap-1 px-4 text-center">
                 {/* Title */}
                 {showTitle && page.title && (
-                    <h1 className="text-5xl font-semibold mt-4 mb-2">{page.title}</h1>
+                    <h1 className="text-5xl font-semibold mt-6 mb-6">{page.title}</h1>
                 )}
 
                 {/* Authors */}
@@ -124,30 +124,39 @@ export function PageRenderer({
             {/* Sticky Menu Section */}
             {page.menu && page.menu.length > 0 && (
                 <div className="sticky top-0 z-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-sm">
-                    <nav className="mx-auto max-w-3xl flex flex-wrap justify-center gap-6 px-4 py-2">
-                        {page.menu.map((item, idx) => (
-                            item.link.includes('://') ? (
-
-                                <a
-                                    key={idx}
-                                    href={item.link}
-                                    className="font-medium text-blue-600 hover:underline"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    <div className="flex items-center gap-1">
+                    <nav className="mx-auto flex flex-wrap justify-center gap-6 px-4 py-2">
+                        {page.menu.map((item, idx) => {
+                            if (!item.link) {
+                                return (
+                                    <span key={idx} className="font-bold text-blue-900 dark:text-blue-200">
                                         {item.name}
-                                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                        </svg>
-                                    </div>
-                                </a>
-                            ) : (
-                                <Link key={idx} href={item.link} className="font-medium text-blue-600 hover:underline">
-                                    {item.name}
-                                </Link>
-                            )
-                        ))}
+                                    </span>
+                                );
+                            } else if (item.link.includes('://')) {
+                                return (
+                                    <a
+                                        key={idx}
+                                        href={item.link}
+                                        className="font-medium text-blue-600 hover:underline"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <span className="flex items-center gap-1">
+                                            {item.name}
+                                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                            </svg>
+                                        </span>
+                                    </a>
+                                );
+                            } else {
+                                return (
+                                    <Link key={idx} href={item.link} className="font-medium text-blue-600 hover:underline">
+                                        {item.name}
+                                    </Link>
+                                );
+                            }
+                        })}
                     </nav>
                 </div>
             )}

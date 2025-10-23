@@ -189,7 +189,7 @@ export const Page = z.object({
     (val) => (val == null ? [] : val),
     z.array(z.object({
       name: z.string(),
-      link: z.string(),
+      link: z.string().nullable().optional(),
     }))
   ).optional(),
   mainImage: MainImage.optional().nullable(),
