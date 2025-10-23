@@ -124,7 +124,7 @@ export function PageRenderer({
             {/* Sticky Menu Section */}
             {page.menu && page.menu.length > 0 && (
                 <div className="sticky top-0 z-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-sm">
-                    <nav className="mx-auto max-w-3xl flex justify-center gap-6 px-4 py-2">
+                    <nav className="mx-auto max-w-3xl flex flex-wrap justify-center gap-6 px-4 py-2">
                         {page.menu.map((item, idx) => (
                             item.link.includes('://') ? (
 
