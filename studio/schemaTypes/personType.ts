@@ -86,6 +86,32 @@ export const personType = defineType({
             of: [{ type: "reference", to: [{ type: "organizationalRole" }] }],
             description: "Function(s) they hold within the structure (can have multiple)",
         }),
+
+        // Location for map (lat/lng)
+        defineField({
+            name: "location",
+            title: "Location (for map)",
+            type: "object",
+            fields: [
+                {
+                    name: "lat",
+                    title: "Latitude",
+                    type: "number",
+                    validation: (Rule) => Rule.min(-90).max(90),
+                },
+                {
+                    name: "lng",
+                    title: "Longitude",
+                    type: "number",
+                    validation: (Rule) => Rule.min(-180).max(180),
+                },
+            ],
+            options: {
+                collapsible: true,
+                collapsed: true,
+            },
+            description: "Geographic location for map display (optional)",
+        }),
         defineField({
             name: "affiliations",
             title: "Affiliations / Groups",

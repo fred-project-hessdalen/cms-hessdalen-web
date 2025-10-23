@@ -15,7 +15,9 @@ import {
     ALL_AFFILIATIONS_QUERY,
     AffiliationsList,
 } from "@/lib/sanity/query/people.query";
+
 import { SITE_SETTINGS_QUERY, SITE_SETTINGS } from "@/lib/sanity/query/site.query";
+import PeopleMapClient from "@/components/PeopleMapClient";
 
 export default async function PersonPage({
     searchParams,
@@ -77,6 +79,21 @@ export default async function PersonPage({
     });
 
 
+    // Prepare data for PeopleMap
+    const peopleWithLocation = (peoples ?? [])
+        .filter(
+            (p) =>
+                p.location &&
+                typeof p.location.lat === "number" &&
+                typeof p.location.lng === "number" &&
+                p.location.lat !== undefined &&
+                p.location.lng !== undefined
+        )
+        .map((p) => ({
+            name: p.name,
+            location: { lat: p.location!.lat as number, lng: p.location!.lng as number },
+        }));
+
     return (
         <div>
             <div className="bg-gray-100 dark:bg-gray-700 w-full">
@@ -126,8 +143,15 @@ export default async function PersonPage({
                 </div>
             </div>
 
+            {/* Map of member locations */}
+            {peopleWithLocation.length > 0 && (
+                <div className="mx-auto max-w-6xl px-4 py-0">
+                    <PeopleMapClient members={peopleWithLocation} />
+                </div>
+            )}
 
-            <div className="mx-auto max-w-6xl px-4 py-8">
+
+            <div className="mx-auto max-w-6xl px-4 py-0">
                 {/* Organizational Roles Section */}
                 <div className="mb-8">
                     <h2 className="text-left text-2xl font-semibold mb-4">Roles</h2>

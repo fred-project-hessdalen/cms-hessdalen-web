@@ -135,6 +135,11 @@ const PEOPLE_FIELDS = `
     label,
     url
   }
+  ,
+  location {
+    lat,
+    lng
+  }
 `;
 
 export const PEOPLE_LIST_QUERY = defineQuery(`
@@ -287,6 +292,17 @@ export const People = z.object({
   socials: zArray(SocialLink),
 
   isActive: z.boolean().optional(),
+  // Location (optional, may be missing or incomplete)
+  location: z.preprocess(
+    v => v ?? undefined,
+    z
+      .object({
+        lat: z.preprocess(v => v ?? undefined, z.number().optional()),
+        lng: z.preprocess(v => v ?? undefined, z.number().optional()),
+      })
+      .partial()
+      .optional()
+  ),
 });
 
 // ── TypeScript-only override so PortableText accepts people.bio ──────────
