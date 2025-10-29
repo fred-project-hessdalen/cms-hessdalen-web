@@ -17,7 +17,7 @@ import {
 } from "@/lib/sanity/query/people.query";
 
 import { SITE_SETTINGS_QUERY, SITE_SETTINGS } from "@/lib/sanity/query/site.query";
-import PeopleMapClient from "@/components/PeopleMapClient";
+import PeopleMapWrapper from "@/components/PeopleMapWrapper";
 
 export default async function PersonPage({
     searchParams,
@@ -119,15 +119,26 @@ export default async function PersonPage({
                     {/* Right side: Member Login Link */}
                     <div className="flex-shrink-0">
                         {session ? (
-                            <Link
-                                href="/member/dashboard"
-                                className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-md transition-colors text-xs"
-                            >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                Dashboard
-                            </Link>
+                            <div className="flex flex-col gap-2">
+                                <Link
+                                    href="/member/dashboard"
+                                    className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-md transition-colors text-xs"
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Dashboard
+                                </Link>
+                                <Link
+                                    href="/forum"
+                                    className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-md transition-colors text-xs"
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+                                    </svg>
+                                    Forum
+                                </Link>
+                            </div>
                         ) : (
                             <Link
                                 href="/auth/signin"
@@ -146,7 +157,7 @@ export default async function PersonPage({
             {/* Map of member locations */}
             {peopleWithLocation.length > 0 && (
                 <div className="mx-auto max-w-6xl px-4 py-0">
-                    <PeopleMapClient members={peopleWithLocation} />
+                    <PeopleMapWrapper members={peopleWithLocation} />
                 </div>
             )}
 

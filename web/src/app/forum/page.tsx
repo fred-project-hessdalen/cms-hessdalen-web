@@ -79,7 +79,7 @@ export default async function ForumPage() {
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
             <div className="max-w-6xl mx-auto px-4">
                 {/* Header */}
-                <div className="flex justify-between items-center mb-8">
+                <div className="text-left flex justify-between items-center mb-8">
                     <div>
                         <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                             Forum
