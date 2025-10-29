@@ -107,6 +107,22 @@ export default async function MemberDashboard() {
                             </button>
                         </div>
 
+                        {/* Forum Post Card */}
+                        <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+                            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                                📝 Forum
+                            </h2>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                                Create a new forum post and start a discussion
+                            </p>
+                            <Link
+                                href="/member/forum/new"
+                                className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md transition-colors"
+                            >
+                                Create Forum Post
+                            </Link>
+                        </div>
+
                         {/* Profile Card */}
                         <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
                             <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">

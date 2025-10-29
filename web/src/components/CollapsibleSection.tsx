@@ -9,15 +9,36 @@ interface CollapsibleSectionProps {
     content?: PortableTextBlock[];
     children?: ReactNode;
     defaultOpen?: boolean;
+    isOpen?: boolean;
+    onToggle?: (isOpen: boolean) => void;
 }
 
-export function CollapsibleSection({ header, content, children, defaultOpen = false }: CollapsibleSectionProps) {
-    const [isOpen, setIsOpen] = useState(defaultOpen);
+export function CollapsibleSection({
+    header,
+    content,
+    children,
+    defaultOpen = false,
+    isOpen: controlledIsOpen,
+    onToggle
+}: CollapsibleSectionProps) {
+    const [internalIsOpen, setInternalIsOpen] = useState(defaultOpen);
+
+    // Use controlled state if provided, otherwise use internal state
+    const isOpen = controlledIsOpen !== undefined ? controlledIsOpen : internalIsOpen;
+
+    const handleToggle = () => {
+        const newState = !isOpen;
+        if (onToggle) {
+            onToggle(newState);
+        } else {
+            setInternalIsOpen(newState);
+        }
+    };
 
     return (
         <div className="mb-8 border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
             <button
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={handleToggle}
                 className="w-full flex items-center justify-between px-6 py-4 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 aria-expanded={isOpen}
             >

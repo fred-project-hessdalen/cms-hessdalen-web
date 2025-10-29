@@ -17,6 +17,9 @@ const EXPLICIT = new Set([
     "organizationalRole",
     "affiliationType",
     "professionalTitle",
+    "forumPost",
+    "forumPostType",
+    "forumPostResponse",
 ]);
 
 const structure: StructureResolver = (S) =>
@@ -39,6 +42,7 @@ const structure: StructureResolver = (S) =>
             S.listItem()
                 .title("Parts")
                 .schemaType("part")
+                .icon(() => "🔲")
                 .child(
                     S.documentTypeList("part")
                         .title("Parts")
@@ -48,19 +52,43 @@ const structure: StructureResolver = (S) =>
             S.listItem()
                 .title("Pages")
                 .schemaType("page")
+                .icon(() => "🌍")
                 .child(
                     S.documentTypeList("page")
                         .title("Pages")
                         .defaultOrdering([{ field: "path", direction: "asc" }])
                 ),
 
+
             S.listItem()
                 .title("News")
                 .schemaType("news")
+                .icon(() => "📰")
                 .child(
                     S.documentTypeList("news")
                         .title("News")
                         .defaultOrdering([{ field: "publishedHereDate", direction: "desc" }])
+                ),
+
+
+            S.listItem()
+                .title("Posts")
+                .schemaType("forumPost")
+                .icon(() => "📌")
+                .child(
+                    S.documentTypeList("forumPost")
+                        .title("Posts")
+                        .defaultOrdering([{ field: "createdAt", direction: "desc" }])
+                ),
+
+            S.listItem()
+                .title("Responses")
+                .schemaType("forumPostResponse")
+                .icon(() => "💬")
+                .child(
+                    S.documentTypeList("forumPostResponse")
+                        .title("Responses")
+                        .defaultOrdering([{ field: "createdAt", direction: "desc" }])
                 ),
 
 
@@ -71,6 +99,7 @@ const structure: StructureResolver = (S) =>
             S.listItem()
                 .title("People")
                 .schemaType("person")
+                .icon(() => "👤")
                 .child(
                     S.documentTypeList("person")
                         .title("People")
@@ -98,7 +127,7 @@ const structure: StructureResolver = (S) =>
                 ),
 
             // --- Taxonomy & Classification ---
-            S.documentTypeListItem("category").title("Tags / Categories"),
+            S.documentTypeListItem("category").title("Tags / Categories").icon(() => "🔍"),
 
             S.divider(),
 
@@ -106,8 +135,19 @@ const structure: StructureResolver = (S) =>
             S.documentTypeListItem("role").title("Credit Role / Contribution"),
             S.documentTypeListItem("membershipType").title("Membership Levels"),
             S.documentTypeListItem("organizationalRole").title("Roles"),
-            S.documentTypeListItem("affiliationType").title("Groups"),
+            S.documentTypeListItem("affiliationType").title("Groups").icon(() => "👥"),
+
             S.documentTypeListItem("professionalTitle").title("Position"),
+
+            S.listItem()
+                .title("Forum Post Types")
+                .schemaType("forumPostType")
+                .icon(() => "📍")
+                .child(
+                    S.documentTypeList("forumPostType")
+                        .title("Forum Post Types")
+                        .defaultOrdering([{ field: "title", direction: "asc" }])
+                ),
 
             S.divider(),
 

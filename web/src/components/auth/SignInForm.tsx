@@ -118,7 +118,7 @@ export function SignInForm() {
 
             <div className="mt-6 text-center">
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                    No password required. We&apos;ll send you a secure link to sign in.
+                    No password required. <br />We&apos;ll send you a secure link to sign in.
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">
                     Only registered members will receive magic links.

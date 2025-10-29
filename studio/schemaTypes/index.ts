@@ -10,6 +10,9 @@ import { membershipType } from "./membershipType"
 import { organizationalRole } from "./organizationalRole"
 import { affiliationType } from "./affiliationType"
 import { professionalTitle } from "./professionalTitle"
+import { forumPost } from "./forumPost"
+import { forumPostType } from "./forumPostType"
+import { forumPostResponse } from "./forumPostResponse"
 // Importing custom block types
 import { imageBlock } from "./blocks/imageBlock"
 import { callout } from "./blocks/callout"
@@ -42,6 +45,9 @@ export const schemaTypes = [
     organizationalRole,
     affiliationType,
     professionalTitle,
+    forumPost,
+    forumPostType,
+    forumPostResponse,
     imageBlock, textColumns, imageGallery, imageList, partsList, callout, collapsible, credit, youtubeVideo, googleSlidesEmbed, googleDocumentEmbed,
     socialLink,
     professionalAffiliation,
@@ -49,4 +55,4 @@ export const schemaTypes = [
     siteMenu,
     menuItem,
     menuLink
-]
+];
