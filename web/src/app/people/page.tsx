@@ -97,7 +97,7 @@ export default async function PersonPage({
     return (
         <div>
             <div className="bg-gray-100 dark:bg-gray-700 w-full">
-                <div className="mx-auto max-w-6xl flex items-center justify-between gap-8 py-8 px-1">
+                <div className="mx-auto max-w-6xl flex flex-col md:flex-row items-center justify-between gap-8 py-8 px-1">
                     {/* Left side: Logo and Site Name */}
                     <div className="flex items-center gap-4">
                         {siteSettings?.logo ? (
@@ -119,7 +119,7 @@ export default async function PersonPage({
                     {/* Right side: Member Login Link */}
                     <div className="flex-shrink-0">
                         {session ? (
-                            <div className="flex flex-col gap-2">
+                            <div className="flex flex-row md:flex-col gap-2">
                                 <Link
                                     href="/member/dashboard"
                                     className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-md transition-colors text-xs"
