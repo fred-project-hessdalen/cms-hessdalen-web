@@ -193,9 +193,9 @@ export default async function ForumPostPage({
                 </Link>
 
                 {/* Two-column layout: Article left, Responses right */}
-                <div className="grid grid-cols-1 2xl:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 xl:items-start">
                     {/* Left column: Article */}
-                    <article className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden h-fit">
+                    <article className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden h-fit 2xl:sticky 2xl:top-8">
                         {/* Post Type Badge */}
                         {post.type && (
                             <div className="px-6 pt-4">
