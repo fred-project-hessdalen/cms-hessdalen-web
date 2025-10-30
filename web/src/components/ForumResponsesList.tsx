@@ -133,8 +133,8 @@ export default function xForumResponsesList({
 
                         {/* Two-column layout: 3/4 content, 1/4 image/links */}
                         <div className="flex flex-col md:flex-row gap-2">
-                            {/* Left column: Title and Body (3/4) */}
-                            <div className="flex-1 md:w-3/4">
+                            {/* Left column: Title and Body (3/4 or full width if no image) */}
+                            <div className={`flex-1 ${response.image?.asset?.url ? 'md:w-3/4' : 'md:w-full'}`}>
                                 {/* Title */}
                                 <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-1">
                                     {response.title}&nbsp;&nbsp;&nbsp;
@@ -196,10 +196,9 @@ export default function xForumResponsesList({
                                 )}
                             </div>
 
-                            {/* Right column: Image (1/4) */}
-                            <div className="md:w-1/4">
-                                {/* Image */}
-                                {response.image?.asset?.url && (
+                            {/* Right column: Image (1/4) - only render if image exists */}
+                            {response.image?.asset?.url && (
+                                <div className="md:w-1/4">
                                     <div className="relative w-full h-48 rounded-lg overflow-hidden">
                                         <Image
                                             src={response.image.asset.url}
@@ -208,8 +207,8 @@ export default function xForumResponsesList({
                                             className="object-cover"
                                         />
                                     </div>
-                                )}
-                            </div>
+                                </div>
+                            )}
                         </div>
                     </article>
                 );
