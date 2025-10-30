@@ -221,7 +221,7 @@ export default async function ForumPostPage({
                                                 alt={post.author.name}
                                                 fill
                                                 className="object-cover"
-                                            />
+                              <              />
                                         </div>
                                     ) : (
                                         <div className="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
@@ -232,7 +232,7 @@ export default async function ForumPostPage({
                                     )}
                                     <div>
                                         <Link
-                                            href={`/people/${post.author.slug.current}`}
+                                            href={`/person/${post.author.slug.current}`}
                                             className="font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400"
                                         >
                                             {post.author.name}

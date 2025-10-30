@@ -50,7 +50,9 @@ export async function POST(request: NextRequest) {
         const slug = `${date}T${time}`;
 
         // Convert HTML body to Sanity block content
+        console.log("HTML body received:", body);
         const blockContent = htmlToPortableText(body);
+        console.log("Converted to blocks:", JSON.stringify(blockContent, null, 2));
 
         // Parse and filter links
         let validLinks: Array<{ _type: string; _key: string; label: string; url: string }> = [];

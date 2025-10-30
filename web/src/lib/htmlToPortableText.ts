@@ -88,10 +88,36 @@ export function htmlToPortableText(html: string): PortableTextBlock[] {
     };
 
     // Split HTML into block-level elements
-    const blockRegex = /<(h[1-6]|p|li)(?:\s[^>]*)?>([^]*?)<\/\1>|<(ul|ol)(?:\s[^>]*)?>([^]*?)<\/\3>/gi;
+    // Updated regex to also match <div> tags and handle text between blocks
+    const blockRegex = /<(h[1-6]|p|li|div)(?:\s[^>]*)?>([^]*?)<\/\1>|<(ul|ol)(?:\s[^>]*)?>([^]*?)<\/\3>/gi;
+
+    // First, let's collect all matches and track positions
     const matches = Array.from(html.matchAll(blockRegex));
 
-    if (matches.length === 0) {
+    let lastIndex = 0;
+    const segments: Array<{ type: 'text' | 'match', content: string, match?: RegExpMatchArray }> = [];
+
+    matches.forEach(match => {
+        // Add any text before this match
+        if (match.index! > lastIndex) {
+            const textBefore = html.substring(lastIndex, match.index);
+            if (textBefore.trim()) {
+                segments.push({ type: 'text', content: textBefore });
+            }
+        }
+        segments.push({ type: 'match', content: match[0], match });
+        lastIndex = match.index! + match[0].length;
+    });
+
+    // Add any remaining text after the last match
+    if (lastIndex < html.length) {
+        const textAfter = html.substring(lastIndex);
+        if (textAfter.trim()) {
+            segments.push({ type: 'text', content: textAfter });
+        }
+    }
+
+    if (segments.length === 0) {
         // No block elements found, treat as plain text paragraph
         const plainText = stripTags(html);
         if (plainText) {
@@ -113,7 +139,30 @@ export function htmlToPortableText(html: string): PortableTextBlock[] {
     } else {
         let currentListType: "bullet" | "number" | null = null;
 
-        matches.forEach((match) => {
+        segments.forEach((segment) => {
+            if (segment.type === 'text') {
+                // Handle plain text as a paragraph
+                const plainText = stripTags(segment.content);
+                if (plainText) {
+                    blocks.push({
+                        _type: "block",
+                        _key: crypto.randomUUID(),
+                        style: "normal",
+                        children: [
+                            {
+                                _type: "span",
+                                _key: crypto.randomUUID(),
+                                text: plainText,
+                                marks: [],
+                            },
+                        ],
+                        markDefs: [],
+                    });
+                }
+                return;
+            }
+
+            const match = segment.match!;
             const tag = (match[1] || match[3]).toLowerCase();
             const content = match[2] || match[4];
 
@@ -144,7 +193,8 @@ export function htmlToPortableText(html: string): PortableTextBlock[] {
 
                 currentListType = null;
             } else {
-                // Process heading or paragraph
+                // Process heading, paragraph, or div
+                // Treat div as normal paragraph
                 const style = tag.startsWith("h") ? tag : "normal";
                 const spans = extractMarks(content);
 

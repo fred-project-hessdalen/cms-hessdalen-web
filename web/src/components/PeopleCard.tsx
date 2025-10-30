@@ -15,7 +15,7 @@ export function PeopleCard({ info, current }: { info: PeopleType, current?: stri
             {/* Stretched link overlay to make the whole card clickable */}
             {!isCurrent && (
                 <Link
-                    href={`/people/${info.slug}`}
+                    href={`/person/${info.slug}`}
                     aria-label={`Open ${info.name}`}
                     className="absolute inset-0 z-10 rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                 />
