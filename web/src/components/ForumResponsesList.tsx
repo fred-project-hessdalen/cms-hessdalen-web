@@ -84,7 +84,7 @@ export default function xForumResponsesList({
                                                 src={response.author.image.asset.url}
                                                 alt={response.author.name}
                                                 fill
-                                                className="object-cover"
+                                                className="object-contain"
                                             />
                                         </div>
                                     ) : (

@@ -220,7 +220,7 @@ export default async function ForumPostPage({
                                                 src={post.author.image.asset.url}
                                                 alt={post.author.name}
                                                 fill
-                                                className="object-cover"
+                                                className="object-contain"
                                             />
                                         </div>
                                     ) : (
@@ -250,7 +250,7 @@ export default async function ForumPostPage({
                                     src={post.image.asset.url}
                                     alt={post.image.alt || post.title}
                                     fill
-                                    className="object-cover"
+                                    className="object-contain"
                                     priority
                                 />
                             </div>
