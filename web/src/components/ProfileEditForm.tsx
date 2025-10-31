@@ -202,7 +202,10 @@ export function ProfileEditForm({
                         <div className="text-left">
                             <div className="font-medium text-left">Active member</div>
                             <div className="text-sm text-gray-600 dark:text-gray-400 text-left">
-                                Uncheck to <b><u>completely</u></b> hide your profile from the website <br />(not visible to members or on public pages)
+                                Uncheck to <b><u>completely</u></b> hide your profile from the website <br />
+                                (not visible to members or on public pages)<br />
+                                Note: If you are inactive, you can <b>not</b> login and see other memebers or read the forum. <br />
+                                You can only access your profile via the special link sent by an administrator.
                             </div>
                         </div>
                     </label>
