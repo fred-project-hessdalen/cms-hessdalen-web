@@ -9,8 +9,13 @@ type ProfileData = {
     summary?: string
     mobileNumber?: string
     isPublic: boolean
+    isActive: boolean
     canShowEmail: boolean
     canShowMobileNumber: boolean
+    location?: {
+        lat?: number
+        lng?: number
+    }
 }
 
 export function ProfileEditForm({
@@ -28,8 +33,11 @@ export function ProfileEditForm({
         summary: person.summary || "",
         mobileNumber: person.mobileNumber || "",
         isPublic: person.isPublic ?? true,
+        isActive: person.isActive ?? true,
         canShowEmail: person.canShowEmail ?? false,
         canShowMobileNumber: person.canShowMobileNumber ?? false,
+        locationLat: person.location?.lat?.toString() || "",
+        locationLng: person.location?.lng?.toString() || "",
     })
 
     const handleSubmit = async (e: FormEvent) => {
@@ -43,10 +51,24 @@ export function ProfileEditForm({
                 ? "/api/member/profile"
                 : `/api/profile/${token}`
 
+            // Prepare data with location object
+            const updateData = {
+                summary: formData.summary,
+                mobileNumber: formData.mobileNumber,
+                isPublic: formData.isPublic,
+                isActive: formData.isActive,
+                canShowEmail: formData.canShowEmail,
+                canShowMobileNumber: formData.canShowMobileNumber,
+                location: {
+                    lat: formData.locationLat ? parseFloat(formData.locationLat) : undefined,
+                    lng: formData.locationLng ? parseFloat(formData.locationLng) : undefined,
+                }
+            }
+
             const response = await fetch(apiUrl, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(updateData),
             })
 
             if (response.ok) {
@@ -114,9 +136,76 @@ export function ProfileEditForm({
                     />
                 </div>
 
+                {/* Location */}
+                <div className="space-y-4 border-t pt-4">
+                    <h3 className="font-semibold text-lg text-left">Location (for map display)</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label htmlFor="locationLat" className="block text-sm font-medium mb-2 text-left">
+                                Latitude
+                            </label>
+                            <input
+                                id="locationLat"
+                                type="number"
+                                step="any"
+                                value={formData.locationLat}
+                                onChange={(e) => setFormData({ ...formData, locationLat: e.target.value })}
+                                placeholder="62.7945"
+                                min="-90"
+                                max="90"
+                                className="w-full px-4 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 text-left"
+                                suppressHydrationWarning
+                            />
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-left">
+                                Range: -90 to 90
+                            </p>
+                        </div>
+                        <div>
+                            <label htmlFor="locationLng" className="block text-sm font-medium mb-2 text-left">
+                                Longitude
+                            </label>
+                            <input
+                                id="locationLng"
+                                type="number"
+                                step="any"
+                                value={formData.locationLng}
+                                onChange={(e) => setFormData({ ...formData, locationLng: e.target.value })}
+                                placeholder="11.1850"
+                                min="-180"
+                                max="180"
+                                className="w-full px-4 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 text-left"
+                                suppressHydrationWarning
+                            />
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-left">
+                                Range: -180 to 180
+                            </p>
+                        </div>
+                    </div>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 text-left">
+                        Set your geographic coordinates for the map (center of your town, region or country - not your house!). <br />
+                        <b>Go to google maps to find the coordinates.</b>  Right-click on the map to get the Long, Lat.<br />
+                        Leave empty if you don&apos;t want to be shown on maps.
+                    </p>
+                </div>
+
                 {/* Privacy Checkboxes */}
                 <div className="space-y-4 border-t pt-4">
                     <h3 className="font-semibold text-lg text-left">Privacy Settings</h3>
+
+                    <label className="flex items-start gap-3 cursor-pointer text-left">
+                        <input
+                            type="checkbox"
+                            checked={formData.isActive}
+                            onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
+                            className="mt-1"
+                        />
+                        <div className="text-left">
+                            <div className="font-medium text-left">Active member</div>
+                            <div className="text-sm text-gray-600 dark:text-gray-400 text-left">
+                                Uncheck to <b><u>completely</u></b> hide your profile from the website <br />(not visible to members or on public pages)
+                            </div>
+                        </div>
+                    </label>
 
                     <label className="flex items-start gap-3 cursor-pointer text-left">
                         <input
@@ -128,7 +217,7 @@ export function ProfileEditForm({
                         <div className="text-left">
                             <div className="font-medium text-left">Show my profile on the public website</div>
                             <div className="text-sm text-gray-600 dark:text-gray-400 text-left">
-                                Uncheck to hide your profile from public pages (still visible to admins)
+                                Uncheck to hide your profile from public pages <br />(still visible to other members when they are logged in)
                             </div>
                         </div>
                     </label>
@@ -146,7 +235,7 @@ export function ProfileEditForm({
                                 <div className="text-left">
                                     <div className="font-medium text-left">Show my email address publicly</div>
                                     <div className="text-sm text-gray-600 dark:text-gray-400 text-left">
-                                        Allow visitors to see your email address
+                                        Allow visitors to see your email address. <br />Note: Your email is always visible to logged-in members.
                                     </div>
                                 </div>
                             </label>
@@ -161,7 +250,7 @@ export function ProfileEditForm({
                                 <div className="text-left">
                                     <div className="font-medium text-left">Show my mobile number publicly</div>
                                     <div className="text-sm text-gray-600 dark:text-gray-400 text-left">
-                                        Allow visitors to see your phone number
+                                        Allow visitors to see your phone number. <br />Note: Your mobile number is NOT visible to logged-in members unless it is explicitly allowed in your profile settings.
                                     </div>
                                 </div>
                             </label>

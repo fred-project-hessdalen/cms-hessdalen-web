@@ -103,7 +103,7 @@ export default async function SearchPage(props: { searchParams: { q?: string; ta
                                 {(peopleListRaw ?? []).map((people: PeopleType) => (
                                     <SearchCard
                                         key={people.slug}
-                                        link={`/person/${people.slug}`}
+                                        link={`/people/${people.slug}`}
                                         label={people.professionalTitle?.title || people.membershipType?.title || ""}
                                         title={people.name}
                                     />

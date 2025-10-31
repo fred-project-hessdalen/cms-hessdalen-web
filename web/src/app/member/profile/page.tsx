@@ -23,8 +23,10 @@ export default async function MemberProfilePage() {
             summary,
             mobileNumber,
             isPublic,
+            isActive,
             canShowEmail,
             canShowMobileNumber,
+            location,
             profileToken,
             "image": image.asset->url,
             professionalTitle->{
@@ -48,8 +50,10 @@ export default async function MemberProfilePage() {
                 summary,
                 mobileNumber,
                 isPublic,
+                isActive,
                 canShowEmail,
                 canShowMobileNumber,
+                location,
                 profileToken,
                 "image": image.asset->url,
                 professionalTitle->{

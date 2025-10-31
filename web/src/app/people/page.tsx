@@ -6,7 +6,6 @@ import { auth } from "@/lib/auth";
 
 import { fetchAndParse } from "@/lib/sanity/fetch";
 import {
-    PEOPLE_LIST_QUERY,
     PEOPLE_BY_ROLE_QUERY,
     PEOPLE_BY_AFFILIATION_QUERY,
     PeopleList,
@@ -18,6 +17,90 @@ import {
 
 import { SITE_SETTINGS_QUERY, SITE_SETTINGS } from "@/lib/sanity/query/site.query";
 import PeopleMapWrapper from "@/components/PeopleMapWrapper";
+import { publicClient } from "@/sanity/client";
+import { defineQuery } from "next-sanity";
+
+// Define queries for all people (when logged in)
+const PEOPLE_FIELDS = `
+  _id,
+  _type,
+  name,
+  "slug": slug.current,
+  email,
+  "mobile": select(canShowMobileNumber == true => mobileNumber, null),
+  canShowEmail,
+  canShowMobileNumber,
+  isPublic,
+  country,
+  website,
+  isActive,
+  group,
+  "image": image.asset->url,
+  summary,
+  professionalTitle->{
+    _id,
+    title,
+    "slug": slug.current
+  },
+  membershipType->{
+    _id,
+    title,
+    "slug": slug.current,
+    description,
+    order
+  },
+  organizationalRoles[]->{
+    _id,
+    title,
+    "slug": slug.current,
+    description,
+    order
+  },
+  affiliations[]->{
+    _id,
+    title,
+    "slug": slug.current,
+    description,
+    type,
+    color
+  },
+  professionalAffiliations[]{
+    title,
+    organization,
+    organizationUrl,
+    startDate,
+    endDate,
+    isPrimary,
+    description
+  },
+  bio,
+  socials[]{
+    label,
+    url
+  },
+  location {
+    lat,
+    lng
+  }
+`;
+
+const ALL_PEOPLE_LIST_QUERY = defineQuery(`
+  *[_type == "person" && isActive == true] | order(group asc, name asc) {
+    ${PEOPLE_FIELDS}
+  }
+`);
+
+const ALL_PEOPLE_BY_ROLE_QUERY = defineQuery(`
+  *[_type == "person" && isActive == true && $roleSlug in organizationalRoles[]->slug.current] | order(group asc, name asc) {
+    ${PEOPLE_FIELDS}
+  }
+`);
+
+const ALL_PEOPLE_BY_AFFILIATION_QUERY = defineQuery(`
+  *[_type == "person" && isActive == true && $groupSlug in affiliations[]->slug.current] | order(group asc, name asc) {
+    ${PEOPLE_FIELDS}
+  }
+`);
 
 export default async function PersonPage({
     searchParams,
@@ -31,14 +114,39 @@ export default async function PersonPage({
     // Check if user is logged in
     const session = await auth();
 
+    // Check if user is admin (has @hessdalen.org email)
+    const isAdmin = session?.user?.email?.endsWith('@hessdalen.org') ?? false;
+
     // Fetch people based on filters or show all
+    // If logged in, show ALL people; otherwise only public ones
     let peoples;
-    if (roleSlug) {
-        peoples = await fetchAndParse(PEOPLE_BY_ROLE_QUERY, { roleSlug }, PeopleList);
-    } else if (groupSlug) {
-        peoples = await fetchAndParse(PEOPLE_BY_AFFILIATION_QUERY, { groupSlug }, PeopleList);
+    if (session) {
+        // Logged in - show ALL people
+        if (roleSlug) {
+            const data = await publicClient.fetch(ALL_PEOPLE_BY_ROLE_QUERY, { roleSlug });
+            peoples = PeopleList.parse(data);
+        } else if (groupSlug) {
+            const data = await publicClient.fetch(ALL_PEOPLE_BY_AFFILIATION_QUERY, { groupSlug });
+            peoples = PeopleList.parse(data);
+        } else {
+            const data = await publicClient.fetch(ALL_PEOPLE_LIST_QUERY);
+            peoples = PeopleList.parse(data);
+        }
     } else {
-        peoples = await fetchAndParse(PEOPLE_LIST_QUERY, {}, PeopleList);
+        // Not logged in - show only public people
+        if (roleSlug) {
+            peoples = await fetchAndParse(PEOPLE_BY_ROLE_QUERY, { roleSlug }, PeopleList);
+        } else if (groupSlug) {
+            peoples = await fetchAndParse(PEOPLE_BY_AFFILIATION_QUERY, { groupSlug }, PeopleList);
+        } else {
+            // Use public query from people.query.ts
+            const data = await publicClient.fetch(defineQuery(`
+              *[_type == "person" && (isPublic == true || !defined(isPublic))] | order(group asc, name asc) {
+                ${PEOPLE_FIELDS}
+              }
+            `));
+            peoples = PeopleList.parse(data);
+        }
     }
 
     const organizationalRoles = await fetchAndParse(ALL_ORGANIZATIONAL_ROLES_QUERY, {}, OrganizationalRolesList);
@@ -269,8 +377,11 @@ export default async function PersonPage({
                             {/* People Cards Grid */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                 {group.people.map((p) => (
-                                    <PeopleCard key={p.slug}
+                                    <PeopleCard
+                                        key={p.slug}
                                         info={{ ...p, bio: (p.bio as PortableTextBlock[]) || [] }}
+                                        isLoggedIn={!!session}
+                                        isAdmin={isAdmin}
                                     />
                                 ))}
                             </div>

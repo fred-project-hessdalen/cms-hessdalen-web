@@ -95,7 +95,7 @@ export default function xForumResponsesList({
                                         </div>
                                     )}
                                     <Link
-                                        href={`/person/${response.author.slug.current}`}
+                                        href={`/people/${response.author.slug.current}`}
                                         className="font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400 text-sm"
                                     >
                                         {response.author.name}

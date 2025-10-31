@@ -20,8 +20,10 @@ export async function GET() {
                 summary,
                 mobileNumber,
                 isPublic,
+                isActive,
                 canShowEmail,
                 canShowMobileNumber,
+                location,
                 profileToken
             }`,
             { userId: session.user.id }
@@ -37,8 +39,10 @@ export async function GET() {
                     summary,
                     mobileNumber,
                     isPublic,
+                    isActive,
                     canShowEmail,
                     canShowMobileNumber,
+                    location,
                     profileToken
                 }`,
                 { email: session.user.email }
@@ -91,7 +95,7 @@ export async function PATCH(request: NextRequest) {
         const updates = await request.json()
 
         // Only allow updating specific fields
-        const allowedFields = ["summary", "mobileNumber", "isPublic", "canShowEmail", "canShowMobileNumber"]
+        const allowedFields = ["summary", "mobileNumber", "isPublic", "isActive", "canShowEmail", "canShowMobileNumber", "location"]
         const sanitizedUpdates = Object.fromEntries(
             Object.entries(updates).filter(([key]) => allowedFields.includes(key))
         )

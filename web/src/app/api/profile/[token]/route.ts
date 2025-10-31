@@ -27,8 +27,10 @@ export async function PATCH(
             summary: body.summary,
             mobileNumber: body.mobileNumber,
             isPublic: body.isPublic,
+            isActive: body.isActive,
             canShowEmail: body.canShowEmail,
             canShowMobileNumber: body.canShowMobileNumber,
+            location: body.location,
         }
 
         // Update person document using writeClient

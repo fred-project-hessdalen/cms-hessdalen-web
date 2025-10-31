@@ -10,8 +10,10 @@ const PROFILE_BY_TOKEN_QUERY = `
     summary,
     mobileNumber,
     isPublic,
+    isActive,
     canShowEmail,
-    canShowMobileNumber
+    canShowMobileNumber,
+    location
   }
 `
 
@@ -22,8 +24,16 @@ const ProfileSchema = z.object({
     summary: z.preprocess(v => v ?? undefined, z.string().optional()),
     mobileNumber: z.preprocess(v => v ?? undefined, z.string().optional()),
     isPublic: z.preprocess(v => v ?? true, z.boolean()),
+    isActive: z.preprocess(v => v ?? true, z.boolean()),
     canShowEmail: z.preprocess(v => v ?? false, z.boolean()),
     canShowMobileNumber: z.preprocess(v => v ?? false, z.boolean()),
+    location: z.preprocess(
+        v => v ?? undefined,
+        z.object({
+            lat: z.preprocess(v => v ?? undefined, z.number().optional()),
+            lng: z.preprocess(v => v ?? undefined, z.number().optional()),
+        }).partial().optional()
+    ),
 })
 
 export default async function ProfileEditPage({

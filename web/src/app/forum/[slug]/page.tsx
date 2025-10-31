@@ -232,7 +232,7 @@ export default async function ForumPostPage({
                                     )}
                                     <div>
                                         <Link
-                                            href={`/person/${post.author.slug.current}`}
+                                            href={`/people/${post.author.slug.current}`}
                                             className="font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400"
                                         >
                                             {post.author.name}

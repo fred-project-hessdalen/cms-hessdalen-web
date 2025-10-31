@@ -1,12 +1,20 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import type { PeopleType } from "@/lib/sanity/query/people.query";
+import Tooltip from "./Tooltip";
 
-export function PeopleCard({ info, current }: { info: PeopleType, current?: string }) {
+export function PeopleCard({ info, current, isLoggedIn, isAdmin }: { info: PeopleType, current?: string, isLoggedIn?: boolean, isAdmin?: boolean }) {
     const getInitials = (name?: string) =>
         name ? name.split(/\s+/).map(n => n[0]).join("").slice(0, 2).toUpperCase() : "?";
 
     const isCurrent = current === info.slug;
+
+    // If logged in, show email/mobile regardless of privacy settings
+    const showEmail = isLoggedIn ? !!info.email : (info.canShowEmail && info.email);
+    const showMobile = isLoggedIn ? !!info.mobile : (info.canShowMobileNumber && info.mobile);
+
     return (
         <div
             key={info.slug}
@@ -15,7 +23,7 @@ export function PeopleCard({ info, current }: { info: PeopleType, current?: stri
             {/* Stretched link overlay to make the whole card clickable */}
             {!isCurrent && (
                 <Link
-                    href={`/person/${info.slug}`}
+                    href={`/people/${info.slug}`}
                     aria-label={`Open ${info.name}`}
                     className="absolute inset-0 z-10 rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                 />
@@ -42,8 +50,15 @@ export function PeopleCard({ info, current }: { info: PeopleType, current?: stri
 
             {/* Text */}
             <div className="min-w-0 text-left w-full">
-                <h3 className="text-base font-semibold truncate">
-                    {info.name}
+                <h3 className="text-base font-semibold truncate flex items-center gap-1">
+                    <span className="truncate">{info.name}</span>
+                    {info.isPublic === false && (
+                        <Tooltip content="Not public" position="left">
+                            <span className="relative z-20 flex-shrink-0 text-lg">
+                                🚫
+                            </span>
+                        </Tooltip>
+                    )}
                 </h3>
 
                 {info.professionalTitle && (
@@ -54,7 +69,7 @@ export function PeopleCard({ info, current }: { info: PeopleType, current?: stri
 
 
 
-                {info.canShowEmail && info.email && (
+                {showEmail && (
                     <a
                         href={`mailto:${info.email}`}
                         className="relative z-20 text-sm text-blue-600 hover:underline break-all"
@@ -62,14 +77,16 @@ export function PeopleCard({ info, current }: { info: PeopleType, current?: stri
                         {info.email}
                     </a>
                 )}
-                {info.canShowMobileNumber && info.mobile && (
+                {showMobile && (
                     <a
-                        href={`tel:${info.mobile.replace(/\s+/g, "")}`}
+                        href={`tel:${info.mobile!.replace(/\s+/g, "")}`}
                         className="relative z-20 text-sm text-blue-600 hover:underline break-all ml-2"
                     >
-                        {info.mobile}
+                        📞 {info.mobile}
                     </a>
                 )}
+
+
                 {info.summary && (
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         {info.summary}
