@@ -33,6 +33,16 @@ interface ForumPost {
             text?: string;
         }>;
     }>;
+    // Responders - unique authors who have replied to this post
+    responders?: Array<{
+        _id: string;
+        name: string;
+        image?: {
+            asset: {
+                url: string;
+            };
+        };
+    }>;
 }
 
 async function getForumPosts(): Promise<ForumPost[]> {
@@ -59,7 +69,16 @@ async function getForumPosts(): Promise<ForumPost[]> {
         url
       }
     },
-    body[0..1]
+    body[0..1],
+    "responders": *[_type == "forumPostResponse" && references(^._id)].author->{
+      _id,
+      name,
+      image {
+        asset-> {
+          url
+        }
+      }
+    } | order(_createdAt desc)
   }`;
 
     return await publicClient.fetch(query);
@@ -186,29 +205,73 @@ export default async function ForumPage() {
                                                     </p>
                                                 )}
 
-                                                {/* Author & Date */}
-                                                <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
-                                                    <div className="flex items-center gap-2">
-                                                        {post.author.image?.asset?.url ? (
-                                                            <div className="relative w-6 h-6 rounded-full overflow-hidden">
-                                                                <Image
-                                                                    src={post.author.image.asset.url}
-                                                                    alt={post.author.name}
-                                                                    fill
-                                                                    className="object-cover"
-                                                                />
-                                                            </div>
-                                                        ) : (
-                                                            <div className="w-6 h-6 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
-                                                                <span className="text-xs font-semibold text-gray-600 dark:text-gray-300">
-                                                                    {post.author.name.charAt(0).toUpperCase()}
-                                                                </span>
-                                                            </div>
-                                                        )}
-                                                        <span className="font-medium">{post.author.name}</span>
+                                                {/* Author & Date + Responders */}
+                                                <div className="flex items-center justify-between gap-3">
+                                                    {/* Left: Author & Date */}
+                                                    <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
+                                                        <div className="flex items-center gap-2">
+                                                            {post.author.image?.asset?.url ? (
+                                                                <div className="relative w-6 h-6 rounded-full overflow-hidden">
+                                                                    <Image
+                                                                        src={post.author.image.asset.url}
+                                                                        alt={post.author.name}
+                                                                        fill
+                                                                        className="object-cover"
+                                                                    />
+                                                                </div>
+                                                            ) : (
+                                                                <div className="w-6 h-6 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
+                                                                    <span className="text-xs font-semibold text-gray-600 dark:text-gray-300">
+                                                                        {post.author.name.charAt(0).toUpperCase()}
+                                                                    </span>
+                                                                </div>
+                                                            )}
+                                                            <span className="font-medium">{post.author.name}</span>
+                                                        </div>
+                                                        <span>•</span>
+                                                        <span>{formattedDate}</span>
                                                     </div>
-                                                    <span>•</span>
-                                                    <span>{formattedDate}</span>
+
+                                                    {/* Right: Responders */}
+                                                    {post.responders && post.responders.length > 0 && (
+                                                        <div className="flex items-center gap-1">
+                                                            {/* Get unique responders (first 5) */}
+                                                            {Array.from(new Map(post.responders.map(r => [r._id, r])).values())
+                                                                .slice(0, 5)
+                                                                .map((responder, idx) => (
+                                                                    <div
+                                                                        key={responder._id}
+                                                                        className="relative w-7 h-7 rounded-full overflow-hidden border-2 border-white dark:border-gray-800"
+                                                                        style={{ marginLeft: idx > 0 ? '-8px' : '0' }}
+                                                                        title={responder.name}
+                                                                    >
+                                                                        {responder.image?.asset?.url ? (
+                                                                            <Image
+                                                                                src={responder.image.asset.url}
+                                                                                alt={responder.name}
+                                                                                fill
+                                                                                className="object-cover"
+                                                                            />
+                                                                        ) : (
+                                                                            <div className="w-full h-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
+                                                                                <span className="text-xs font-semibold text-gray-600 dark:text-gray-300">
+                                                                                    {responder.name.charAt(0).toUpperCase()}
+                                                                                </span>
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                ))}
+                                                            {/* Show count if more than 5 responders */}
+                                                            {new Set(post.responders.map(r => r._id)).size > 5 && (
+                                                                <div
+                                                                    className="relative w-7 h-7 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center border-2 border-white dark:border-gray-800 text-xs font-semibold text-gray-600 dark:text-gray-300"
+                                                                    style={{ marginLeft: '-8px' }}
+                                                                >
+                                                                    +{new Set(post.responders.map(r => r._id)).size - 5}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>
