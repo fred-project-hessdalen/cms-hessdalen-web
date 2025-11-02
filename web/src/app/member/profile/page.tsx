@@ -22,13 +22,19 @@ export default async function MemberProfilePage() {
             email,
             summary,
             mobileNumber,
+            website,
             isPublic,
             isActive,
             canShowEmail,
             canShowMobileNumber,
             location,
             profileToken,
-            "image": image.asset->url,
+            image {
+                asset-> {
+                    _ref,
+                    url
+                }
+            },
             professionalTitle->{
                 _id,
                 title,
@@ -49,13 +55,19 @@ export default async function MemberProfilePage() {
                 email,
                 summary,
                 mobileNumber,
+                website,
                 isPublic,
                 isActive,
                 canShowEmail,
                 canShowMobileNumber,
                 location,
                 profileToken,
-                "image": image.asset->url,
+                image {
+                    asset-> {
+                        _ref,
+                        url
+                    }
+                },
                 professionalTitle->{
                     _id,
                     title,
@@ -123,6 +135,7 @@ export default async function MemberProfilePage() {
                     <PeopleCard
                         info={{
                             ...person,
+                            image: person.image?.asset?.url || null,
                             mobile: person.mobileNumber,
                             bio: person.bio || []
                         }}

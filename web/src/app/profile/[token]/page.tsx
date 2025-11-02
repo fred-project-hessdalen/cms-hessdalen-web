@@ -9,11 +9,18 @@ const PROFILE_BY_TOKEN_QUERY = `
     email,
     summary,
     mobileNumber,
+    website,
     isPublic,
     isActive,
     canShowEmail,
     canShowMobileNumber,
-    location
+    location,
+    image {
+      asset-> {
+        _ref,
+        url
+      }
+    }
   }
 `
 
@@ -23,6 +30,7 @@ const ProfileSchema = z.object({
     email: z.string(),
     summary: z.preprocess(v => v ?? undefined, z.string().optional()),
     mobileNumber: z.preprocess(v => v ?? undefined, z.string().optional()),
+    website: z.preprocess(v => v ?? undefined, z.string().optional()),
     isPublic: z.preprocess(v => v ?? true, z.boolean()),
     isActive: z.preprocess(v => v ?? true, z.boolean()),
     canShowEmail: z.preprocess(v => v ?? false, z.boolean()),
@@ -33,6 +41,15 @@ const ProfileSchema = z.object({
             lat: z.preprocess(v => v ?? undefined, z.number().optional()),
             lng: z.preprocess(v => v ?? undefined, z.number().optional()),
         }).partial().optional()
+    ),
+    image: z.preprocess(
+        v => v ?? undefined,
+        z.object({
+            asset: z.object({
+                _ref: z.string().optional(),
+                url: z.string().optional(),
+            }).optional(),
+        }).optional()
     ),
 })
 

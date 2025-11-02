@@ -2,12 +2,14 @@
 
 import { useState, FormEvent } from "react"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 
 type ProfileData = {
     name: string
     email: string
     summary?: string
     mobileNumber?: string
+    website?: string
     isPublic: boolean
     isActive: boolean
     canShowEmail: boolean
@@ -15,6 +17,12 @@ type ProfileData = {
     location?: {
         lat?: number
         lng?: number
+    }
+    image?: {
+        asset?: {
+            _ref?: string
+            url?: string
+        }
     }
 }
 
@@ -32,6 +40,7 @@ export function ProfileEditForm({
     const [formData, setFormData] = useState({
         summary: person.summary || "",
         mobileNumber: person.mobileNumber || "",
+        website: person.website || "",
         isPublic: person.isPublic ?? true,
         isActive: person.isActive ?? true,
         canShowEmail: person.canShowEmail ?? false,
@@ -39,6 +48,11 @@ export function ProfileEditForm({
         locationLat: person.location?.lat?.toString() || "",
         locationLng: person.location?.lng?.toString() || "",
     })
+
+    const [uploadingImage, setUploadingImage] = useState(false)
+    const [imagePreview, setImagePreview] = useState<string | null>(
+        person.image?.asset?.url || null
+    )
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault()
@@ -55,6 +69,7 @@ export function ProfileEditForm({
             const updateData = {
                 summary: formData.summary,
                 mobileNumber: formData.mobileNumber,
+                website: formData.website,
                 isPublic: formData.isPublic,
                 isActive: formData.isActive,
                 canShowEmail: formData.canShowEmail,
@@ -85,6 +100,55 @@ export function ProfileEditForm({
         }
     }
 
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            setMessage("❌ Please upload an image file")
+            return
+        }
+
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            setMessage("❌ Image must be smaller than 5MB")
+            return
+        }
+
+        setUploadingImage(true)
+        setMessage("")
+
+        try {
+            const formData = new FormData()
+            formData.append('image', file)
+
+            // Use different API endpoint for member vs token-based editing
+            const apiUrl = token === "member"
+                ? "/api/member/profile/image"
+                : `/api/profile/${token}/image`
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                body: formData,
+            })
+
+            if (response.ok) {
+                const data = await response.json()
+                setImagePreview(data.imageUrl)
+                setMessage("✅ Image uploaded successfully!")
+                router.refresh()
+            } else {
+                const error = await response.json()
+                setMessage(`❌ Error uploading image: ${error.error}`)
+            }
+        } catch {
+            setMessage("❌ Failed to upload image")
+        } finally {
+            setUploadingImage(false)
+        }
+    }
+
     return (
         <div className="max-w-2xl mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md text-left" suppressHydrationWarning>
             <h2 className="text-2xl font-bold mb-6 text-left">Profile for {person.name}</h2>
@@ -93,6 +157,56 @@ export function ProfileEditForm({
 
             <form onSubmit={handleSubmit} className="space-y-6" suppressHydrationWarning>
 
+                {/* Profile Image */}
+                <div className="space-y-4 border-t pt-4">
+                    <h3 className="font-semibold text-lg text-left">Profile Image</h3>
+                    <div className="flex items-start gap-6">
+                        {/* Image Preview */}
+                        <div className="flex-shrink-0">
+                            {imagePreview ? (
+                                <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-gray-200 dark:border-gray-600">
+                                    <Image
+                                        src={imagePreview}
+                                        alt="Profile"
+                                        fill
+                                        className="object-cover"
+                                    />
+                                </div>
+                            ) : (
+                                <div className="w-32 h-32 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center border-4 border-gray-200 dark:border-gray-600">
+                                    <span className="text-4xl font-semibold text-gray-400 dark:text-gray-500">
+                                        {person.name.charAt(0).toUpperCase()}
+                                    </span>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Upload Button */}
+                        <div className="flex-1">
+                            <label className="block">
+                                <span className="sr-only">Choose profile photo</span>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageUpload}
+                                    disabled={uploadingImage}
+                                    className="block w-full text-sm text-gray-500 dark:text-gray-400
+                                        file:mr-4 file:py-2 file:px-4
+                                        file:rounded-md file:border-0
+                                        file:text-sm file:font-semibold
+                                        file:bg-blue-50 file:text-blue-700
+                                        hover:file:bg-blue-100
+                                        dark:file:bg-blue-900 dark:file:text-blue-300
+                                        dark:hover:file:bg-blue-800
+                                        disabled:opacity-50 disabled:cursor-not-allowed"
+                                />
+                            </label>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                                {uploadingImage ? "Uploading..." : "JPG, PNG or GIF. Max 5MB."}
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
                 {/* Privacy Checkboxes */}
                 <div className="space-y-4 border-t pt-4">
@@ -205,6 +319,22 @@ export function ProfileEditForm({
                                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-left">
                                     {formData.summary.length}/280 characters
                                 </p>
+                            </div>
+
+                            {/* Website */}
+                            <div>
+                                <label htmlFor="website" className="block text-sm font-medium mb-2 text-left">
+                                    Website
+                                </label>
+                                <input
+                                    id="website"
+                                    type="url"
+                                    value={formData.website}
+                                    onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                                    placeholder="https://example.com"
+                                    className="w-full px-4 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 text-left"
+                                    suppressHydrationWarning
+                                />
                             </div>
 
 

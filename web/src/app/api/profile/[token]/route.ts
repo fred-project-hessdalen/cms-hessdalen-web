@@ -26,6 +26,7 @@ export async function PATCH(
         const allowedFields = {
             summary: body.summary,
             mobileNumber: body.mobileNumber,
+            website: body.website,
             isPublic: body.isPublic,
             isActive: body.isActive,
             canShowEmail: body.canShowEmail,
