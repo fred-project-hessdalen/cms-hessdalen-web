@@ -200,33 +200,39 @@ export function ProfileEditForm({
                             className="mt-1"
                         />
                         <div className="text-left">
-                            <div className="font-medium text-left">Active member</div>
+                            <div className="font-medium text-left">Visible to other members</div>
                             <div className="text-sm text-gray-600 dark:text-gray-400 text-left">
-                                Uncheck to <b><u>completely</u></b> hide your profile from the website <br />
-                                (not visible to members or on public pages)<br />
-                                Note: If you are inactive, you can <b>not</b> login and see other memebers or read the forum. <br />
-                                You can only access your profile via the special link sent by an administrator.
+                                Uncheck to <b><u>completely</u></b> hide your profile from everyone — both members and the public.<br />
+                                When hidden, you will not appear in any lists or searches.<br />
+                                <span className="text-red-600 dark:text-red-400 font-semibold">
+                                    If unchecked, you can <b>not</b> login and you can not see other memebers or read the forum. <br />
+                                    You can only access your profile via the special link sent by an administrator.
+                                </span>
                             </div>
                         </div>
                     </label>
 
-                    <label className="flex items-start gap-3 cursor-pointer text-left">
-                        <input
-                            type="checkbox"
-                            checked={formData.isPublic}
-                            onChange={(e) => setFormData({ ...formData, isPublic: e.target.checked })}
-                            className="mt-1"
-                        />
-                        <div className="text-left">
-                            <div className="font-medium text-left">Show my profile on the public website</div>
-                            <div className="text-sm text-gray-600 dark:text-gray-400 text-left">
-                                Uncheck to hide your profile from public pages <br />(still visible to other members when they are logged in)
+                    {/* Only show public visibility option if profile is active */}
+                    {formData.isActive && (
+                        <label className="flex items-start gap-3 cursor-pointer text-left">
+                            <input
+                                type="checkbox"
+                                checked={formData.isPublic}
+                                onChange={(e) => setFormData({ ...formData, isPublic: e.target.checked })}
+                                className="mt-1"
+                            />
+                            <div className="text-left">
+                                <div className="font-medium text-left">Visible to the public</div>
+                                <div className="text-sm text-gray-600 dark:text-gray-400 text-left">
+                                    Uncheck to hide your profile from public pages <br />
+                                    Your profile will still be visible to logged-in members.
+                                </div>
                             </div>
-                        </div>
-                    </label>
+                        </label>
+                    )}
 
                     {/* Only show email/mobile options if profile is public */}
-                    {formData.isPublic && (
+                    {formData.isActive && formData.isPublic && (
                         <>
                             <label className="flex items-start gap-3 cursor-pointer text-left">
                                 <input
