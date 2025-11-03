@@ -199,14 +199,19 @@ export default function xForumResponsesList({
                             {/* Right column: Image (1/4) - only render if image exists */}
                             {response.image?.asset?.url && (
                                 <div className="md:w-1/4">
-                                    <div className="relative w-full h-48 rounded-lg overflow-hidden">
+                                    <a
+                                        href={response.image.asset.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="block relative w-full h-48 rounded-lg overflow-hidden hover:opacity-90 transition-opacity"
+                                    >
                                         <Image
                                             src={response.image.asset.url}
                                             alt={response.title}
                                             fill
-                                            className="object-cover"
+                                            className="object-contain object-left-top"
                                         />
-                                    </div>
+                                    </a>
                                 </div>
                             )}
                         </div>

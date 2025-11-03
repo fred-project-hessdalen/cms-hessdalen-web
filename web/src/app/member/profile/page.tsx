@@ -85,7 +85,6 @@ export default async function MemberProfilePage() {
                 .set({ authUserId: session.user.id })
                 .commit()
 
-            console.log(`✅ Auto-linked auth user ${session.user.id} to person ${person._id}`)
         }
     }
 

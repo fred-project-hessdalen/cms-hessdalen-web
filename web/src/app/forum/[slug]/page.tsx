@@ -245,7 +245,12 @@ export default async function ForumPostPage({
 
                         {/* Featured Image */}
                         {post.image?.asset?.url && (
-                            <div className="relative w-full h-96">
+                            <a
+                                href={post.image.asset.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block relative w-full h-96 hover:opacity-90 transition-opacity"
+                            >
                                 <Image
                                     src={post.image.asset.url}
                                     alt={post.image.alt || post.title}
@@ -253,7 +258,7 @@ export default async function ForumPostPage({
                                     className="object-contain"
                                     priority
                                 />
-                            </div>
+                            </a>
                         )}
 
                         {/* Body Content */}

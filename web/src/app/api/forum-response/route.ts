@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { writeClient } from "@/lib/sanity/live";
 import { htmlToPortableText } from "@/lib/htmlToPortableText";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: NextRequest) {
     const session = await auth();
@@ -124,6 +127,42 @@ export async function POST(request: NextRequest) {
         };
 
         const result = await writeClient.create(doc);
+
+        // Send email notification to the post author
+        try {
+            // Get the parent post and its author
+            const parentPost = await writeClient.fetch(
+                `*[_type == "forumPost" && _id == $postId][0]{
+                    title,
+                    author->{
+                        name,
+                        email
+                    }
+                }`,
+                { postId: parentPostId }
+            );
+
+            if (parentPost?.author?.email) {
+                await resend.emails.send({
+                    from: process.env.EMAIL_FROM || 'onboarding@resend.dev',
+                    to: [parentPost.author.email],
+                    subject: `New response to your forum post: ${parentPost.title}`,
+                    html: `
+                        <h2>New Response to Your Forum Post</h2>
+                        <p><strong>Post:</strong> ${parentPost.title}</p>
+                        <p><strong>Response from:</strong> ${session.user.name || session.user.email}</p>
+                        <p><strong>Response title:</strong> ${title}</p>
+                        <hr>
+                        <div>${body}</div>
+                        <hr>
+                        <p><a href="${process.env.NEXTAUTH_URL}/forum">View in forum</a></p>
+                    `,
+                });
+            }
+        } catch (emailError) {
+            // Log email error but don't fail the response creation
+            console.error("Failed to send email notification:", emailError);
+        }
 
         return NextResponse.json({
             success: true,

@@ -69,7 +69,6 @@ export async function GET() {
                     .set({ authUserId: session.user.id })
                     .commit()
 
-                console.log(`✅ Linked auth user ${session.user.id} to person ${person._id}`)
             }
         }
 
