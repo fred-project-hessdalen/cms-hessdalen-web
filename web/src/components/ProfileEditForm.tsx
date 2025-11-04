@@ -110,50 +110,75 @@ export function ProfileEditForm({
             return
         }
 
-        // Validate file size (max 5MB)
-        if (file.size > 5 * 1024 * 1024) {
-            setMessage("❌ Image must be smaller than 5MB")
+        // Validate file size (max 2MB)
+        if (file.size > 2 * 1024 * 1024) {
+            setMessage("❌ Image must be smaller than 2MB")
             return
         }
 
-        setUploadingImage(true)
-        setMessage("")
+        // Check if image is square
+        const img = document.createElement('img')
+        const objectUrl = URL.createObjectURL(file)
 
-        try {
-            const formData = new FormData()
-            formData.append('image', file)
+        img.onload = async () => {
+            URL.revokeObjectURL(objectUrl) // Clean up
 
-            // Use different API endpoint for member vs token-based editing
-            const apiUrl = token === "member"
-                ? "/api/member/profile/image"
-                : `/api/profile/${token}/image`
-
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                body: formData,
-            })
-
-            if (response.ok) {
-                const data = await response.json()
-                setImagePreview(data.imageUrl)
-                setMessage("✅ Image uploaded successfully!")
-                router.refresh()
-            } else {
-                const error = await response.json()
-                setMessage(`❌ Error uploading image: ${error.error}`)
+            if (img.width !== img.height) {
+                setMessage(`❌ Profile picture must be square. Your image is ${img.width}x${img.height}`)
+                return
             }
-        } catch {
-            setMessage("❌ Failed to upload image")
-        } finally {
-            setUploadingImage(false)
+
+            // Image is valid, proceed with upload
+            setUploadingImage(true)
+            setMessage("")
+
+            try {
+                const formData = new FormData()
+                formData.append('image', file)
+
+                // Use different API endpoint for member vs token-based editing
+                const apiUrl = token === "member"
+                    ? "/api/member/profile/image"
+                    : `/api/profile/${token}/image`
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    body: formData,
+                })
+
+                if (response.ok) {
+                    const data = await response.json()
+                    setImagePreview(data.imageUrl)
+                    setMessage("✅ Image uploaded successfully!")
+                    router.refresh()
+                } else {
+                    const error = await response.json()
+                    setMessage(`❌ Error uploading image: ${error.error}`)
+                }
+            } catch {
+                setMessage("❌ Failed to upload image")
+            } finally {
+                setUploadingImage(false)
+            }
         }
+
+        img.onerror = () => {
+            URL.revokeObjectURL(objectUrl)
+            setMessage("❌ Failed to load image")
+        }
+
+        img.src = objectUrl
     }
 
     return (
         <div className="max-w-2xl mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md text-left" suppressHydrationWarning>
             <h2 className="text-2xl font-bold mb-6 text-left">Profile for {person.name}</h2>
 
-
+            {message && (
+                <div className="p-4 rounded-md bg-gray-100 dark:bg-gray-700 text-left">
+                    {message}
+                </div>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-6" suppressHydrationWarning>
 
@@ -202,7 +227,7 @@ export function ProfileEditForm({
                                 />
                             </label>
                             <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                                {uploadingImage ? "Uploading..." : "JPG, PNG or GIF. Max 5MB."}
+                                {uploadingImage ? "Uploading..." : "Profile picture must be square. JPG, PNG or GIF. Max 2MB."}
                             </p>
                         </div>
                     </div>
@@ -402,11 +427,7 @@ export function ProfileEditForm({
                     {saving ? "Saving..." : "Save Changes"}
                 </button>
 
-                {message && (
-                    <div className="p-4 rounded-md bg-gray-100 dark:bg-gray-700 text-left">
-                        {message}
-                    </div>
-                )}
+
             </form>
         </div>
     )

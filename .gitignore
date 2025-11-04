@@ -36,3 +36,4 @@ coverage/
 
 # Keep empty dirs if you need them
 # (create a .gitkeep file in those dirs)
+notes/
