@@ -204,7 +204,13 @@ export const PEOPLE_BY_AFFILIATION_QUERY = defineQuery(`
 
 // helpers
 const zStrOpt = z.preprocess(v => (v ?? undefined), z.string().optional());
-const zUrlOpt = z.preprocess(v => (v ?? undefined), z.string().url().optional());
+const zUrlOpt = z.preprocess(
+  v => {
+    if (!v || v === "" || v === null || v === undefined) return undefined;
+    return v;
+  },
+  z.string().url().optional()
+);
 const zArray = <T extends z.ZodTypeAny>(item: T) =>
   z.preprocess(v => (v == null ? [] : v), z.array(item));
 
