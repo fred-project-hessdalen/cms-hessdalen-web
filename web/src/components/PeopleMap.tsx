@@ -30,12 +30,13 @@ export default function PeopleMap({ members }: PeopleMapProps) {
     const defaultPosition: [number, number] = [52, -36];
     const validMembers = members.filter((m) => m.location);
     return (
-        <MapContainer
-            center={defaultPosition}
-            zoom={2}
-            style={{ height: "400px", width: "100%", margin: "2rem 0" }}
-            scrollWheelZoom={true}
-        >
+        <div className="h-96 w-full my-8 z-[1]">
+            <MapContainer
+                center={defaultPosition}
+                zoom={2}
+                className="h-full w-full"
+                scrollWheelZoom={true}
+            >
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -47,6 +48,7 @@ export default function PeopleMap({ members }: PeopleMapProps) {
                     </Marker>
                 ) : null
             )}
-        </MapContainer>
+            </MapContainer>
+        </div>
     );
 }
