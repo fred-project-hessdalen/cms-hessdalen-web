@@ -179,8 +179,10 @@ export function PageRenderer({
                                     </a>
                                 );
                             } else {
+                                // Ensure internal links start with / for root-relative paths
+                                const href = item.link.startsWith('/') ? item.link : `/${item.link}`;
                                 return (
-                                    <Link key={idx} href={item.link} className="font-medium text-blue-600 hover:underline">
+                                    <Link key={idx} href={href} className="font-medium text-blue-600 hover:underline">
                                         {item.name}
                                     </Link>
                                 );

@@ -83,7 +83,7 @@ const NEWS_FIELDS = `
       ...,
       content[]{
         ...,
-        _type == "image" => {
+        _type == "imageBlock" => {
           ...,
           asset->{url}
         }

@@ -150,7 +150,7 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
           ...,
           content[]{
             ...,
-            _type == "image" => {
+            _type == "imageBlock" => {
               ...,
               asset->{url}
             }
