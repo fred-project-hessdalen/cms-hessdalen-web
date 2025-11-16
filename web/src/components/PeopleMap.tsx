@@ -4,6 +4,38 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import React from "react";
 
+// Override Leaflet's high z-index
+const mapStyles = `
+.leaflet-container-low-z .leaflet-pane {
+  z-index: 1 !important;
+}
+.leaflet-container-low-z .leaflet-tile-pane {
+  z-index: 1 !important;
+}
+.leaflet-container-low-z .leaflet-overlay-pane {
+  z-index: 2 !important;
+}
+.leaflet-container-low-z .leaflet-marker-pane {
+  z-index: 3 !important;
+}
+.leaflet-container-low-z .leaflet-control-zoom {
+  z-index: 4 !important;
+}
+.leaflet-container-low-z .leaflet-control {
+  z-index: 4 !important;
+}
+.leaflet-container-low-z .leaflet-control-container {
+  position: relative !important;
+  z-index: 4 !important;
+}
+`;
+
+if (typeof document !== 'undefined') {
+  const style = document.createElement('style');
+  style.textContent = mapStyles;
+  document.head.appendChild(style);
+}
+
 // Fix default icon issue in Leaflet + React
 if (typeof window !== "undefined" && L && L.Icon && L.Icon.Default) {
     L.Icon.Default.mergeOptions({
@@ -30,13 +62,13 @@ export default function PeopleMap({ members }: PeopleMapProps) {
     const defaultPosition: [number, number] = [52, -36];
     const validMembers = members.filter((m) => m.location);
     return (
-        <div className="h-96 w-full my-8 z-[1]">
-            <MapContainer
-                center={defaultPosition}
-                zoom={2}
-                className="h-full w-full"
-                scrollWheelZoom={true}
-            >
+        <MapContainer
+            center={defaultPosition}
+            zoom={2}
+            className="leaflet-container-low-z"
+            style={{ height: "400px", width: "100%", margin: "2rem 0" }}
+            scrollWheelZoom={true}
+        >
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -49,6 +81,6 @@ export default function PeopleMap({ members }: PeopleMapProps) {
                 ) : null
             )}
             </MapContainer>
-        </div>
+      
     );
 }
