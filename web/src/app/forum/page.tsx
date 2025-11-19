@@ -11,6 +11,7 @@ interface ForumPost {
     author: {
         _id: string;
         name: string;
+        displayName?: string;
         image?: {
             asset: {
                 url: string;
@@ -37,6 +38,7 @@ interface ForumPost {
     responders?: Array<{
         _id: string;
         name: string;
+        displayName?: string;
         image?: {
             asset: {
                 url: string;
@@ -53,6 +55,7 @@ async function getForumPosts(): Promise<ForumPost[]> {
     author-> {
       _id,
       name,
+      displayName,
       image {
         asset-> {
           url
@@ -73,6 +76,7 @@ async function getForumPosts(): Promise<ForumPost[]> {
     "responders": *[_type == "forumPostResponse" && references(^._id)].author->{
       _id,
       name,
+      displayName,
       image {
         asset-> {
           url
@@ -222,11 +226,11 @@ export default async function ForumPage() {
                                                             ) : (
                                                                 <div className="w-6 h-6 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
                                                                     <span className="text-xs font-semibold text-gray-600 dark:text-gray-300">
-                                                                        {post.author.name.charAt(0).toUpperCase()}
+                                                                        {(post.author.displayName || post.author.name).charAt(0).toUpperCase()}
                                                                     </span>
                                                                 </div>
                                                             )}
-                                                            <span className="font-medium">{post.author.name}</span>
+                                                            <span className="font-medium">{post.author.displayName || post.author.name}</span>
                                                         </div>
                                                         <span>•</span>
                                                         <span>{formattedDate}</span>
@@ -243,19 +247,19 @@ export default async function ForumPage() {
                                                                         key={responder._id}
                                                                         className="relative w-7 h-7 rounded-full overflow-hidden border-2 border-white dark:border-gray-800"
                                                                         style={{ marginLeft: idx > 0 ? '-8px' : '0' }}
-                                                                        title={responder.name}
+                                                                        title={responder.displayName || responder.name}
                                                                     >
                                                                         {responder.image?.asset?.url ? (
                                                                             <Image
                                                                                 src={responder.image.asset.url}
-                                                                                alt={responder.name}
+                                                                                alt={responder.displayName || responder.name}
                                                                                 fill
                                                                                 className="object-cover"
                                                                             />
                                                                         ) : (
                                                                             <div className="w-full h-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
                                                                                 <span className="text-xs font-semibold text-gray-600 dark:text-gray-300">
-                                                                                    {responder.name.charAt(0).toUpperCase()}
+                                                                                    {(responder.displayName || responder.name).charAt(0).toUpperCase()}
                                                                                 </span>
                                                                             </div>
                                                                         )}

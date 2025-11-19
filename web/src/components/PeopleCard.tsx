@@ -24,7 +24,7 @@ export function PeopleCard({ info, current, isLoggedIn, isAdmin }: { info: Peopl
             {!isCurrent && (
                 <Link
                     href={`/people/${info.slug}`}
-                    aria-label={`Open ${info.name}`}
+                    aria-label={`Open ${info.displayName ? info.displayName : info.name}`}
                     className="absolute inset-0 z-10 rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                 />
             )}
@@ -33,7 +33,7 @@ export function PeopleCard({ info, current, isLoggedIn, isAdmin }: { info: Peopl
             {info.image ? (
                 <Image
                     src={info.image}
-                    alt={info.name}
+                    alt={info.displayName ? info.displayName : info.name}
                     width={56}
                     height={56}
                     className="h-14 w-14 rounded-full object-cover ring-1 ring-gray-200 dark:ring-gray-700"
@@ -44,14 +44,14 @@ export function PeopleCard({ info, current, isLoggedIn, isAdmin }: { info: Peopl
                     className="rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-sm font-semibold text-gray-700 dark:text-gray-200 flex-none"
                     style={{ width: 56, height: 56, minWidth: 56, minHeight: 56, maxWidth: 56, maxHeight: 56 }}
                 >
-                    {getInitials(info.name)}
+                    {getInitials(info.displayName ? info.displayName : info.name)}
                 </div>
             )}
 
             {/* Text */}
             <div className="min-w-0 text-left w-full">
                 <h3 className="text-base font-semibold truncate flex items-center gap-1">
-                    <span className="truncate">{info.name}</span>
+                    <span className="truncate">{info.displayName ? info.displayName : info.name}</span>
                     {info.isPublic === false && (
                         <Tooltip content="Not public" position="left">
                             <span className="relative z-20 flex-shrink-0 text-lg">

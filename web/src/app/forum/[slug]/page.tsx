@@ -35,6 +35,7 @@ interface ForumPost {
     author: {
         _id: string;
         name: string;
+        displayName?: string;
         slug: {
             current: string;
         };
@@ -70,6 +71,7 @@ async function getForumPost(slug: string): Promise<ForumPost | null> {
     author-> {
       _id,
       name,
+      displayName,
       slug,
       image {
         asset-> {
@@ -100,6 +102,7 @@ interface ForumResponse {
     author: {
         _id: string;
         name: string;
+        displayName?: string;
         slug: {
             current: string;
         };
@@ -133,6 +136,7 @@ async function getForumResponses(postId: string): Promise<ForumResponse[]> {
     author-> {
       _id,
       name,
+      displayName,
       slug,
       image {
         asset-> {
@@ -218,7 +222,7 @@ export default async function ForumPostPage({
                                         <div className="relative w-10 h-10 rounded-full overflow-hidden">
                                             <Image
                                                 src={post.author.image.asset.url}
-                                                alt={post.author.name}
+                                                alt={post.author.displayName || post.author.name}
                                                 fill
                                                 className="object-contain"
                                             />
@@ -226,7 +230,7 @@ export default async function ForumPostPage({
                                     ) : (
                                         <div className="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
                                             <span className="text-gray-600 dark:text-gray-300 font-semibold">
-                                                {post.author.name.charAt(0).toUpperCase()}
+                                                {(post.author.displayName || post.author.name).charAt(0).toUpperCase()}
                                             </span>
                                         </div>
                                     )}
@@ -235,7 +239,7 @@ export default async function ForumPostPage({
                                             href={`/people/${post.author.slug.current}`}
                                             className="font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400"
                                         >
-                                            {post.author.name}
+                                            {post.author.displayName || post.author.name}
                                         </Link>
                                         <div className="text-xs">{formattedDate}</div>
                                     </div>

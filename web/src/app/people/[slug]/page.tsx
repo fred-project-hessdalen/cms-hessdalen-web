@@ -74,7 +74,7 @@ export default async function PersonPage({
                             {people.image ? (
                                 <Image
                                     src={people.image}
-                                    alt={people.name}
+                                    alt={people.displayName || people.name}
                                     width={64}
                                     height={64}
                                     className="h-16 w-16 sm:h-32 sm:w-32 rounded-full object-cover ring-1 ring-gray-200 dark:ring-gray-700"
@@ -84,7 +84,7 @@ export default async function PersonPage({
                                 <div className="h-16 w-16 sm:h-32 sm:w-32 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-2xl font-semibold text-gray-700 dark:text-gray-200 flex-none"
                                     style={{ minWidth: 64, minHeight: 64, maxWidth: 128, maxHeight: 128 }}
                                 >
-                                    {getInitials(people.name)}
+                                    {getInitials(people.displayName || people.name)}
                                 </div>
                             )}
 
@@ -92,7 +92,7 @@ export default async function PersonPage({
                             <div className="min-w-0 text-left w-full">
                                 <div className="flex items-center justify-between gap-2 w-full">
                                     <h3 className="text-3xl font-semibold flex-1 truncate">
-                                        {people.name}
+                                        {people.displayName || people.name}
                                     </h3>
                                     {/* Membership Type */}
                                     {people.membershipType && (

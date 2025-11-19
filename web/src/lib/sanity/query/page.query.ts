@@ -112,7 +112,7 @@ const PAGE_FIELDS = `
       category
     },
     note,
-    person->{name, image}
+    person->{name, displayName, image}
   },
   publishedDate,
   categories[]->{
@@ -174,6 +174,7 @@ const Author = z.object({
   note: zStrOpt.optional(),
   person: z.object({
     name: zStrOpt,
+    displayName: zStrOpt,
     image: z.any().optional(),
   }).optional(),
 });

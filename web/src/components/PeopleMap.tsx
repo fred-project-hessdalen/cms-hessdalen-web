@@ -47,6 +47,7 @@ if (typeof window !== "undefined" && L && L.Icon && L.Icon.Default) {
 
 export interface MemberLocation {
     name: string;
+    displayName?: string;
     location: {
         lat: number;
         lng: number;
@@ -58,15 +59,45 @@ interface PeopleMapProps {
 }
 
 export default function PeopleMap({ members }: PeopleMapProps) {
+    // Debug: Log the members data
+    console.log('PeopleMap received members:', members);
+    console.log('Members count:', members.length);
+    
     // Center on Europe by default
     const defaultPosition: [number, number] = [52, -36];
-    const validMembers = members.filter((m) => m.location);
+    
+    // TEMPORARY: Add mock data to test displayName feature
+    const mockMembers: MemberLocation[] = [
+        {
+            name: "John Smith",
+            displayName: "Privacy User", // This should show instead of "John Smith"
+            location: { lat: 59.9139, lng: 10.7522 } // Oslo
+        },
+        {
+            name: "Jane Doe", 
+            // No displayName - should show "Jane Doe"
+            location: { lat: 55.6761, lng: 12.5683 } // Copenhagen
+        },
+        {
+            name: "Bob Johnson",
+            displayName: "Anonymous Researcher", // This should show instead of "Bob Johnson"
+            location: { lat: 59.3293, lng: 18.0686 } // Stockholm
+        }
+    ];
+    
+    // FORCE mock data for testing displayName feature
+    const testMembers = [...members, ...mockMembers];
+    console.log('Combined testMembers:', testMembers);
+    console.log('TestMembers with displayName:', testMembers.filter(m => m.displayName));
+    
+    const validMembers = testMembers.filter((m) => m.location);
+    console.log('Valid members (with location):', validMembers);
     return (
         <MapContainer
             center={defaultPosition}
             zoom={2}
             className="leaflet-container-low-z"
-            style={{ height: "400px", width: "100%", margin: "2rem 0" }}
+            style={{ height: "400px", width: "100%", margin: "2rem 0", border: "4px solid red", borderRadius: "8px" }}
             scrollWheelZoom={true}
         >
             <TileLayer
@@ -76,7 +107,7 @@ export default function PeopleMap({ members }: PeopleMapProps) {
             {validMembers.map((member, idx) =>
                 member.location ? (
                     <Marker key={idx} position={[member.location.lat, member.location.lng]}>
-                        <Popup>{member.name}</Popup>
+                        <Popup>{member.displayName || member.name}</Popup>
                     </Marker>
                 ) : null
             )}

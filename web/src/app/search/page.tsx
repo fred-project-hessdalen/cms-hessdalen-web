@@ -37,6 +37,18 @@ export default async function SearchPage(props: { searchParams: { q?: string; ta
         newsListRaw = news ?? [];
         pagesListRaw = pages ?? [];
         peopleListRaw = people ?? [];
+        
+        // Console log all fetched members for debugging
+        console.log('🔍 Search Results for:', q);
+        console.log('📊 People found:', peopleListRaw.length);
+        peopleListRaw.forEach((person: any, index) => {
+            console.log(`👤 ${index + 1}. ${person.name}:`, {
+                name: person.name,
+                displayName: person.displayName,
+                searchName: person.searchName,
+                hasDisplayName: !!person.displayName
+            });
+        });
     }
 
     return (
@@ -105,7 +117,7 @@ export default async function SearchPage(props: { searchParams: { q?: string; ta
                                         key={people.slug}
                                         link={`/people/${people.slug}`}
                                         label={people.professionalTitle?.title || people.membershipType?.title || ""}
-                                        title={people.name}
+                                        title={people.displayName || people.name}
                                     />
                                 ))}
                             </div>

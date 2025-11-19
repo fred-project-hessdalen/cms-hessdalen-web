@@ -105,7 +105,7 @@ export function PageRenderer({
                     <div className="text-sm text-gray-600 mb-1">
                         By {page.authors.map((author, idx) => (
                             <span key={idx} className="mr-2">
-                                {author.person?.name}{author.role?.title ? ` (${author.role.title})` : ""}
+                                {author.person?.displayName || author.person?.name}{author.role?.title ? ` (${author.role.title})` : ""}
                                 {idx < page.authors.length - 1 ? "," : ""}
                             </span>
                         ))}
