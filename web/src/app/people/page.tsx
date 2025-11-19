@@ -126,32 +126,20 @@ export default async function PersonPage({
         // Logged in - show ALL people
         if (roleSlug) {
             const data = await publicClient.fetch(ALL_PEOPLE_BY_ROLE_QUERY, { roleSlug });
-            console.log('HTTP Request - Role filtered people:', data);
             peoples = PeopleList.parse(data);
         } else if (groupSlug) {
             const data = await publicClient.fetch(ALL_PEOPLE_BY_AFFILIATION_QUERY, { groupSlug });
-            console.log('HTTP Request - Group filtered people:', data);
             peoples = PeopleList.parse(data);
         } else {
             const data = await publicClient.fetch(ALL_PEOPLE_LIST_QUERY);
-            console.log('🔍 All People with searchName:', data.map((p: any) => ({
-                name: p.name,
-                displayName: p.displayName,
-                searchName: p.searchName,
-                hasDisplayName: !!p.displayName
-            })));
             peoples = PeopleList.parse(data);
         }
     } else {
         // Not logged in - show only public people
         if (roleSlug) {
-            console.log('HTTP Request - Fetching public role filtered people');
             peoples = await fetchAndParse(PEOPLE_BY_ROLE_QUERY, { roleSlug }, PeopleList);
-            console.log('HTTP Request - Public role filtered result:', peoples);
         } else if (groupSlug) {
-            console.log('HTTP Request - Fetching public group filtered people');
             peoples = await fetchAndParse(PEOPLE_BY_AFFILIATION_QUERY, { groupSlug }, PeopleList);
-            console.log('HTTP Request - Public group filtered result:', peoples);
         } else {
             // Use public query from people.query.ts
             const data = await publicClient.fetch(defineQuery(`
@@ -159,9 +147,7 @@ export default async function PersonPage({
                 ${PEOPLE_FIELDS}
               }
             `));
-            console.log('HTTP Request - Public people data (for cards):', data);
             peoples = PeopleList.parse(data);
-            console.log('HTTP Request - Parsed public people (for cards):', peoples);
         }
     }
 
