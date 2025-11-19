@@ -26,7 +26,6 @@ const PEOPLE_FIELDS = `
   _type,
   name,
   displayName,
-  "searchName": select(defined(displayName) && displayName != "" => displayName, name),
   "slug": slug.current,
   email,
   "mobile": select(canShowMobileNumber == true => mobileNumber, null),

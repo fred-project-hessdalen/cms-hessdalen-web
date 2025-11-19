@@ -68,7 +68,7 @@ export default function PeopleMap({ members }: PeopleMapProps) {
             center={defaultPosition}
             zoom={2}
             className="leaflet-container-low-z"
-            style={{ height: "400px", width: "100%", margin: "2rem 0", borderRadius: "8px" }}
+            style={{ height: "400px", width: "100%", margin: "2rem 0" }}
             scrollWheelZoom={true}
         >
             <TileLayer
