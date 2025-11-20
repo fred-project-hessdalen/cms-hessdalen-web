@@ -35,6 +35,13 @@ export const personType = defineType({
             validation: (Rule) => Rule.required(),
         }),
         defineField({
+            name: "displayName",
+            title: "Display Name (Public)",
+            type: "string",
+            description: "Optional. If empty, your real name will be shown. Set this for privacy.",
+            validation: (Rule) => Rule.max(100),
+        }),
+        defineField({
             name: "slug",
             type: "slug",
             options: { source: "name" },

@@ -9,6 +9,7 @@ const PEOPLE_FIELDS = `
   _id,
   _type,
   name,
+  displayName,
   "slug": slug.current,
   email,
   "mobile": select(canShowMobileNumber == true => mobileNumber, null),
@@ -161,7 +162,12 @@ export const PEOPLE_BY_EMAIL_QUERY = defineQuery(`
 `);
 
 export const PEOPLE_SEARCH_QUERY = defineQuery(`
-  *[_type == "person" && isActive == true && (isPublic == true || !defined(isPublic)) && (name match $q || email match $q || summary[].children[].text match $q || bio[].children[].text match $q)] | order(name asc)[0...10] {
+  *[_type == "person" && isActive == true && (isPublic == true || !defined(isPublic)) && (
+    lower(coalesce(displayName, name)) match lower($q) + "*" ||
+    lower(email) match lower($q) + "*" ||
+    lower(summary[].children[].text) match lower($q) + "*" ||
+    lower(bio[].children[].text) match lower($q) + "*"
+  )] | order(name asc)[0...10] {
     ${PEOPLE_FIELDS}
   }
 `);
@@ -267,6 +273,7 @@ export const People = z.object({
   _id: z.string(),
   _type: z.literal("person"),
   name: z.string().min(1),
+  displayName: zStrOpt,
   slug: z.string().min(1),
 
   email: z.preprocess(v => (v ?? undefined), z.string().email().optional()),

@@ -47,6 +47,7 @@ if (typeof window !== "undefined" && L && L.Icon && L.Icon.Default) {
 
 export interface MemberLocation {
     name: string;
+    displayName?: string;
     location: {
         lat: number;
         lng: number;
@@ -60,6 +61,7 @@ interface PeopleMapProps {
 export default function PeopleMap({ members }: PeopleMapProps) {
     // Center on Europe by default
     const defaultPosition: [number, number] = [52, -36];
+    
     const validMembers = members.filter((m) => m.location);
     return (
         <MapContainer
@@ -76,7 +78,7 @@ export default function PeopleMap({ members }: PeopleMapProps) {
             {validMembers.map((member, idx) =>
                 member.location ? (
                     <Marker key={idx} position={[member.location.lat, member.location.lng]}>
-                        <Popup>{member.name}</Popup>
+                        <Popup>{member.displayName || member.name}</Popup>
                     </Marker>
                 ) : null
             )}

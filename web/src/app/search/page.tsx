@@ -105,7 +105,7 @@ export default async function SearchPage(props: { searchParams: { q?: string; ta
                                         key={people.slug}
                                         link={`/people/${people.slug}`}
                                         label={people.professionalTitle?.title || people.membershipType?.title || ""}
-                                        title={people.name}
+                                        title={people.displayName || people.name}
                                     />
                                 ))}
                             </div>

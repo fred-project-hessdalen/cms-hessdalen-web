@@ -25,6 +25,7 @@ const PEOPLE_FIELDS = `
   _id,
   _type,
   name,
+  displayName,
   "slug": slug.current,
   email,
   "mobile": select(canShowMobileNumber == true => mobileNumber, null),
@@ -153,6 +154,8 @@ export default async function PersonPage({
     const affiliations = await fetchAndParse(ALL_AFFILIATIONS_QUERY, {}, AffiliationsList);
     const siteSettings = await fetchAndParse(SITE_SETTINGS_QUERY, {}, SITE_SETTINGS);
 
+
+
     // Group people by membershipType
     type MembershipGroup = {
         membershipType: {
@@ -198,7 +201,7 @@ export default async function PersonPage({
                 p.location.lng !== undefined
         )
         .map((p) => ({
-            name: p.name,
+            name: p.displayName ? p.displayName : p.name,
             location: { lat: p.location!.lat as number, lng: p.location!.lng as number },
         }));
 

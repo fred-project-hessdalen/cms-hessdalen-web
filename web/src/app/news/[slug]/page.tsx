@@ -43,7 +43,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
                                 <div className="text-sm text-gray-600 mb-2">
                                     By {news.authors.map((author, idx) => (
                                         <span key={idx} className="mr-2">
-                                            {author.person?.name}{author.role?.title ? ` (${author.role.title})` : ""}
+                                            {author.person?.displayName || author.person?.name}{author.role?.title ? ` (${author.role.title})` : ""}
                                             {idx < news.authors.length - 1 ? "," : ""}
                                         </span>
                                     ))}

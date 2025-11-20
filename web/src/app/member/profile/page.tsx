@@ -18,6 +18,7 @@ export default async function MemberProfilePage() {
         `*[_type == "person" && authUserId == $userId][0]{
             _id,
             name,
+            displayName,
             "slug": slug.current,
             email,
             summary,
@@ -51,6 +52,7 @@ export default async function MemberProfilePage() {
             `*[_type == "person" && email == $email][0]{
                 _id,
                 name,
+                displayName,
                 "slug": slug.current,
                 email,
                 summary,

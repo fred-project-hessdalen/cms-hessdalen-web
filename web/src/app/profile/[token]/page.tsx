@@ -6,6 +6,7 @@ const PROFILE_BY_TOKEN_QUERY = `
   *[_type == "person" && profileToken == $token][0] {
     _id,
     name,
+    displayName,
     email,
     summary,
     mobileNumber,
@@ -27,6 +28,7 @@ const PROFILE_BY_TOKEN_QUERY = `
 const ProfileSchema = z.object({
     _id: z.string(),
     name: z.string(),
+    displayName: z.string(),
     email: z.string(),
     summary: z.preprocess(v => v ?? undefined, z.string().optional()),
     mobileNumber: z.preprocess(v => v ?? undefined, z.string().optional()),

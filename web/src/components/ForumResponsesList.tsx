@@ -17,6 +17,7 @@ interface ForumResponse {
     author: {
         _id: string;
         name: string;
+        displayName?: string;
         slug: {
             current: string;
         };
@@ -82,7 +83,7 @@ export default function xForumResponsesList({
                                         <div className="relative w-10 h-10 rounded-full overflow-hidden">
                                             <Image
                                                 src={response.author.image.asset.url}
-                                                alt={response.author.name}
+                                                alt={response.author.displayName || response.author.name}
                                                 fill
                                                 className="object-contain"
                                             />
@@ -90,7 +91,7 @@ export default function xForumResponsesList({
                                     ) : (
                                         <div className="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
                                             <span className="text-gray-600 dark:text-gray-300 font-semibold">
-                                                {response.author.name.charAt(0).toUpperCase()}
+                                                {(response.author.displayName || response.author.name).charAt(0).toUpperCase()}
                                             </span>
                                         </div>
                                     )}
@@ -98,7 +99,7 @@ export default function xForumResponsesList({
                                         href={`/people/${response.author.slug.current}`}
                                         className="font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400 text-sm"
                                     >
-                                        {response.author.name}
+                                        {response.author.displayName || response.author.name}
                                     </Link>
                                 </div>
                                 {response.replyTo && (
