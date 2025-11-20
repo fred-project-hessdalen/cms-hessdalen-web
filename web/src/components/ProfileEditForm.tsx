@@ -6,6 +6,7 @@ import Image from "next/image"
 
 type ProfileData = {
     name: string
+    displayName: string
     email: string
     summary?: string
     mobileNumber?: string
@@ -172,7 +173,19 @@ export function ProfileEditForm({
 
     return (
         <div className="max-w-2xl mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md text-left" suppressHydrationWarning>
-            <h2 className="text-2xl font-bold mb-6 text-left">Profile for {person.name}</h2>
+            <h2 className="text-2xl font-bold mb-0 text-left">{person.name}
+            </h2>
+            <table>
+                <tr>
+                    <td>Display name:</td>
+                    <td>&nbsp;{person.displayName}</td>
+                </tr>
+                <tr>
+                    <td>E-mail:</td>
+                    <td>&nbsp;{person.email}</td>
+                </tr>
+
+            </table>
 
             {message && (
                 <div className="p-4 rounded-md bg-gray-100 dark:bg-gray-700 text-left">
