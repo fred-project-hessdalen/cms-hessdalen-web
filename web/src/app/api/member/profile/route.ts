@@ -24,6 +24,8 @@ export async function GET() {
                 isActive,
                 canShowEmail,
                 canShowMobileNumber,
+                emailOnForumPost,
+                emailOnPostReply,
                 location,
                 profileToken,
                 image {
@@ -50,6 +52,8 @@ export async function GET() {
                     isActive,
                     canShowEmail,
                     canShowMobileNumber,
+                    emailOnForumPost,
+                    emailOnPostReply,
                     location,
                     profileToken,
                     image {
@@ -108,7 +112,7 @@ export async function PATCH(request: NextRequest) {
         const updates = await request.json()
 
         // Only allow updating specific fields
-        const allowedFields = ["summary", "mobileNumber", "website", "isPublic", "isActive", "canShowEmail", "canShowMobileNumber", "location"]
+        const allowedFields = ["summary", "mobileNumber", "website", "isPublic", "isActive", "canShowEmail", "canShowMobileNumber", "emailOnForumPost", "emailOnPostReply", "location"]
         const sanitizedUpdates = Object.fromEntries(
             Object.entries(updates).filter(([key]) => allowedFields.includes(key))
         )

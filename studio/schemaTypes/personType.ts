@@ -190,6 +190,20 @@ export const personType = defineType({
             hidden: ({ document }) => !document?.isPublic,
         }),
         defineField({
+            name: "emailOnForumPost",
+            title: "Email on Forum Post",
+            type: "boolean",
+            initialValue: false,
+            description: "Send email notification when someone creates a new forum post",
+        }),
+        defineField({
+            name: "emailOnPostReply",
+            title: "Email on Post Reply",
+            type: "boolean",
+            initialValue: false,
+            description: "Send email notification when someone replies to any forum post",
+        }),
+        defineField({
             name: "profileToken",
             title: "Profile Edit Token",
             type: "string",

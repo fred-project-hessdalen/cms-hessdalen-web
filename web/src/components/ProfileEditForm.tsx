@@ -15,6 +15,8 @@ type ProfileData = {
     isActive: boolean
     canShowEmail: boolean
     canShowMobileNumber: boolean
+    emailOnForumPost?: boolean
+    emailOnPostReply?: boolean
     location?: {
         lat?: number
         lng?: number
@@ -46,6 +48,8 @@ export function ProfileEditForm({
         isActive: person.isActive ?? true,
         canShowEmail: person.canShowEmail ?? false,
         canShowMobileNumber: person.canShowMobileNumber ?? false,
+        emailOnForumPost: person.emailOnForumPost ?? false,
+        emailOnPostReply: person.emailOnPostReply ?? false,
         locationLat: person.location?.lat?.toString() || "",
         locationLng: person.location?.lng?.toString() || "",
     })
@@ -75,6 +79,8 @@ export function ProfileEditForm({
                 isActive: formData.isActive,
                 canShowEmail: formData.canShowEmail,
                 canShowMobileNumber: formData.canShowMobileNumber,
+                emailOnForumPost: formData.emailOnForumPost,
+                emailOnPostReply: formData.emailOnPostReply,
                 location: {
                     lat: formData.locationLat ? parseFloat(formData.locationLat) : undefined,
                     lng: formData.locationLng ? parseFloat(formData.locationLng) : undefined,
@@ -429,6 +435,41 @@ export function ProfileEditForm({
                             </div>
                         </>
                     )}
+                </div>
+
+                {/* Email Notification Preferences */}
+                <div className="space-y-4 border-t pt-4">
+                    <h3 className="font-semibold text-lg text-left">Email Notifications</h3>
+                    
+                    <label className="flex items-start gap-3 cursor-pointer text-left">
+                        <input
+                            type="checkbox"
+                            checked={formData.emailOnForumPost}
+                            onChange={(e) => setFormData({ ...formData, emailOnForumPost: e.target.checked })}
+                            className="mt-1"
+                        />
+                        <div className="text-left">
+                            <div className="font-medium text-left">Send me an email for every Forum Post</div>
+                            <div className="text-sm text-gray-600 dark:text-gray-400 text-left">
+                                Get notified when someone creates a new forum post.
+                            </div>
+                        </div>
+                    </label>
+
+                    <label className="flex items-start gap-3 cursor-pointer text-left">
+                        <input
+                            type="checkbox"
+                            checked={formData.emailOnPostReply}
+                            onChange={(e) => setFormData({ ...formData, emailOnPostReply: e.target.checked })}
+                            className="mt-1"
+                        />
+                        <div className="text-left">
+                            <div className="font-medium text-left">Send me an email for every Post Reply</div>
+                            <div className="text-sm text-gray-600 dark:text-gray-400 text-left">
+                                Get notified when someone replies to any forum post.
+                            </div>
+                        </div>
+                    </label>
                 </div>
 
                 {/* Submit Button */}
