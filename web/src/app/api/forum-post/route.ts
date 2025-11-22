@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { writeClient } from "@/lib/sanity/live";
 import { htmlToPortableText } from "@/lib/htmlToPortableText";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: NextRequest) {
     const session = await auth();
@@ -111,6 +114,47 @@ export async function POST(request: NextRequest) {
         };
 
         const result = await writeClient.create(doc);
+
+        // Send email notification to members who want to be notified about new forum posts
+        try {
+            // Get all members who want email notifications for new posts
+            const membersToNotify = await writeClient.fetch(
+                `*[_type == "person" && emailOnForumPost == true && email != null]{
+                    email,
+                    emailOnForumPost
+                }`
+            );
+
+            // Build recipient list
+            const recipients: string[] = [];
+
+            membersToNotify.forEach((member: { email: string; emailOnForumPost: boolean }) => {
+                if (member.email && member.emailOnForumPost && !recipients.includes(member.email)) {
+                    recipients.push(member.email);
+                }
+            });
+
+            // Send email if there are recipients
+            if (recipients.length > 0) {
+                await resend.emails.send({
+                    from: process.env.EMAIL_FROM || 'onboarding@resend.dev',
+                    to: recipients,
+                    subject: `New forum post: ${title}`,
+                    html: `
+                        <h2>New Forum Post</h2>
+                        <p><strong>Title:</strong> ${title}</p>
+                        <p><strong>Posted by:</strong> ${session.user.name || session.user.email}</p>
+                        <hr>
+                        <div>${body}</div>
+                        <hr>
+                        <p><a href="${process.env.NEXTAUTH_URL}/forum">View in forum</a></p>
+                    `,
+                });
+            }
+        } catch (emailError) {
+            // Log email error but don't fail the post creation
+            console.error("Failed to send email notification:", emailError);
+        }
 
         return NextResponse.json({
             success: true,

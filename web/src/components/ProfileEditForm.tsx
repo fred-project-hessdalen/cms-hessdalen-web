@@ -182,15 +182,16 @@ export function ProfileEditForm({
             <h2 className="text-2xl font-bold mb-0 text-left">{person.name}
             </h2>
             <table>
-                <tr>
-                    <td>Display name:</td>
-                    <td>&nbsp;{person.displayName}</td>
-                </tr>
-                <tr>
-                    <td>E-mail:</td>
-                    <td>&nbsp;{person.email}</td>
-                </tr>
-
+                <tbody>
+                    <tr>
+                        <td>Display name:</td>
+                        <td>&nbsp;{person.displayName}</td>
+                    </tr>
+                    <tr>
+                        <td>E-mail:</td>
+                        <td>&nbsp;{person.email}</td>
+                    </tr>
+                </tbody>
             </table>
 
             {message && (
@@ -440,7 +441,7 @@ export function ProfileEditForm({
                 {/* Email Notification Preferences */}
                 <div className="space-y-4 border-t pt-4">
                     <h3 className="font-semibold text-lg text-left">Email Notifications</h3>
-                    
+
                     <label className="flex items-start gap-3 cursor-pointer text-left">
                         <input
                             type="checkbox"
@@ -481,7 +482,11 @@ export function ProfileEditForm({
                     {saving ? "Saving..." : "Save Changes"}
                 </button>
 
-
+                {message && (
+                    <div className="p-4 rounded-md bg-gray-100 dark:bg-gray-700 text-left">
+                        {message}
+                    </div>
+                )}
             </form>
         </div>
     )
