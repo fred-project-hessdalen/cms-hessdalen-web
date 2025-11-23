@@ -136,6 +136,14 @@ export const siteSettings = defineType({
         defineField({ name: "locale", title: "Default locale", type: "string", initialValue: "nb-NO" }),
         defineField({ name: "timezone", title: "Default timezone", type: "string", initialValue: "Europe/Oslo" }),
 
+        // Ko-fi Integration
+        defineField({
+            name: "kofiVerificationToken",
+            title: "Ko-fi Verification Token",
+            type: "string",
+            description: "Your Ko-fi webhook verification token for secure webhook handling",
+        }),
+
         // Optional notice/banner
         defineField({
             name: "banner",
