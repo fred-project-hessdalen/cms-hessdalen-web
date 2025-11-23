@@ -128,7 +128,7 @@ export async function POST(request: NextRequest) {
 
         const result = await writeClient.create(doc);
 
-        // Send email notification to the post author
+        // Send email notification to members who want to be notified
         try {
             // Get the parent post and its author
             const parentPost = await writeClient.fetch(
@@ -136,19 +136,44 @@ export async function POST(request: NextRequest) {
                     title,
                     author->{
                         name,
-                        email
+                        email,
+                        emailOnPostReply
                     }
                 }`,
                 { postId: parentPostId }
             );
 
-            if (parentPost?.author?.email) {
+            // Get all members who want email notifications
+            const membersToNotify = await writeClient.fetch(
+                `*[_type == "person" && emailOnPostReply == true && email != null]{
+                    email,
+                    emailOnPostReply
+                }`
+            );
+
+            // Build recipient list
+            const recipients: string[] = [];
+
+            // Add post author if they want notifications
+            if (parentPost?.author?.email && parentPost.author.emailOnPostReply) {
+                recipients.push(parentPost.author.email);
+            }
+
+            // Add all other members who want notifications
+            membersToNotify.forEach((member: { email: string; emailOnPostReply: boolean }) => {
+                if (member.email && member.emailOnPostReply && !recipients.includes(member.email)) {
+                    recipients.push(member.email);
+                }
+            });
+
+            // Send email if there are recipients
+            if (recipients.length > 0) {
                 await resend.emails.send({
                     from: process.env.EMAIL_FROM || 'onboarding@resend.dev',
-                    to: [parentPost.author.email],
-                    subject: `New response to your forum post: ${parentPost.title}`,
+                    to: recipients,
+                    subject: `[Project Hessdalen] New response to forum post: ${parentPost.title}`,
                     html: `
-                        <h2>New Response to Your Forum Post</h2>
+                        <h2>New Response to Forum Post</h2>
                         <p><strong>Post:</strong> ${parentPost.title}</p>
                         <p><strong>Response from:</strong> ${session.user.name || session.user.email}</p>
                         <p><strong>Response title:</strong> ${title}</p>

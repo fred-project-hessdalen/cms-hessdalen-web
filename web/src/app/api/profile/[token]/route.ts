@@ -31,6 +31,8 @@ export async function PATCH(
             isActive: body.isActive,
             canShowEmail: body.canShowEmail,
             canShowMobileNumber: body.canShowMobileNumber,
+            emailOnForumPost: body.emailOnForumPost,
+            emailOnPostReply: body.emailOnPostReply,
             location: body.location,
         }
 
