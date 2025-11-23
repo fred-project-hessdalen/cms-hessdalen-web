@@ -139,7 +139,7 @@ export async function POST(request: NextRequest) {
                 await resend.emails.send({
                     from: process.env.EMAIL_FROM || 'onboarding@resend.dev',
                     to: recipients,
-                    subject: `New forum post: ${title}`,
+                    subject: `[Project Hessdalen] New forum post: ${title}`,
                     html: `
                         <h2>New Forum Post</h2>
                         <p><strong>Title:</strong> ${title}</p>
