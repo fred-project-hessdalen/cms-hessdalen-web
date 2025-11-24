@@ -104,6 +104,80 @@ const PAGE_FIELDS = `
       }
     }
   },
+  restricted[]{
+    ...,
+    _type == "imageBlock" => {
+      ...,
+      asset->{url},
+      link
+    },
+    images[]{
+      ...,
+      asset->{url},
+      description[]{ ... },
+      caption,
+      credit,
+      link
+    },
+    _type == "imageList" => {
+      ...,
+      description[]{ ... },
+      highlight,
+      aspect,
+      items[]{
+        title,
+        description[]{ ... },
+        link,
+        "icon": {
+          "url": icon.asset->url
+        }
+      }
+    },
+    _type == "partsList" => {
+      ...,
+      description[]{ ... },
+      highlight,
+      items[]->{
+        _id,
+        name,
+        title,
+        description[]{ ... },
+        "image": {
+          "url": image.asset->url,
+          "alt": image.alt
+        },
+        aspect,
+        imageURL,
+        buttons[]{
+          name,
+          url,
+          style
+        },
+        align,
+        layout
+      }
+    },
+    _type == "textColumns" => {
+      ...,
+      content[]{
+        ...,
+        _type == "image" => {
+          ...,
+          asset->{url}
+        }
+      }
+    },
+    _type == "collapsible" => {
+      ...,
+      content[]{
+        ...,
+        _type == "imageBlock" => {
+          ...,
+          asset->{url}
+        }
+      }
+    }
+  },
   authors[]{
     role->{
       _id,
@@ -196,6 +270,7 @@ export const Page = z.object({
   mainImage: MainImage.optional().nullable(),
   summary: zArray(z.any()),
   body: zArray(z.any()),
+  restricted: zArray(z.any()),
   authors: zArray(Author),
   publishedDate: zStrOpt,
   categories: z.preprocess(
@@ -212,9 +287,10 @@ export const Page = z.object({
 });
 
 
-export type PageType = Omit<z.infer<typeof Page>, "summary" | "body"> & {
+export type PageType = Omit<z.infer<typeof Page>, "summary" | "body" | "restricted"> & {
   summary: PortableTextBlock[];
   body: PortableTextBlock[];
+  restricted: PortableTextBlock[];
   menu?: { name: string; link?: string | null }[];
 };
 

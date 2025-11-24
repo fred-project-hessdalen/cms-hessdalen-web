@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { fetchAndParse } from "@/lib/sanity/fetch";
 import { PAGE_BY_PATH_QUERY, Page, type PageType } from "@/lib/sanity/query/page.query";
 import { PageRenderer } from "@/components/PageRenderer";
+import { auth } from "@/lib/auth";
 
 export default async function CatchAllPage(props: { params: { slug?: string[] } } | { params: Promise<{ slug?: string[] }> }) {
     // Await params if it's a Promise (Next.js dynamic API)
@@ -23,9 +24,13 @@ export default async function CatchAllPage(props: { params: { slug?: string[] } 
         }
     }
 
+    // Check if user is authenticated
+    const session = await auth();
+    const isAuthenticated = !!session?.user;
+
     return (
         <div className="flex flex-col gap-8">
-            <PageRenderer page={doc} />
+            <PageRenderer page={doc} isAuthenticated={isAuthenticated} />
         </div>
     );
 }

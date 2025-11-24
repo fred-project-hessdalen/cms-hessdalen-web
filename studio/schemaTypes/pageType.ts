@@ -181,7 +181,24 @@ export const pageType = defineType({
                 { type: 'googleDocumentEmbed' },
             ],
         }),
-
+        defineField({
+            name: "restricted",
+            title: "RestrictedArticle Content",
+            type: "array",
+            of: [
+                { type: "block" }, // rich text
+                { type: 'imageBlock' },
+                { type: 'imageGallery' },
+                { type: 'imageList' },
+                { type: 'partsList' },
+                { type: 'textColumns' },
+                { type: 'callout' },
+                { type: 'collapsible' },
+                { type: 'youtubeVideo' },
+                { type: 'googleSlidesEmbed' },
+                { type: 'googleDocumentEmbed' },
+            ],
+        }),
         // Multiple authors
         defineField({
             name: "authors",
