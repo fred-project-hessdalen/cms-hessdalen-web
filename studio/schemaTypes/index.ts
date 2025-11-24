@@ -13,6 +13,7 @@ import { professionalTitle } from "./professionalTitle"
 import { forumPost } from "./forumPost"
 import { forumPostType } from "./forumPostType"
 import { forumPostResponse } from "./forumPostResponse"
+import { accessKeyType } from "./accessKeyType"
 // Importing custom block types
 import { imageBlock } from "./blocks/imageBlock"
 import { callout } from "./blocks/callout"
@@ -48,6 +49,7 @@ export const schemaTypes = [
     forumPost,
     forumPostType,
     forumPostResponse,
+    accessKeyType,
     imageBlock, textColumns, imageGallery, imageList, partsList, callout, collapsible, credit, youtubeVideo, googleSlidesEmbed, googleDocumentEmbed,
     socialLink,
     professionalAffiliation,

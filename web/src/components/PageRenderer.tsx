@@ -8,6 +8,14 @@ import { CategoryList } from "@/components/CategoryList";
 import { formatDateByLocale } from "@/lib/dateFunctions";
 import React, { useEffect, useRef, useState } from "react";
 
+interface AccessKeyData {
+    key: string;
+    name: string;
+    email: string;
+    expiresAt: string;
+    isActive: boolean;
+}
+
 interface PageRendererProps {
     page: PageType;
     showTitle?: boolean;
@@ -17,6 +25,7 @@ interface PageRendererProps {
     showSummary?: boolean;
     showBody?: boolean;
     isAuthenticated?: boolean;
+    accessKey?: AccessKeyData | null;
 }
 
 export function PageRenderer({
@@ -28,9 +37,14 @@ export function PageRenderer({
     showSummary = true,
     showBody = true,
     isAuthenticated = false,
+    accessKey = null,
 }: PageRendererProps) {
     const [showStickyTitle, setShowStickyTitle] = useState(false);
     const sentinelRef = useRef<HTMLDivElement>(null);
+
+    // Check if access key is expired
+    const isKeyExpired = accessKey ? new Date(accessKey.expiresAt) < new Date() : false;
+    const hasValidAccess = isAuthenticated || (accessKey && !isKeyExpired);
 
     useEffect(() => {
         const sentinel = sentinelRef.current;
@@ -207,17 +221,50 @@ export function PageRenderer({
             {/* Restricted Content - Members Only */}
             {page.restricted && page.restricted.length > 0 && (
                 <>
-                    {isAuthenticated ? (
+                    {hasValidAccess ? (
                         <div className="bg-blue-50 dark:bg-blue-900/20 w-full px-4 pt-6 pb-8 border-t-4 border-blue-500">
                             <div className="mx-auto max-w-3xl">
                                 <div className="flex items-center gap-2 mb-4">
                                     <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
                                         <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                                     </svg>
-                                    <h2 className="text-xl font-semibold text-blue-900 dark:text-blue-200 m-0">Member Content</h2>
+                                    <div>
+                                        <h2 className="text-xl font-semibold text-blue-900 dark:text-blue-200 m-0">Member Content
+                                            {accessKey && !isAuthenticated && (
+                                                <>
+                                                    &nbsp;made available for {accessKey.name} &lt;{accessKey.email}&gt;
+                                                </>
+                                            )}
+                                        </h2>
+                                    </div>
                                 </div>
                                 <div className="mx-auto max-w-3xl items-center text-left prose">
                                     <AdvancedPortableText value={page.restricted} />
+                                </div>
+                            </div>
+                        </div>
+                    ) : accessKey && isKeyExpired ? (
+                        <div className="bg-red-50 dark:bg-red-900/20 w-full px-4 py-8 border-t-4 border-red-500">
+                            <div className="mx-auto max-w-3xl text-center">
+                                <div className="flex flex-col items-center gap-4 p-6 border border-red-300 dark:border-red-600 rounded-lg bg-white dark:bg-gray-900">
+                                    <svg className="w-12 h-12 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Access Key Expired</h3>
+                                        <p className="text-gray-600 dark:text-gray-400 mb-2">
+                                            The access key for <strong>{accessKey.name}</strong> expired on {formatDateByLocale(accessKey.expiresAt)}.
+                                        </p>
+                                        <p className="text-gray-600 dark:text-gray-400 mb-4">
+                                            Please contact the site administrator for a new access key or sign in as a member.
+                                        </p>
+                                        <Link
+                                            href="/auth/signin"
+                                            className="inline-block px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                                        >
+                                            Sign in as member
+                                        </Link>
+                                    </div>
                                 </div>
                             </div>
                         </div>
