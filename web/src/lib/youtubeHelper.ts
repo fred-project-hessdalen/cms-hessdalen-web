@@ -6,6 +6,10 @@ export function getYouTubeVideoId(url: string): string | null {
     const watchMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
     if (watchMatch) return watchMatch[1];
 
+    // Handle youtube.com/shorts/ format
+    const shortsMatch = url.match(/youtube\.com\/shorts\/([^?&\s]+)/);
+    if (shortsMatch) return shortsMatch[1];
+
     // Handle youtube.com/embed/ format
     const embedMatch = url.match(/youtube\.com\/embed\/([^?&\s]+)/);
     if (embedMatch) return embedMatch[1];

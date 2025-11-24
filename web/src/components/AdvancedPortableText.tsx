@@ -284,6 +284,13 @@ const portableTextComponents: PortableTextComponents = {
                                 const url = img?.asset?.url ?? null;
                                 if (!url) return null;
 
+                                // Components for PortableText that strips links when inside a linked image
+                                const descriptionComponents: PortableTextComponents = img?.link ? {
+                                    marks: {
+                                        link: ({ children }) => <span>{children}</span>, // Remove link, just show text
+                                    },
+                                } : {};
+
                                 const imageElement = (
                                     <div className="flex flex-col">
                                         <figure className="overflow-hidden !m-0 !p-0 rounded-lg" style={{ aspectRatio }}>
@@ -299,7 +306,7 @@ const portableTextComponents: PortableTextComponents = {
                                         {img?.caption && <div className="mt-1 text-2xl font-semibold text-center text-gray-500 dark:text-gray-500">{img.caption}</div>}
                                         {img?.description && (
                                             <div className="mt-2 text-sm text-center text-gray-600 dark:text-gray-400 prose prose-sm dark:prose-invert max-w-none">
-                                                <PortableText value={img.description} />
+                                                <PortableText value={img.description} components={descriptionComponents} />
                                             </div>
                                         )}
                                         {img?.credit && (
@@ -531,8 +538,11 @@ const portableTextComponents: PortableTextComponents = {
                 );
             }
 
+            const isShorts = value?.aspectRatio === "9:16";
+
             const aspectRatios = {
                 "16:9": "aspect-video", // 16:9
+                "9:16": "aspect-[9/16]", // 9:16 (Shorts/Vertical)
                 "4:3": "aspect-[4/3]",  // 4:3
                 "21:9": "aspect-[21/9]", // 21:9
             };
@@ -540,13 +550,13 @@ const portableTextComponents: PortableTextComponents = {
             const aspectClass = aspectRatios[value?.aspectRatio || "16:9"] || "aspect-video";
 
             return (
-                <figure className="my-8">
+                <figure className={`my-8 ${isShorts ? 'flex flex-col items-center' : ''}`}>
                     {value?.title && (
                         <figcaption className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                             {value.title}
                         </figcaption>
                     )}
-                    <div className={`relative w-full ${aspectClass} rounded-xl overflow-hidden shadow-lg`}>
+                    <div className={`relative ${isShorts ? 'w-[280px] h-[500px]' : `w-full ${aspectClass}`} rounded-xl overflow-hidden shadow-lg`}>
                         <iframe
                             src={`https://www.youtube.com/embed/${videoId}`}
                             title={value?.title || "YouTube video player"}

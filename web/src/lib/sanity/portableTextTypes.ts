@@ -84,7 +84,7 @@ export interface PTYouTubeBlock {
     _type: "youtubeVideo";
     url: string;
     title?: string;
-    aspectRatio?: "16:9" | "4:3" | "21:9";
+    aspectRatio?: "16:9" | "9:16" | "4:3" | "21:9";
 }
 
 export interface PTCollapsibleBlock {

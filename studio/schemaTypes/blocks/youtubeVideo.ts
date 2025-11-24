@@ -35,6 +35,7 @@ export const youtubeVideo = defineType({
             options: {
                 list: [
                     { title: '16:9 (Standard)', value: '16:9' },
+                    { title: '9:16 (Shorts/Vertical)', value: '9:16' },
                     { title: '4:3 (Traditional)', value: '4:3' },
                     { title: '21:9 (Ultrawide)', value: '21:9' },
                 ],
