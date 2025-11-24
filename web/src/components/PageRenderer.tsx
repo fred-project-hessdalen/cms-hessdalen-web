@@ -232,7 +232,7 @@ export function PageRenderer({
                                         <h2 className="text-xl font-semibold text-blue-900 dark:text-blue-200 m-0">Member Content
                                             {accessKey && !isAuthenticated && (
                                                 <>
-                                                    &nbsp;made available for {accessKey.name} &lt;{accessKey.email}&gt;
+                                                    &nbsp;made available to {accessKey.name} &lt;{accessKey.email}&gt;
                                                 </>
                                             )}
                                         </h2>

@@ -47,6 +47,20 @@ export default async function CatchAllPage(props: { params: { slug?: string[] },
             }`,
             { key: keyParam }
         );
+
+        // Log key usage and send email notifications (only if key is valid and not expired)
+        if (accessKeyData && new Date(accessKeyData.expiresAt) >= new Date()) {
+            // Fire and forget - don't wait for email to send
+            fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/log-key-access`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    key: keyParam,
+                    pagePath: path,
+                    pageTitle: doc.title,
+                }),
+            }).catch(err => console.error('Failed to log key access:', err));
+        }
     }
 
     return (
