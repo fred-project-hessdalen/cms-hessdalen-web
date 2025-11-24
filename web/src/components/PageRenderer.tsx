@@ -7,6 +7,8 @@ import { SimplePortableText } from "@/components/SimplePortableText";
 import { CategoryList } from "@/components/CategoryList";
 import { formatDateByLocale } from "@/lib/dateFunctions";
 import React, { useEffect, useRef, useState } from "react";
+import { clearStoredAccessKey } from "@/components/AccessKeyHandler";
+import { useRouter } from "next/navigation";
 
 interface AccessKeyData {
     key: string;
@@ -41,10 +43,19 @@ export function PageRenderer({
 }: PageRendererProps) {
     const [showStickyTitle, setShowStickyTitle] = useState(false);
     const sentinelRef = useRef<HTMLDivElement>(null);
+    const router = useRouter();
 
     // Check if access key is expired
     const isKeyExpired = accessKey ? new Date(accessKey.expiresAt) < new Date() : false;
     const hasValidAccess = isAuthenticated || (accessKey && !isKeyExpired);
+
+    const handleForgetKey = () => {
+        clearStoredAccessKey();
+        // Remove key from URL and refresh
+        const url = new URL(window.location.href);
+        url.searchParams.delete("key");
+        router.replace(url.pathname + url.search);
+    };
 
     useEffect(() => {
         const sentinel = sentinelRef.current;
@@ -224,19 +235,32 @@ export function PageRenderer({
                     {hasValidAccess ? (
                         <div className="bg-blue-50 dark:bg-blue-900/20 w-full px-4 pt-6 pb-8 border-t-4 border-blue-500">
                             <div className="mx-auto max-w-3xl">
-                                <div className="flex items-center gap-2 mb-4">
-                                    <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                                    </svg>
-                                    <div>
-                                        <h2 className="text-xl font-semibold text-blue-900 dark:text-blue-200 m-0">Member Content
-                                            {accessKey && !isAuthenticated && (
-                                                <>
-                                                    &nbsp;made available to {accessKey.name} &lt;{accessKey.email}&gt;
-                                                </>
-                                            )}
-                                        </h2>
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="flex items-center gap-2">
+                                        <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                                        </svg>
+                                        <div>
+                                            <h2 className="text-xl font-semibold text-blue-900 dark:text-blue-200 m-0">Member Content
+                                                {accessKey && !isAuthenticated && (
+                                                    <>
+                                                        &nbsp;made available to {accessKey.name} &lt;{accessKey.email}&gt;
+                                                    </>
+                                                )}
+                                            </h2>
+                                        </div>
                                     </div>
+                                    {accessKey && !isAuthenticated && (
+                                        <button
+                                            onClick={handleForgetKey}
+                                            className="px-3 py-1 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors flex items-center gap-1"
+                                            title="Remove access key and hide member content"
+                                        >
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </button>
+                                    )}
                                 </div>
                                 <div className="mx-auto max-w-3xl items-center text-left prose">
                                     <AdvancedPortableText value={page.restricted} />

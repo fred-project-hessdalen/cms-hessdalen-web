@@ -12,6 +12,8 @@ import { SanityLive } from "@/lib/sanity/live";
 import SiteFooter from "@/components/SiteFooter";
 import SiteNavigation from "@/components/SiteNavigation";
 import { Analytics } from "@vercel/analytics/next"
+import { AccessKeyHandler } from "@/components/AccessKeyHandler";
+import { Suspense } from "react";
 
 const varela = Varela_Round({
   subsets: ["latin"],
@@ -120,6 +122,9 @@ export default async function RootLayout({
           <p className="text-xs text-gray-400 dark:text-gray-500">{siteSettings.tagline}</p>
         </div>
         <SanityLive />
+        <Suspense fallback={null}>
+          <AccessKeyHandler />
+        </Suspense>
 
         <main className="flex-1 max-w-full mx-auto p-0 w-full text-center">
           {children}
