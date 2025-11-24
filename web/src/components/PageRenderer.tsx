@@ -216,7 +216,7 @@ export function PageRenderer({
                                     </svg>
                                     <h2 className="text-xl font-semibold text-blue-900 dark:text-blue-200 m-0">Member Content</h2>
                                 </div>
-                                <div className="prose prose-blue dark:prose-invert max-w-none">
+                                <div className="mx-auto max-w-3xl items-center text-left prose">
                                     <AdvancedPortableText value={page.restricted} />
                                 </div>
                             </div>
