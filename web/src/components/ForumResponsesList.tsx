@@ -43,7 +43,7 @@ interface ForumResponsesListProps {
     onReply: (responseId: string, responseTitle: string) => void;
 }
 
-export default function xForumResponsesList({
+export default function ForumResponsesList({
     responses,
     onReply,
 }: ForumResponsesListProps) {
@@ -58,6 +58,7 @@ export default function xForumResponsesList({
     return (
         <div className="space-y-6">
             {responses.map((response) => {
+                
                 const formattedDate = new Date(response.createdAt).toLocaleDateString(
                     "en-US",
                     {
@@ -72,7 +73,8 @@ export default function xForumResponsesList({
                 return (
                     <article
                         key={response._id}
-                        className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6"
+                        id={`response-${response._id}`}
+                        className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-all duration-300"
                     >
                         {/* First row: Date & Reply info on left, Author on right */}
                         <div className="flex items-center justify-between mb-3">
@@ -118,7 +120,21 @@ export default function xForumResponsesList({
                                                     d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
                                                 />
                                             </svg>
-                                            <strong>{response.replyTo.title}</strong>
+                                            <button
+                                                onClick={() => {
+                                                    const targetElement = document.getElementById(`response-${response.replyTo!._id}`);
+                                                    if (targetElement) {
+                                                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                                        targetElement.classList.add('ring-2', 'ring-indigo-500', 'ring-opacity-50');
+                                                        setTimeout(() => {
+                                                            targetElement.classList.remove('ring-2', 'ring-indigo-500', 'ring-opacity-50');
+                                                        }, 2000);
+                                                    }
+                                                }}
+                                                className="font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 underline cursor-pointer"
+                                            >
+                                              {response.replyTo.title}
+                                            </button>
                                         </span>
                                     </div>
                                 )}
