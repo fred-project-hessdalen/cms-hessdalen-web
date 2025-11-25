@@ -28,6 +28,8 @@ export default async function MemberProfilePage() {
             isActive,
             canShowEmail,
             canShowMobileNumber,
+            emailOnForumPost,
+            emailOnPostReply,
             location,
             profileToken,
             image {
@@ -62,6 +64,8 @@ export default async function MemberProfilePage() {
                 isActive,
                 canShowEmail,
                 canShowMobileNumber,
+                emailOnForumPost,
+                emailOnPostReply,
                 location,
                 profileToken,
                 image {

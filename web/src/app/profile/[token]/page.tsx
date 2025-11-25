@@ -15,6 +15,8 @@ const PROFILE_BY_TOKEN_QUERY = `
     isActive,
     canShowEmail,
     canShowMobileNumber,
+    emailOnForumPost,
+    emailOnPostReply,
     location,
     image {
       asset-> {
@@ -37,6 +39,8 @@ const ProfileSchema = z.object({
     isActive: z.preprocess(v => v ?? true, z.boolean()),
     canShowEmail: z.preprocess(v => v ?? false, z.boolean()),
     canShowMobileNumber: z.preprocess(v => v ?? false, z.boolean()),
+    emailOnForumPost: z.preprocess(v => v ?? false, z.boolean()),
+    emailOnPostReply: z.preprocess(v => v ?? false, z.boolean()),
     location: z.preprocess(
         v => v ?? undefined,
         z.object({
