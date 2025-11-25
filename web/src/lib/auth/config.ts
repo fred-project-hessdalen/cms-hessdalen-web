@@ -8,62 +8,76 @@ const prisma = new PrismaClient()
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 export const authConfig: NextAuthConfig = {
-    adapter: PrismaAdapter(prisma),
-    providers: [
-        EmailProvider({
-            server: {}, // Dummy server config (we use custom sendVerificationRequest with Resend)
-            from: process.env.EMAIL_FROM || "onboarding@resend.dev",
-            // Customize the email that gets sent
-            async sendVerificationRequest({ identifier: email, url }) {
-                const { host } = new URL(url)
+  adapter: PrismaAdapter(prisma),
+  trustHost: true, // Important: allows NextAuth to work across different domains
+  providers: [
+    EmailProvider({
+      server: {}, // Dummy server config (we use custom sendVerificationRequest with Resend)
+      from: process.env.EMAIL_FROM || "onboarding@resend.dev",
+      // Customize the email that gets sent
+      async sendVerificationRequest({ identifier: email, url }) {
+        const { host } = new URL(url)
 
-                try {
-                    await resend.emails.send({
-                        from: process.env.EMAIL_FROM || "onboarding@resend.dev",
-                        to: email,
-                        subject: `Sign in to ${host}`,
-                        html: html({ url, host, email }),
-                        text: text({ url, host }),
-                    })
-                } catch (error) {
-                    console.error("Failed to send email:", error)
-                    throw error
-                }
-            },
-        }),
-    ],
-    pages: {
-        signIn: "/auth/signin",
-        verifyRequest: "/auth/verify-request",
-        error: "/auth/error",
+        try {
+          await resend.emails.send({
+            from: process.env.EMAIL_FROM || "onboarding@resend.dev",
+            to: email,
+            subject: `Sign in to ${host}`,
+            html: html({ url, host, email }),
+            text: text({ url, host }),
+          })
+        } catch (error) {
+          console.error("Failed to send email:", error)
+          throw error
+        }
+      },
+    }),
+  ],
+  pages: {
+    signIn: "/auth/signin",
+    verifyRequest: "/auth/verify-request",
+    error: "/auth/error",
+  },
+  callbacks: {
+    async session({ session, user }) {
+      if (session?.user) {
+        session.user.id = user.id
+      }
+      return session
     },
-    callbacks: {
-        async session({ session, user }) {
-            if (session?.user) {
-                session.user.id = user.id
-            }
-            return session
-        },
-        async jwt({ token, user }) {
-            if (user) {
-                token.id = user.id
-            }
-            return token
-        },
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id
+      }
+      return token
     },
-    secret: process.env.NEXTAUTH_SECRET,
+  },
+  cookies: {
+    sessionToken: {
+      name: process.env.NODE_ENV === "production"
+        ? `__Secure-next-auth.session-token`
+        : `next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
+  },
+  secret: process.env.NEXTAUTH_SECRET,
 }
 
 // Email HTML body
 function html({ url, host, email }: { url: string; host: string; email: string }) {
-    const escapedHost = host.replace(/\./g, "&#8203;.")
-    const escapedEmail = email.replace(/\./g, "&#8203;.")
+  const escapedHost = host.replace(/\./g, "&#8203;.")
+  const escapedEmail = email.replace(/\./g, "&#8203;.")
 
-    const brandColor = "#2563eb"
-    const buttonText = "#fff"
-    const buttonBackground = brandColor
+  const brandColor = "#2563eb"
+  const buttonText = "#fff"
+  const buttonBackground = brandColor
 
-    return `
+  return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -124,5 +138,5 @@ function html({ url, host, email }: { url: string; host: string; email: string }
 
 // Email Text body (fallback for email clients that don't render HTML)
 function text({ url, host }: { url: string; host: string }) {
-    return `Sign in to ${host}\n\n${url}\n\n`
+  return `Sign in to ${host}\n\n${url}\n\n`
 }

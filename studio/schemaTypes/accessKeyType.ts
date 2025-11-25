@@ -58,11 +58,11 @@ export const accessKeyType = defineType({
             isActive: "isActive",
         },
         prepare: ({ key, name, email, expiresAt, isActive }) => {
-            const expDate = expiresAt ? new Date(expiresAt).toLocaleDateString() : "No expiry";
+            const expDate = expiresAt ? new Date(expiresAt).toLocaleDateString('no') : "No expiry";
             const status = isActive ? "✓" : "✗";
             return {
-                title: `${status} ${key}`,
-                subtitle: `${name} (${email}) - Expires: ${expDate}`,
+                title: `${status} ${name} <${email}>`,
+                subtitle: `until ${expDate.substring(0, 10)}`,
             };
         },
     },
