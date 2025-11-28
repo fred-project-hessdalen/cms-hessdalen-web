@@ -132,7 +132,12 @@ export const PAGE_BY_PATH_QUERY = defineQuery(`
 `);
 
 export const PAGE_SEARCH_QUERY = defineQuery(`
-  *[_type == "page" && (title match $q || summary[].children[].text match $q || body[].children[].text match $q)] | order(publishedDate desc)[0...10] {
+  *[_type == "page" && (
+    title match $q || 
+    summary[].children[].text match $q || 
+    body[].children[].text match $q ||
+    body[_type == "collapsible"].content[].children[].text match $q
+  )] | order(publishedDate desc)[0...10] {
     ${PAGE_FIELDS}
   }
 `);
