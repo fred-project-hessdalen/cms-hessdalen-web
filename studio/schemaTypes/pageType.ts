@@ -26,22 +26,42 @@ export const pageType = defineType({
         },
     ],
 
+    groups: [
+        {
+            name: 'edit',
+            title: 'Edit',
+            default: true
+        },
+        {
+            name: 'props',
+            title: 'Properties'
+        }
+    ],
+
+    fieldsets: [
+        {
+            name: 'navigation',
+            title: 'Advanced Navigation Settings',
+            options: { collapsible: true, collapsed: true }
+        },
+        {
+            name: 'image',
+            title: 'Main Image',
+            options: { collapsible: true, collapsed: true }
+        }
+    ],
+
     fields: [
         defineField({
             name: "title",
             type: "string",
-        }),
-        defineField({
-            name: "hidden",
-            title: "Hidden",
-            type: "boolean",
-            description: "Hide this page from navigation and sitemaps",
-            initialValue: false,
+            group: ['edit', 'props'],
         }),
         defineField({
             name: "path",
             title: "Path (no leading slash)",
             type: "string",
+            group: ['edit', 'props'],
             description: `Examples: "card", "card/fred", "docs/getting-started"`,
             validation: (Rule) =>
                 Rule.required()
@@ -77,10 +97,21 @@ export const pageType = defineType({
                     }),
         }),
         defineField({
+            name: "hidden",
+            title: "Hidden",
+            type: "boolean",
+            description: "Hide this page from navigation and sitemaps",
+            initialValue: false,
+            fieldset: 'navigation',
+            group: 'props',
+        }),
+        defineField({
             name: "redirectTo",
             title: "Redirect To (optional)",
             type: "string",
-            description: 'Internal path (e.g., "other-page") or external URL (e.g., "https://example.com"). Leave empty for no redirect.',
+            description: 'Internal path (e.g., "other-page") or external URL (e.g., "https://example.com").',
+            fieldset: 'navigation',
+            group: 'props',
         }),
 
         defineField({
@@ -101,16 +132,20 @@ export const pageType = defineType({
                     }
                 }
             ],
-            description: "Optional menu for this page. Each item has a name and a link."
+            description: "Optional menu for this page. Each item has a name and a link.",
+            fieldset: 'navigation',
+            group: 'props',
         }),
 
 
         // Tile / Cover image
         defineField({
             name: "mainImage",
-            title: "Tile Image",
+            title: "Image",
             type: "image",
             options: { hotspot: true },
+            fieldset: 'image',
+            group: 'props',
             fields: [
                 {
                     name: "alt",
@@ -143,6 +178,7 @@ export const pageType = defineType({
             name: 'summary',
             title: 'Short summary',
             type: 'array',
+            group: 'props',
             of: [
                 {
                     type: 'block',
@@ -167,6 +203,7 @@ export const pageType = defineType({
             name: "body",
             title: "Article Content",
             type: "array",
+            group: ['edit'],
             of: [
                 { type: "block" }, // rich text
                 { type: 'imageBlock' },
@@ -183,8 +220,9 @@ export const pageType = defineType({
         }),
         defineField({
             name: "restricted",
-            title: "RestrictedArticle Content",
+            title: "Members-Only Content",
             type: "array",
+            group: ['edit'],
             of: [
                 { type: "block" }, // rich text
                 { type: 'imageBlock' },
@@ -199,6 +237,14 @@ export const pageType = defineType({
                 { type: 'googleDocumentEmbed' },
             ],
         }),
+
+
+        defineField({
+            name: "publishedDate",
+            title: "Published Date",
+            type: "datetime",
+            group: 'props',
+        }),
         // Multiple authors
         defineField({
             name: "authors",
@@ -206,12 +252,7 @@ export const pageType = defineType({
             type: "array",
             of: [{ type: "credit" }],   // 👈 object, not reference
             validation: (Rule) => Rule.min(1),
-        }),
-
-        defineField({
-            name: "publishedDate",
-            title: "Published Date",
-            type: "datetime",
+            group: 'props',
         }),
 
 
@@ -226,6 +267,7 @@ export const pageType = defineType({
                     to: [{ type: "category" }],
                 }
             ],
+            group: 'props',
         }),
 
         // Single origin country
@@ -236,6 +278,7 @@ export const pageType = defineType({
             options: {
                 list: countryList,
             },
+            group: 'props',
         }),
     ],
     preview: {
