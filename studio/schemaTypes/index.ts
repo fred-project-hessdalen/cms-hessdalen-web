@@ -26,6 +26,7 @@ import { textColumns } from "./blocks/textColumns"
 import { youtubeVideo } from "./blocks/youtubeVideo"
 import { googleSlidesEmbed } from "./blocks/googleSlidesEmbed"
 import { googleDocumentEmbed } from "./blocks/googleDocumentEmbed"
+import { businessCard } from "./blocks/businessCard"
 import { socialLink } from "./objects/socialLink"
 import { professionalAffiliation } from "./objects/professionalAffiliation"
 import { siteSettings } from "./singletons/siteSettings"
@@ -50,7 +51,7 @@ export const schemaTypes = [
     forumPostType,
     forumPostResponse,
     accessKeyType,
-    imageBlock, textColumns, imageGallery, imageList, partsList, callout, collapsible, credit, youtubeVideo, googleSlidesEmbed, googleDocumentEmbed,
+    imageBlock, textColumns, imageGallery, imageList, partsList, callout, collapsible, credit, youtubeVideo, googleSlidesEmbed, googleDocumentEmbed, businessCard,
     socialLink,
     professionalAffiliation,
     siteSettings,

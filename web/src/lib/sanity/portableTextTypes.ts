@@ -110,3 +110,17 @@ export interface PTGoogleDocumentBlock {
     embedUrl: string;
     aspect?: "landscape" | "square" | "portrait";
 }
+
+export interface PTBusinessCardBlock {
+    _type: "businessCard";
+    cardPage: {
+        title: string;
+        path: string;
+        mainImage?: {
+            asset?: { url?: string };
+            alt?: string;
+        };
+        summary?: PortableTextBlock[];
+    };
+    layout?: "horizontal" | "vertical";
+}

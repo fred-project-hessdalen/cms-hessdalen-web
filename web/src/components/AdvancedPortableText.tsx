@@ -2,10 +2,11 @@ import { PortableText, PortableTextComponents } from "next-sanity";
 import type { PortableTextBlock } from "sanity";
 import Image from "next/image";
 import Link from "next/link";
-import type { PTImageBlock, PTImageGalleryBlock, PTImageListBlock, PTPartsListBlock, PTTextColumnsBlock, PTCalloutBlock, PTYouTubeBlock, PTCollapsibleBlock, PTGoogleSlidesBlock, PTGoogleDocumentBlock } from "@/lib/sanity/portableTextTypes";
+import type { PTImageBlock, PTImageGalleryBlock, PTImageListBlock, PTPartsListBlock, PTTextColumnsBlock, PTCalloutBlock, PTYouTubeBlock, PTCollapsibleBlock, PTGoogleSlidesBlock, PTGoogleDocumentBlock, PTBusinessCardBlock } from "@/lib/sanity/portableTextTypes";
 import { getYouTubeVideoId } from "@/lib/youtubeHelper";
 import { CollapsibleSection } from "./CollapsibleSection";
 import { PartsGrid } from "./PartsGrid";
+import { BusinessCardBlock } from "./BusinessCardBlock";
 
 
 const portableTextComponents: PortableTextComponents = {
@@ -677,6 +678,9 @@ const portableTextComponents: PortableTextComponents = {
                     </div>
                 </figure>
             );
+        },
+        businessCard: ({ value }: { value: PTBusinessCardBlock }) => {
+            return <BusinessCardBlock cardPage={value?.cardPage} layout={value?.layout} />;
         },
     },
 };
