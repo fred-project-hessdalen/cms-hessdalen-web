@@ -20,7 +20,7 @@ export default async function MemberDashboard() {
         : null
 
     return (
-        <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-12 px-4">
+        <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-8 px-4">
             <div className="max-w-4xl mx-auto">
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
@@ -29,7 +29,7 @@ export default async function MemberDashboard() {
 
                     {/* Member Profile Card */}
                     {person ? (
-                        <div className="mb-6 flex justify-center">
+                        <div className="mb-8 flex justify-center">
                             <div className="w-full max-w-sm">
                                 <PeopleCard
                                     info={{ ...person, bio: (person.bio as PortableTextBlock[]) || [] }}
@@ -37,96 +37,37 @@ export default async function MemberDashboard() {
                             </div>
                         </div>
                     ) : (
-                        <p className="text-gray-600 dark:text-gray-400 mb-6">
+                        <p className="text-gray-600 dark:text-gray-400 mb-8">
                             Welcome back, {session.user?.email}!
                         </p>
                     )}
-
+                    <Link
+                        href="/api/auth/signout"
+                        className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold mb-8 py-2 px-4 rounded-md transition-colors"
+                    >
+                        Sign Out
+                    </Link>
                     <div className="grid gap-6 md:grid-cols-2">
-                        {/* Homepage Card */}
+                        {/* Recommendations Card */}
                         <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
                             <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                                Homepage
+                                ⭐ Recommendations
                             </h2>
                             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                                Return to the main homepage
+                                Share a resource or article with the community
                             </p>
                             <Link
-                                href="/"
-                                className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition-colors"
+                                href="/member/recommendation/new"
+                                className="inline-block bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 px-4 rounded-md transition-colors"
                             >
-                                Go to Homepage
-                            </Link>
-                        </div>
-
-                        {/* Members Card */}
-                        <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
-                            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                                Members
-                            </h2>
-                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                                View all members and their profiles
-                            </p>
-                            <Link
-                                href="/people"
-                                className="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md transition-colors"
-                            >
-                                View Members
-                            </Link>
-                        </div>
-
-                        {/* Resources Card (Coming Soon) */}
-                        <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
-                            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                                Resources
-                            </h2>
-                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                                Access member-only documents and files
-                            </p>
-                            <button
-                                disabled
-                                className="inline-block bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 font-semibold py-2 px-4 rounded-md cursor-not-allowed"
-                            >
-                                Coming Soon
-                            </button>
-                        </div>
-
-                        {/* Events Card (Coming Soon) */}
-                        <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
-                            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                                Events
-                            </h2>
-                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                                View and RSVP to upcoming events
-                            </p>
-                            <button
-                                disabled
-                                className="inline-block bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 font-semibold py-2 px-4 rounded-md cursor-not-allowed"
-                            >
-                                Coming Soon
-                            </button>
-                        </div>
-
-                        {/* Forum Post Card */}
-                        <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
-                            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                                📝 Forum
-                            </h2>
-                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                                Create a new forum post and start a discussion
-                            </p>
-                            <Link
-                                href="/member/forum/new"
-                                className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md transition-colors"
-                            >
-                                Create Forum Post
+                                Add Recommendation
                             </Link>
                         </div>
 
                         {/* Profile Card */}
                         <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
                             <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                                Your Profile
+                                👤 Your Profile
                             </h2>
                             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                                 Manage your profile information and privacy settings
@@ -139,21 +80,7 @@ export default async function MemberDashboard() {
                             </Link>
                         </div>
 
-                        {/* Account Card */}
-                        <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
-                            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                                Account
-                            </h2>
-                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                                Manage your account settings
-                            </p>
-                            <Link
-                                href="/api/auth/signout"
-                                className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md transition-colors"
-                            >
-                                Sign Out
-                            </Link>
-                        </div>
+
                     </div>
                 </div>
             </div>

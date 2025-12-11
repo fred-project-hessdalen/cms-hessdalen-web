@@ -4,11 +4,13 @@ import Link from "next/link";
 import { fetchAndParse } from "@/lib/sanity/fetch";
 import { LATEST_NEWS_LIST_QUERY, NewsList, NewsType } from "@/lib/sanity/query/news.query";
 import { SITE_SETTINGS_QUERY, SITE_SETTINGS } from "@/lib/sanity/query/site.query";
+import { ACTIVE_RECOMMENDATIONS_QUERY, RecommendationList } from "@/lib/sanity/query/recommendation.query";
 import type { PageType } from "@/lib/sanity/query/page.query";
 import type { PortableTextBlock } from "sanity";
 import SiteMap from "@/components/SiteMap";
 import { PageRenderer } from "@/components/PageRenderer";
 import { PartsGrid } from "@/components/PartsGrid";
+import { RecommendationDisplay } from "@/components/RecommendationDisplay";
 
 export default async function IndexPage() {
   const newsListRaw = await fetchAndParse(
@@ -22,6 +24,14 @@ export default async function IndexPage() {
     summary: n.summary as PortableTextBlock[],
     body: n.body as PortableTextBlock[],
   }));
+
+  // Fetch active recommendations
+  const recommendations = await fetchAndParse(
+    ACTIVE_RECOMMENDATIONS_QUERY,
+    {},
+    RecommendationList,
+    { next: { revalidate: 60 } }
+  );
 
   // Fetch site settings with homepage pages
   const siteSettings = await fetchAndParse(
@@ -74,10 +84,13 @@ export default async function IndexPage() {
       {/* Parts on Top of Page */}
       <PartsGrid parts={partsOnTopOfPage} />
 
-
       <div className="mx-auto px-4 not-prose py-8 bg-gray-100 dark:bg-gray-700">
         <div className="flex items-center justify-between px-4 mb-6">
           <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Latest News</h2>
+
+          {/* Recommendations */}
+          <RecommendationDisplay recommendations={recommendations ?? []} />
+
           <Link
             href="/news"
             className="text-blue-600 hover:underline font-medium"
@@ -95,7 +108,7 @@ export default async function IndexPage() {
 
       {/* Homepage Pages */}
       {homepagePages.length > 0 && (
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-0">
           {homepagePages.map((page) => (
             <div key={page._id}>
               <PageRenderer page={page} />

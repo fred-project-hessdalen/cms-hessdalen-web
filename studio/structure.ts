@@ -20,6 +20,7 @@ const EXPLICIT = new Set([
     "forumPost",
     "forumPostType",
     "forumPostResponse",
+    "recommendation",
 ]);
 
 const structure: StructureResolver = (S) =>
@@ -91,7 +92,15 @@ const structure: StructureResolver = (S) =>
                         .defaultOrdering([{ field: "createdAt", direction: "desc" }])
                 ),
 
-
+            S.listItem()
+                .title("Recommendations")
+                .schemaType("recommendation")
+                .icon(() => "⭐")
+                .child(
+                    S.documentTypeList("recommendation")
+                        .title("Recommendations")
+                        .defaultOrdering([{ field: "expiresAt", direction: "asc" }])
+                ),
 
             S.divider(),
 
