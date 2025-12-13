@@ -5,7 +5,16 @@ import Image from "next/image";
 const portableTextComponents: PortableTextComponents = {
     types: {
         // Custom types like images, callouts, etc.
-        image: ({ value }) => <Image src={value.url} alt={value.alt} />,
+        image: ({ value }) => (
+            <a
+                href={value.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block hover:opacity-80 transition-opacity cursor-pointer"
+            >
+                <Image src={value.url} alt={value.alt} />
+            </a>
+        ),
     },
 
     block: {

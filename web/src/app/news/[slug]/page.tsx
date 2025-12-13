@@ -26,7 +26,12 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
                         <div className="relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/60 shadow-sm hover:shadow-md transition-shadow p-8 flex flex-col gap-4 w-full">
                             {/* Main Image */}
                             {news.mainImage?.asset?.url ? (
-                                <div className="w-full aspect-[16/9] relative mb-4">
+                                <a
+                                    href={news.mainImage.asset.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="block w-full aspect-[16/9] relative mb-4 hover:opacity-80 transition-opacity cursor-pointer"
+                                >
                                     <Image
                                         src={news.mainImage.asset.url}
                                         alt={news.mainImage.alt || news.title}
@@ -34,7 +39,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
                                         className="object-cover rounded-xl"
                                         sizes="100vw"
                                     />
-                                </div>
+                                </a>
                             ) : null}
                             {/* Title */}
                             <h1 className="text-3xl font-semibold mb-2">{news.title}</h1>
