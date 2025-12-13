@@ -198,7 +198,8 @@ const portableTextComponents: PortableTextComponents = {
                     href={linkUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="no-underline hover:opacity-80 transition-opacity cursor-pointer"
+                    className="no-underline hover:opacity-80 transition-opacity cursor-pointer block"
+
                 >
                     {imageElement}
                 </a>
