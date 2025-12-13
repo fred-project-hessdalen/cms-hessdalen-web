@@ -59,7 +59,7 @@ const portableTextComponents: PortableTextComponents = {
             const url = value?.asset?.url ?? null;
             if (!url) return null;
 
-            // Determine dimensions and object position based on layout
+            // Determine dimensions and object position
             let width = 1600;
             let height = 900; // 16:9 standard
             let objectPosition = "center";
