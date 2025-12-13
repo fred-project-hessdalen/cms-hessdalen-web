@@ -51,6 +51,12 @@ export const forumPostResponse = defineType({
             readOnly: true,
         }),
         defineField({
+            name: "editedAt",
+            title: "Last Edited",
+            type: "datetime",
+            description: "Automatically updated when the response is edited",
+        }),
+        defineField({
             name: "parentPost",
             title: "Parent Post",
             type: "reference",

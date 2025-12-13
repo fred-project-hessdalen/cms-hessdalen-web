@@ -28,6 +28,7 @@ interface ForumResponse {
         };
     };
     createdAt: string;
+    editedAt?: string;
     links?: Array<{
         label: string;
         url: string;
@@ -38,14 +39,23 @@ interface ForumResponse {
     };
 }
 
+interface Session {
+    user?: {
+        id?: string;
+        email?: string | null;
+    };
+}
+
 interface ForumResponsesSectionProps {
     postId: string;
     responses: ForumResponse[];
+    session: Session | null;
 }
 
 export default function ForumResponsesSection({
     postId,
     responses,
+    session,
 }: ForumResponsesSectionProps) {
     const [replyToId, setReplyToId] = useState<string | null>(null);
     const [replyToTitle, setReplyToTitle] = useState<string | null>(null);
@@ -106,7 +116,7 @@ export default function ForumResponsesSection({
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
                     Responses ({responses.length})
                 </h2>
-                <ForumResponsesList responses={responses} onReply={handleReply} />
+                <ForumResponsesList responses={responses} onReply={handleReply} session={session} />
             </div>
         </div>
     );

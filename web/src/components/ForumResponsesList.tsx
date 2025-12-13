@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { PortableTextBlock } from "sanity";
 import { SimplePortableText } from "./SimplePortableText";
+import { EditForumResponseButton } from "./EditForumResponseButton";
 
 interface ForumResponse {
     _id: string;
@@ -28,6 +29,7 @@ interface ForumResponse {
         };
     };
     createdAt: string;
+    editedAt?: string;
     links?: Array<{
         label: string;
         url: string;
@@ -38,14 +40,23 @@ interface ForumResponse {
     };
 }
 
+interface Session {
+    user?: {
+        id?: string;
+        email?: string | null;
+    };
+}
+
 interface ForumResponsesListProps {
     responses: ForumResponse[];
     onReply: (responseId: string, responseTitle: string) => void;
+    session: Session | null;
 }
 
 export default function ForumResponsesList({
     responses,
     onReply,
+    session,
 }: ForumResponsesListProps) {
     if (responses.length === 0) {
         return (
@@ -140,10 +151,26 @@ export default function ForumResponsesList({
                                 )}
                             </div>
 
-                            {/* Right side: Date */}
+                            {/* Right side: Date and Edit button */}
                             <div className="text-right">
                                 <div className="text-xs text-gray-600 dark:text-gray-400">
                                     {formattedDate}
+                                    {response.editedAt && (
+                                        <div className="text-gray-500 italic">
+                                            (edited {new Date(response.editedAt).toLocaleDateString("en-US", {
+                                                month: "short",
+                                                day: "numeric",
+                                                hour: "2-digit",
+                                                minute: "2-digit",
+                                            })})
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="mt-1">
+                                    <EditForumResponseButton 
+                                        response={response} 
+                                        session={session} 
+                                    />
                                 </div>
                             </div>
                         </div>

@@ -8,6 +8,7 @@ import ForumResponsesSection from "@/components/ForumResponsesSection";
 import { createClient } from "next-sanity";
 import { env } from "@/lib/sanity/env";
 import { auth } from "@/lib/auth";
+import { EditForumPostButton } from "../../../components/EditForumPostButton";
 
 // Disable caching to always show latest responses
 export const dynamic = 'force-dynamic';
@@ -50,6 +51,7 @@ interface ForumPost {
         title: string;
     };
     createdAt: string;
+    editedAt?: string;
     links?: Array<{
         label: string;
         url: string;
@@ -73,6 +75,8 @@ async function getForumPost(slug: string): Promise<ForumPost | null> {
       name,
       displayName,
       slug,
+      authUserId,
+      email,
       image {
         asset-> {
           url
@@ -84,6 +88,7 @@ async function getForumPost(slug: string): Promise<ForumPost | null> {
       title
     },
     createdAt,
+    editedAt,
     links
   }`;
 
@@ -113,6 +118,7 @@ interface ForumResponse {
         };
     };
     createdAt: string;
+    editedAt?: string;
     links?: Array<{
         label: string;
         url: string;
@@ -138,6 +144,8 @@ async function getForumResponses(postId: string): Promise<ForumResponse[]> {
       name,
       displayName,
       slug,
+      authUserId,
+      email,
       image {
         asset-> {
           url
@@ -145,6 +153,7 @@ async function getForumResponses(postId: string): Promise<ForumResponse[]> {
       }
     },
     createdAt,
+    editedAt,
     links,
     replyTo-> {
       _id,
@@ -216,34 +225,54 @@ export default async function ForumPostPage({
                             </h1>
 
                             {/* Author & Date */}
-                            <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
-                                <div className="flex items-center gap-2">
-                                    {post.author.image?.asset?.url ? (
-                                        <div className="relative w-10 h-10 rounded-full overflow-hidden">
-                                            <Image
-                                                src={post.author.image.asset.url}
-                                                alt={post.author.displayName || post.author.name}
-                                                fill
-                                                className="object-contain"
-                                            />
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+                                    <div className="flex items-center gap-2">
+                                        {post.author.image?.asset?.url ? (
+                                            <div className="relative w-10 h-10 rounded-full overflow-hidden">
+                                                <Image
+                                                    src={post.author.image.asset.url}
+                                                    alt={post.author.displayName || post.author.name}
+                                                    fill
+                                                    className="object-contain"
+                                                />
+                                            </div>
+                                        ) : (
+                                            <div className="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
+                                                <span className="text-gray-600 dark:text-gray-300 font-semibold">
+                                                    {(post.author.displayName || post.author.name).charAt(0).toUpperCase()}
+                                                </span>
+                                            </div>
+                                        )}
+                                        <div>
+                                            <Link
+                                                href={`/people/${post.author.slug.current}`}
+                                                className="font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400"
+                                            >
+                                                {post.author.displayName || post.author.name}
+                                            </Link>
+                                            <div className="text-xs">
+                                                {formattedDate}
+                                                {post.editedAt && (
+                                                    <span className="ml-2 text-gray-500 italic">
+                                                        (edited {new Date(post.editedAt).toLocaleDateString("en-US", {
+                                                            month: "short",
+                                                            day: "numeric",
+                                                            hour: "2-digit",
+                                                            minute: "2-digit",
+                                                        })})
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
-                                    ) : (
-                                        <div className="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
-                                            <span className="text-gray-600 dark:text-gray-300 font-semibold">
-                                                {(post.author.displayName || post.author.name).charAt(0).toUpperCase()}
-                                            </span>
-                                        </div>
-                                    )}
-                                    <div>
-                                        <Link
-                                            href={`/people/${post.author.slug.current}`}
-                                            className="font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400"
-                                        >
-                                            {post.author.displayName || post.author.name}
-                                        </Link>
-                                        <div className="text-xs">{formattedDate}</div>
                                     </div>
                                 </div>
+                                
+                                {/* Edit button - only show for post owner */}
+                                <EditForumPostButton 
+                                    post={post} 
+                                    session={session as any} 
+                                />
                             </div>
                         </header>
 
@@ -308,7 +337,7 @@ export default async function ForumPostPage({
 
                     {/* Right column: Responses Section */}
                     <div>
-                        <ForumResponsesSection postId={post._id} responses={responses} />
+                        <ForumResponsesSection postId={post._id} responses={responses} session={session as any} />
                     </div>
                 </div>
             </div>
