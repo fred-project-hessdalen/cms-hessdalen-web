@@ -78,6 +78,12 @@ export const forumPost = defineType({
             initialValue: () => new Date().toISOString(),
             readOnly: true,
         }),
+        defineField({
+            name: "editedAt",
+            title: "Last Edited",
+            type: "datetime",
+            description: "Automatically updated when the post is edited",
+        }),
 
         defineField({
             name: "responsesPreview",
