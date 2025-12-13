@@ -119,34 +119,27 @@ const portableTextComponents: PortableTextComponents = {
                     </figure>
                 );
 
-                // Apply container wrapper if needed
+                // Apply container wrapper if needed!!!
                 if (containerClass) {
+                    const linkUrl = value?.link || url;
+                    
+                    const wrappedImage = (
+                        <a
+                            href={linkUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="no-underline hover:opacity-80 transition-opacity cursor-pointer"
+                        >
+                            {imageElement}
+                        </a>
+                    );
+                    
                     if (width === "full") {
                         // Breakout with max-w-screen-2xl constraint
                         return (
                             <div className={containerClass}>
                                 <div className="mx-auto max-w-screen-2xl px-4">
-                                    {value?.link ? (
-                                        value.link.includes("://") ? (
-                                            <a
-                                                href={value.link}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="no-underline hover:opacity-80 transition-opacity"
-                                            >
-                                                {imageElement}
-                                            </a>
-                                        ) : (
-                                            <Link
-                                                href={value.link}
-                                                className="no-underline hover:opacity-80 transition-opacity"
-                                            >
-                                                {imageElement}
-                                            </Link>
-                                        )
-                                    ) : (
-                                        imageElement
-                                    )}
+                                    {wrappedImage}
                                 </div>
                             </div>
                         );
@@ -154,59 +147,25 @@ const portableTextComponents: PortableTextComponents = {
                         // Screen width - no max-w constraint
                         return (
                             <div className={containerClass}>
-                                {value?.link ? (
-                                    value.link.includes("://") ? (
-                                        <a
-                                            href={value.link}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="no-underline hover:opacity-80 transition-opacity"
-                                        >
-                                            {imageElement}
-                                        </a>
-                                    ) : (
-                                        <Link
-                                            href={value.link}
-                                            className="no-underline hover:opacity-80 transition-opacity"
-                                        >
-                                            {imageElement}
-                                        </Link>
-                                    )
-                                ) : (
-                                    imageElement
-                                )}
+                                {wrappedImage}
                             </div>
                         );
                     }
                 }
 
-                // Wrap in link if provided
-                if (value?.link) {
-                    const isExternal = value.link.includes("://");
-                    if (isExternal) {
-                        return (
-                            <a
-                                href={value.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="no-underline hover:opacity-80 transition-opacity"
-                            >
-                                {imageElement}
-                            </a>
-                        );
-                    } else {
-                        return (
-                            <Link
-                                href={value.link}
-                                className="no-underline hover:opacity-80 transition-opacity"
-                            >
-                                {imageElement}
-                            </Link>
-                        );
-                    }
-                }
-
-                return imageElement;
+                // Always wrap in link - use custom link if provided, otherwise link to full image
+                const linkUrl = value?.link || url;
+                
+                return (
+                    <a
+                        href={linkUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="no-underline hover:opacity-80 transition-opacity cursor-pointer"
+                    >
+                        {imageElement}
+                    </a>
+                );
             }
 
             // Standard and Banner layouts with enforced aspect ratio
@@ -231,33 +190,19 @@ const portableTextComponents: PortableTextComponents = {
                 </div>
             );
 
-            // Wrap in link if provided
-            if (value?.link) {
-                const isExternal = value.link.includes("://");
-                if (isExternal) {
-                    return (
-                        <a
-                            href={value.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="no-underline hover:opacity-80 transition-opacity"
-                        >
-                            {imageElement}
-                        </a>
-                    );
-                } else {
-                    return (
-                        <Link
-                            href={value.link}
-                            className="no-underline hover:opacity-80 transition-opacity"
-                        >
-                            {imageElement}
-                        </Link>
-                    );
-                }
-            }
-
-            return imageElement;
+            // Always wrap in link - use custom link if provided, otherwise link to full image
+            const linkUrl = value?.link || url;
+            
+            return (
+                <a
+                    href={linkUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="no-underline hover:opacity-80 transition-opacity cursor-pointer"
+                >
+                    {imageElement}
+                </a>
+            );
         },
         imageGallery: ({ value }: { value: PTImageGalleryBlock }) => {
             const cols = Math.min(Math.max(value?.columns ?? 3, 2), 6);
