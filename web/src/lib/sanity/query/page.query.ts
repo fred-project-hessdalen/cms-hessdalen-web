@@ -102,6 +102,18 @@ const PAGE_FIELDS = `
           asset->{url}
         }
       }
+    },
+    _type == "businessCard" => {
+      ...,
+      cardPage->{
+        title,
+        path,
+        mainImage{
+          asset->{url},
+          alt
+        },
+        summary[]{ ... }
+      }
     }
   },
   restricted[]{
@@ -175,6 +187,18 @@ const PAGE_FIELDS = `
           ...,
           asset->{url}
         }
+      }
+    },
+    _type == "businessCard" => {
+      ...,
+      cardPage->{
+        title,
+        path,
+        mainImage{
+          asset->{url},
+          alt
+        },
+        summary[]{ ... }
       }
     }
   },

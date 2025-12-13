@@ -216,6 +216,7 @@ export const pageType = defineType({
                 { type: 'youtubeVideo' },
                 { type: 'googleSlidesEmbed' },
                 { type: 'googleDocumentEmbed' },
+                { type: 'businessCard' },
             ],
         }),
         defineField({
