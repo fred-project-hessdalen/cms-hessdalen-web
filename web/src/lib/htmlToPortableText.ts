@@ -24,11 +24,21 @@ export function htmlToPortableText(html: string): PortableTextBlock[] {
         ];
     }
 
+     let processedHtml = html
+        .replace(/<br\s*\/?>\s*<br\s*\/?>/gi, '</p><p>')
+        .replace(/<br\s*\/?>/gi, '</p><p>');
+    
+
+    if (!/<(p|div|h[1-6]|ul|ol|li)[\s>]/i.test(processedHtml)) {
+        processedHtml = `<p>${processedHtml}</p>`;
+    }
+
     const blocks: PortableTextBlock[] = [];
 
-    // Helper to strip HTML tags and decode entities
+
     const stripTags = (str: string): string => {
         return str
+            .replace(/<br\s*\/?>/gi, "\n")
             .replace(/<[^>]*>/g, "")
             .replace(/&nbsp;/g, " ")
             .replace(/&lt;/g, "<")
@@ -92,7 +102,7 @@ export function htmlToPortableText(html: string): PortableTextBlock[] {
     const blockRegex = /<(h[1-6]|p|li|div)(?:\s[^>]*)?>([^]*?)<\/\1>|<(ul|ol)(?:\s[^>]*)?>([^]*?)<\/\3>/gi;
 
     // First, let's collect all matches and track positions
-    const matches = Array.from(html.matchAll(blockRegex));
+    const matches = Array.from(processedHtml.matchAll(blockRegex));
 
     let lastIndex = 0;
     const segments: Array<{ type: 'text' | 'match', content: string, match?: RegExpMatchArray }> = [];
@@ -100,7 +110,7 @@ export function htmlToPortableText(html: string): PortableTextBlock[] {
     matches.forEach(match => {
         // Add any text before this match
         if (match.index! > lastIndex) {
-            const textBefore = html.substring(lastIndex, match.index);
+            const textBefore = processedHtml.substring(lastIndex, match.index);
             if (textBefore.trim()) {
                 segments.push({ type: 'text', content: textBefore });
             }
@@ -110,8 +120,8 @@ export function htmlToPortableText(html: string): PortableTextBlock[] {
     });
 
     // Add any remaining text after the last match
-    if (lastIndex < html.length) {
-        const textAfter = html.substring(lastIndex);
+    if (lastIndex < processedHtml.length) {
+        const textAfter = processedHtml.substring(lastIndex);
         if (textAfter.trim()) {
             segments.push({ type: 'text', content: textAfter });
         }
@@ -119,7 +129,7 @@ export function htmlToPortableText(html: string): PortableTextBlock[] {
 
     if (segments.length === 0) {
         // No block elements found, treat as plain text paragraph
-        const plainText = stripTags(html);
+        const plainText = stripTags(processedHtml);
         if (plainText) {
             blocks.push({
                 _type: "block",
