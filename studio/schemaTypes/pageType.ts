@@ -216,6 +216,7 @@ export const pageType = defineType({
                 { type: 'youtubeVideo' },
                 { type: 'googleSlidesEmbed' },
                 { type: 'googleDocumentEmbed' },
+                { type: 'kofiEmbed' },
             ],
         }),
         defineField({
@@ -235,6 +236,7 @@ export const pageType = defineType({
                 { type: 'youtubeVideo' },
                 { type: 'googleSlidesEmbed' },
                 { type: 'googleDocumentEmbed' },
+                { type: 'kofiEmbed' },
             ],
         }),
 
