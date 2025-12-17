@@ -1,9 +1,15 @@
 {
     "redirects": [
         {
-            "source": "https://hessdalen.org/:path*",
+            "source": "/:path*",
             "destination": "https://www.hessdalen.org/:path*",
-            "permanent": true
+            "permanent": true,
+            "has": [
+                {
+                    "type": "host",
+                    "value": "hessdalen.org"
+                }
+            ]
         }
     ],
     "headers": [
