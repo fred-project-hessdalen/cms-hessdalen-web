@@ -36,6 +36,22 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  // Redirect non-www to www to avoid caching issues
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'hessdalen.org',
+          },
+        ],
+        destination: 'https://www.hessdalen.org/:path*',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
