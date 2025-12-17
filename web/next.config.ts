@@ -11,6 +11,31 @@ const nextConfig: NextConfig = {
     // deviceSizes: [640, 768, 1024, 1280, 1536],
     // imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
+  // Force browsers to reload CSS and JS by setting proper cache headers
+  async headers() {
+    return [
+      {
+        // Apply to all static assets
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=0, must-revalidate',
+          },
+        ],
+      },
+      {
+        // Cache static files with hash in filename for 1 year
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
