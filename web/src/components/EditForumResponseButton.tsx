@@ -3,11 +3,12 @@
 import { useState } from 'react';
 import { EditForumItemModal } from './EditForumItemModal';
 import { useRouter } from 'next/navigation';
+import type { PortableTextBlock } from 'sanity';
 
 interface ForumResponse {
     _id: string;
     title: string;
-    body: Array<Record<string, unknown>>;
+    body: PortableTextBlock[];
     author: {
         _id: string;
         authUserId?: string;
@@ -37,7 +38,7 @@ export function EditForumResponseButton({ response, session }: EditForumResponse
 
     // Check if current user can edit this response
     const canEdit = session?.user && (
-        session.user.id === response.author.authUserId || 
+        session.user.id === response.author.authUserId ||
         session.user.email === response.author.email
     );
 
@@ -46,10 +47,10 @@ export function EditForumResponseButton({ response, session }: EditForumResponse
     }
 
     // Convert Sanity blocks to HTML for editing
-    const bodyToHtml = (blocks: Array<Record<string, unknown>>) => {
+    const bodyToHtml = (blocks: PortableTextBlock[]) => {
         return blocks
             .filter(block => block._type === 'block')
-            .map(block => 
+            .map(block =>
                 (block.children as Array<Record<string, unknown>>)
                     ?.map((child: Record<string, unknown>) => child.text)
                     .join('')
