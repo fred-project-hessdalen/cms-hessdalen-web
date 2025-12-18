@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 interface ForumPost {
     _id: string;
     title: string;
-    body: any[];
+    body: Array<Record<string, unknown>>;
     author: {
         _id: string;
         authUserId?: string;
@@ -46,12 +46,12 @@ export function EditForumPostButton({ post, session }: EditForumPostButtonProps)
     }
 
     // Convert Sanity blocks to HTML for editing
-    const bodyToHtml = (blocks: any[]) => {
+    const bodyToHtml = (blocks: Array<Record<string, unknown>>) => {
         return blocks
             .filter(block => block._type === 'block')
             .map(block => 
-                block.children
-                    ?.map((child: any) => child.text)
+                (block.children as Array<Record<string, unknown>>)
+                    ?.map((child: Record<string, unknown>) => child.text)
                     .join('')
             )
             .join('\n\n');
