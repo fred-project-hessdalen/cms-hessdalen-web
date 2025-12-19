@@ -31,14 +31,21 @@ export function PeopleCard({ info, current, isLoggedIn, isAdmin }: { info: Peopl
 
             {/* Avatar */}
             {info.image ? (
-                <Image
-                    src={info.image}
-                    alt={info.displayName ? info.displayName : info.name}
-                    width={56}
-                    height={56}
-                    className="h-14 w-14 rounded-full object-cover ring-1 ring-gray-200 dark:ring-gray-700"
-                    sizes="56px"
-                />
+                <a
+                    href={info.image}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block hover:opacity-90 transition-opacity"
+                >
+                    <Image
+                        src={info.image}
+                        alt={info.displayName ? info.displayName : info.name}
+                        width={56}
+                        height={56}
+                        className="h-14 w-14 rounded-full object-cover ring-1 ring-gray-200 dark:ring-gray-700"
+                        sizes="56px"
+                    />
+                </a>
             ) : (
                 <div
                     className="rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-sm font-semibold text-gray-700 dark:text-gray-200 flex-none"

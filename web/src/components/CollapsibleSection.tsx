@@ -25,14 +25,21 @@ const portableTextComponents: PortableTextComponents = {
             const height = 900;
             return (
                 <figure className="!my-0 w-full">
-                    <Image
-                        src={url}
-                        alt={value?.alt || "Article image"}
-                        width={width}
-                        height={height}
-                        className="w-full h-auto rounded-xl object-cover"
-                        sizes="(min-width: 1024px) 800px, 100vw"
-                    />
+                    <a
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block hover:opacity-90 transition-opacity"
+                    >
+                        <Image
+                            src={url}
+                            alt={value?.alt || "Article image"}
+                            width={width}
+                            height={height}
+                            className="w-full h-auto rounded-xl object-cover"
+                            sizes="(min-width: 1024px) 800px, 100vw"
+                        />
+                    </a>
                     {value?.caption && (
                         <figcaption className="mt-1 text-xs text-gray-500 dark:text-gray-400">{value.caption}</figcaption>
                     )}

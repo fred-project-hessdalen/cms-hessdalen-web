@@ -21,15 +21,22 @@ export function NewsCard({ info, current }: { info: NewsType, current?: string }
             )}
             {/* Main image with 16:9 aspect ratio */}
             {info.mainImage?.asset?.url ? (
-                <div className="w-full aspect-[16/9] relative mb-2">
-                    <Image
-                        src={info.mainImage.asset.url}
-                        alt={info.mainImage.alt || info.title}
-                        fill
-                        className="object-cover rounded-xl"
-                        sizes="100vw"
-                    />
-                </div>
+                <a
+                    href={info.mainImage.asset.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block hover:opacity-90 transition-opacity"
+                >
+                    <div className="w-full aspect-[16/9] relative mb-2">
+                        <Image
+                            src={info.mainImage.asset.url}
+                            alt={info.mainImage.alt || info.title}
+                            fill
+                            className="object-cover rounded-xl"
+                            sizes="100vw"
+                        />
+                    </div>
+                </a>
             ) : null}
             {/* Title */}
             <h3 className="text-lg font-semibold truncate mb-1">{info.title}</h3>
