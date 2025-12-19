@@ -57,15 +57,22 @@ export function Part({ part }: PartProps) {
     };
 
     const imageContent = part.image?.url ? (
-        <div className={`w-full ${aspectClass} relative overflow-hidden rounded-lg mb-2`}>
-            <Image
-                src={part.image.url}
-                alt={part.image.alt || part.title || part.name}
-                fill
-                className="object-cover absolute inset-0"
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            />
-        </div>
+        <a
+            href={part.image.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block hover:opacity-90 transition-opacity"
+        >
+            <div className={`w-full ${aspectClass} relative overflow-hidden rounded-lg mb-2`}>
+                <Image
+                    src={part.image.url}
+                    alt={part.image.alt || part.title || part.name}
+                    fill
+                    className="object-cover absolute inset-0"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                />
+            </div>
+        </a>
     ) : null;
 
     return (
