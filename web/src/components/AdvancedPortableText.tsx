@@ -122,7 +122,7 @@ const portableTextComponents: PortableTextComponents = {
                 // Apply container wrapper if needed!!!
                 if (containerClass) {
                     const linkUrl = value?.link || url;
-                    
+
                     const wrappedImage = (
                         <a
                             href={linkUrl}
@@ -133,7 +133,7 @@ const portableTextComponents: PortableTextComponents = {
                             {imageElement}
                         </a>
                     );
-                    
+
                     if (width === "full") {
                         // Breakout with max-w-screen-2xl constraint
                         return (
@@ -155,7 +155,7 @@ const portableTextComponents: PortableTextComponents = {
 
                 // Always wrap in link - use custom link if provided, otherwise link to full image
                 const linkUrl = value?.link || url;
-                
+
                 return (
                     <a
                         href={linkUrl}
@@ -192,7 +192,7 @@ const portableTextComponents: PortableTextComponents = {
 
             // Always wrap in link - use custom link if provided, otherwise link to full image
             const linkUrl = value?.link || url;
-            
+
             return (
                 <a
                     href={linkUrl}
@@ -551,6 +551,7 @@ const portableTextComponents: PortableTextComponents = {
             const aspectRatios = {
                 video: "aspect-video",       // 16:9
                 landscape: "aspect-[297/210]", // A4 Landscape 29.7:21cm
+                portrait: "aspect-[210/297]", // A4 Portrait 21:29.7cm
                 square: "aspect-square",     // 1:1
             };
             const aspectClass = aspectRatios[aspect] || aspectRatios.video;

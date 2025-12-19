@@ -3,7 +3,7 @@ import { defineType, defineField } from 'sanity'
 
 export const imageList = defineType({
     name: 'imageList',
-    title: 'Image List',
+    title: 'Image Cards',
     type: 'object',
     fields: [
         defineField({
@@ -99,7 +99,7 @@ export const imageList = defineType({
             aspect: 'aspect',
         },
         prepare: ({ title, highlight, aspect }) => ({
-            title: 'Image List: ' + (title || 'Untitled'),
+            title: 'Image Cards: ' + (title || 'Untitled'),
             subtitle: `${highlight ? 'Highlighted' : 'Normal'} • ${aspect || 'square'}`,
         }),
     },

@@ -53,6 +53,7 @@ export const googleSlidesEmbed = defineType({
                 list: [
                     { title: 'Video (16:9)', value: 'video' },
                     { title: 'A4 Landscape (29.7:21cm)', value: 'landscape' },
+                    { title: 'A4 Portrait (21:29.7cm)', value: 'portrait' },
                     { title: 'Square (1:1)', value: 'square' },
                 ],
                 layout: 'radio',

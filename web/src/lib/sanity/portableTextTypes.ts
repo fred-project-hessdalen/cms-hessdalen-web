@@ -101,7 +101,7 @@ export interface PTGoogleSlidesBlock {
     autoplay?: boolean;
     loop?: boolean;
     delaySec?: number;
-    aspect?: "video" | "landscape" | "square";
+    aspect?: "video" | "landscape" | "portrait" | "square";
 }
 
 export interface PTGoogleDocumentBlock {

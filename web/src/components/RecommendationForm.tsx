@@ -13,10 +13,17 @@ export function RecommendationForm({ personId, personName }: RecommendationFormP
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
+    // Calculate end of next month as default expiry
+    const getEndOfNextMonth = () => {
+        const now = new Date()
+        const nextMonth = new Date(now.getFullYear(), now.getMonth() + 2, 0, 23, 59)
+        return nextMonth.toISOString().slice(0, 16)
+    }
+
     const [formData, setFormData] = useState({
         title: "",
         link: "",
-        expiresAt: "",
+        expiresAt: getEndOfNextMonth(),
     })
 
     const handleSubmit = async (e: React.FormEvent) => {
