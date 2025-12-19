@@ -45,6 +45,11 @@ const PAGE_FIELDS = `
       color,
       caption
     },
+    _type == "customHtmlEmbed" => {
+      ...,
+      html,
+      caption
+    },
     images[]{
       ...,
       asset->{url},
@@ -125,6 +130,11 @@ const PAGE_FIELDS = `
       widgetType,
       text,
       color,
+      caption
+    },
+    _type == "customHtmlEmbed" => {
+      ...,
+      html,
       caption
     },
     images[]{

@@ -28,6 +28,7 @@ import { youtubeVideo } from "./blocks/youtubeVideo"
 import { googleSlidesEmbed } from "./blocks/googleSlidesEmbed"
 import { googleDocumentEmbed } from "./blocks/googleDocumentEmbed"
 import kofiEmbed from "./blocks/kofiEmbed"
+import customHtmlEmbed from "./blocks/customHtmlEmbed"
 import { socialLink } from "./objects/socialLink"
 import { professionalAffiliation } from "./objects/professionalAffiliation"
 import { siteSettings } from "./singletons/siteSettings"
@@ -53,7 +54,7 @@ export const schemaTypes = [
     forumPostResponse,
     recommendationType,
     accessKeyType,
-    imageBlock, textColumns, imageGallery, imageList, partsList, callout, collapsible, credit, youtubeVideo, googleSlidesEmbed, googleDocumentEmbed, kofiEmbed,
+    imageBlock, textColumns, imageGallery, imageList, partsList, callout, collapsible, credit, youtubeVideo, googleSlidesEmbed, googleDocumentEmbed, kofiEmbed, customHtmlEmbed,
     socialLink,
     professionalAffiliation,
     siteSettings,

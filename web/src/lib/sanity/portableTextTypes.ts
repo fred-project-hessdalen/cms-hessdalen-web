@@ -119,3 +119,9 @@ export interface PTKofiEmbedBlock {
     color?: 'blue' | 'red' | 'orange' | 'pink' | 'white' | 'black';
     caption?: string;
 }
+
+export interface PTCustomHtmlEmbedBlock {
+    _type: "customHtmlEmbed";
+    html: string;
+    caption?: string;
+}

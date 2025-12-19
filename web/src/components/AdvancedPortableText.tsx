@@ -2,11 +2,12 @@ import { PortableText, PortableTextComponents } from "next-sanity";
 import type { PortableTextBlock } from "sanity";
 import Image from "next/image";
 import Link from "next/link";
-import type { PTImageBlock, PTImageGalleryBlock, PTImageListBlock, PTPartsListBlock, PTTextColumnsBlock, PTCalloutBlock, PTYouTubeBlock, PTCollapsibleBlock, PTGoogleSlidesBlock, PTGoogleDocumentBlock, PTKofiEmbedBlock } from "@/lib/sanity/portableTextTypes";
+import type { PTImageBlock, PTImageGalleryBlock, PTImageListBlock, PTPartsListBlock, PTTextColumnsBlock, PTCalloutBlock, PTYouTubeBlock, PTCollapsibleBlock, PTGoogleSlidesBlock, PTGoogleDocumentBlock, PTKofiEmbedBlock, PTCustomHtmlEmbedBlock } from "@/lib/sanity/portableTextTypes";
 import { getYouTubeVideoId } from "@/lib/youtubeHelper";
 import { CollapsibleSection } from "./CollapsibleSection";
 import { PartsGrid } from "./PartsGrid";
 import { KofiEmbedBlock } from "./KofiEmbedBlock";
+import { CustomHtmlEmbedBlock } from "./CustomHtmlEmbedBlock";
 
 
 const portableTextComponents: PortableTextComponents = {
@@ -690,6 +691,9 @@ const portableTextComponents: PortableTextComponents = {
                     caption={value?.caption}
                 />
             );
+        },
+        customHtmlEmbed: ({ value }: { value: PTCustomHtmlEmbedBlock }) => {
+            return <CustomHtmlEmbedBlock html={value?.html} caption={value?.caption} />;
         },
     },
 };
