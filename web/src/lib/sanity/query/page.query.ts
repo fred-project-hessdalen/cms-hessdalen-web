@@ -37,6 +37,19 @@ const PAGE_FIELDS = `
       asset->{url},
       link
     },
+    _type == "kofiEmbed" => {
+      ...,
+      username,
+      widgetType,
+      text,
+      color,
+      caption
+    },
+    _type == "customHtmlEmbed" => {
+      ...,
+      html,
+      caption
+    },
     images[]{
       ...,
       asset->{url},
@@ -110,6 +123,19 @@ const PAGE_FIELDS = `
       ...,
       asset->{url},
       link
+    },
+    _type == "kofiEmbed" => {
+      ...,
+      username,
+      widgetType,
+      text,
+      color,
+      caption
+    },
+    _type == "customHtmlEmbed" => {
+      ...,
+      html,
+      caption
     },
     images[]{
       ...,

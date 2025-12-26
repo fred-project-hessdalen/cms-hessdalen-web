@@ -110,3 +110,18 @@ export interface PTGoogleDocumentBlock {
     embedUrl: string;
     aspect?: "landscape" | "square" | "portrait";
 }
+
+export interface PTKofiEmbedBlock {
+    _type: "kofiEmbed";
+    username: string;
+    widgetType?: 'button' | 'floating' | 'panel';
+    text?: string;
+    color?: 'blue' | 'red' | 'orange' | 'pink' | 'white' | 'black';
+    caption?: string;
+}
+
+export interface PTCustomHtmlEmbedBlock {
+    _type: "customHtmlEmbed";
+    html: string;
+    caption?: string;
+}
