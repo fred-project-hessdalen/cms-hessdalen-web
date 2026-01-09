@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type ReactNode } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import { PortableText, PortableTextComponents } from "next-sanity";
 import type { PortableTextBlock } from "@portabletext/types";
 import Image from "next/image";
@@ -73,7 +73,15 @@ export function CollapsibleSection({
     isOpen: controlledIsOpen,
     onToggle
 }: CollapsibleSectionProps) {
-    const [internalIsOpen, setInternalIsOpen] = useState(defaultOpen);
+    const [internalIsOpen, setInternalIsOpen] = useState(false);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+        if (controlledIsOpen === undefined) {
+            setInternalIsOpen(defaultOpen);
+        }
+    }, [defaultOpen, controlledIsOpen]);
 
     // Use controlled state if provided, otherwise use internal state
     const isOpen = controlledIsOpen !== undefined ? controlledIsOpen : internalIsOpen;
@@ -87,18 +95,38 @@ export function CollapsibleSection({
         }
     };
 
+    if (!mounted) {
+        return (
+            <div className="mb-2 border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
+                <div className="w-full flex items-center justify-between px-3 py-2 bg-gray-50 dark:bg-gray-800">
+                    <span className="text-base font-medium text-gray-900 dark:text-gray-100">
+                        {header}
+                    </span>
+                    <svg
+                        className="w-4 h-4 text-gray-600 dark:text-gray-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <div className="mb-8 border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
+        <div className="mb-2 border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
             <button
                 onClick={handleToggle}
-                className="w-full flex items-center justify-between px-6 py-4 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                className="w-full flex items-center justify-between px-3 py-2 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 aria-expanded={isOpen}
             >
-                <span className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
                     {header}
                 </span>
                 <svg
-                    className={`w-5 h-5 text-gray-600 dark:text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                    className={`w-4 h-4 text-gray-600 dark:text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -107,7 +135,7 @@ export function CollapsibleSection({
                 </svg>
             </button>
             {isOpen && (
-                <div className="px-6 py-4 prose prose-zinc dark:prose-invert max-w-none">
+                <div className="px-3 py-2 prose prose-zinc dark:prose-invert max-w-none">
                     {content && <PortableText value={content} components={portableTextComponents} />}
                     {children}
                 </div>

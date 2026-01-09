@@ -195,16 +195,16 @@ export default async function PersonPage({
                                 {/* Professional Affiliations */}
                                 {people.professionalAffiliations && people.professionalAffiliations.length > 0 && (
                                     <CollapsibleSection header="Affiliations" defaultOpen={false}>
-                                        <div className="space-y-4">
+                                        <div className="space-y-2">
                                             {people.professionalAffiliations.map((aff, idx) => (
                                                 <div
                                                     key={idx}
-                                                    className="border-l-4 border-blue-500 dark:border-blue-400 pl-4 py-1"
+                                                    className="border-l-4 border-blue-500 dark:border-blue-400 pl-4 py-0"
                                                 >
                                                     <div className="flex items-start justify-between">
                                                         <div>
                                                             {aff.title && (
-                                                                <h3 className="font-semibold text-lg">
+                                                                <h3 className="font-semibold text-sm leading-none m-0">
                                                                     {aff.title}
                                                                     {aff.organization && (
                                                                         <span className="text-gray-600 dark:text-gray-400">
