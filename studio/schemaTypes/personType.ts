@@ -242,6 +242,7 @@ export const personType = defineType({
                 { type: 'textColumns' },
                 { type: 'callout' },
                 { type: 'collapsible' },
+                { type: 'separator' },
                 { type: 'youtubeVideo' },
                 { type: 'googleSlidesEmbed' },
                 { type: 'googleDocumentEmbed' },
