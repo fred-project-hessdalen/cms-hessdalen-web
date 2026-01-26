@@ -110,3 +110,9 @@ export interface PTGoogleDocumentBlock {
     embedUrl: string;
     aspect?: "landscape" | "square" | "portrait";
 }
+
+export interface PTSeparatorBlock {
+    _type: "separator";
+    style?: "subtle" | "prominent";
+    showLine?: boolean;
+}
