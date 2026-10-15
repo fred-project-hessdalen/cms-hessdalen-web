@@ -41,8 +41,8 @@ export function EditForumItemModal({
             formData.append('body', body);
             formData.append('links', JSON.stringify(links));
 
-            const endpoint = itemType === 'post' 
-                ? `/api/forum-post/${itemId}` 
+            const endpoint = itemType === 'post'
+                ? `/api/forum-post/${itemId}`
                 : `/api/forum-response/${itemId}`;
 
             const response = await fetch(endpoint, {
@@ -96,102 +96,102 @@ export function EditForumItemModal({
                         </button>
                     </div>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    {error && (
-                        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-                            {error}
-                        </div>
-                    )}
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        {error && (
+                            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+                                {error}
+                            </div>
+                        )}
 
-                    {/* Title */}
-                    <div>
-                        <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Title
-                        </label>
-                        <input
-                            type="text"
-                            id="title"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-                            required
-                        />
-                    </div>
-
-                    {/* Body */}
-                    <div>
-                        <label htmlFor="body" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Content
-                        </label>
-                        <RichTextEditor
-                            id="body"
-                            value={body}
-                            onChange={setBody}
-                            className="w-full"
-                            placeholder="Write your content here..."
-                        />
-                    </div>
-
-                    {/* Links */}
-                    <div>
-                        <div className="flex items-center justify-between mb-2">
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                Links (optional)
+                        {/* Title */}
+                        <div>
+                            <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Title
                             </label>
-                            <button
-                                type="button"
-                                onClick={addLink}
-                                className="text-sm text-indigo-600 hover:text-indigo-700 dark:text-indigo-400"
-                            >
-                                + Add Link
-                            </button>
+                            <input
+                                type="text"
+                                id="title"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                                required
+                            />
                         </div>
-                        {links.map((link, index) => (
-                            <div key={index} className="flex gap-2 mb-2">
-                                <input
-                                    type="text"
-                                    placeholder="Label"
-                                    value={link.label}
-                                    onChange={(e) => updateLink(index, 'label', e.target.value)}
-                                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-                                />
-                                <input
-                                    type="url"
-                                    placeholder="URL"
-                                    value={link.url}
-                                    onChange={(e) => updateLink(index, 'url', e.target.value)}
-                                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-                                />
+
+                        {/* Body */}
+                        <div>
+                            <label htmlFor="body" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Content
+                            </label>
+                            <RichTextEditor
+                                id="body"
+                                value={body}
+                                onChange={setBody}
+                                className="w-full"
+                                placeholder="Write your content here..."
+                            />
+                        </div>
+
+                        {/* Links */}
+                        <div>
+                            <div className="flex items-center justify-between mb-2">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    Links (optional)
+                                </label>
                                 <button
                                     type="button"
-                                    onClick={() => removeLink(index)}
-                                    className="px-3 py-2 text-red-600 hover:text-red-700 dark:text-red-400"
+                                    onClick={addLink}
+                                    className="text-sm text-indigo-600 hover:text-indigo-700 dark:text-indigo-400"
                                 >
-                                    ×
+                                    + Add Link
                                 </button>
                             </div>
-                        ))}
-                    </div>
+                            {links.map((link, index) => (
+                                <div key={index} className="flex gap-2 mb-2">
+                                    <input
+                                        type="text"
+                                        placeholder="Label"
+                                        value={link.label}
+                                        onChange={(e) => updateLink(index, 'label', e.target.value)}
+                                        className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                                    />
+                                    <input
+                                        type="url"
+                                        placeholder="URL"
+                                        value={link.url}
+                                        onChange={(e) => updateLink(index, 'url', e.target.value)}
+                                        className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => removeLink(index)}
+                                        className="px-3 py-2 text-red-600 hover:text-red-700 dark:text-red-400"
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
 
-                    {/* Actions */}
-                    <div className="flex justify-end gap-3 pt-4">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100"
-                            disabled={isSubmitting}
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            disabled={isSubmitting}
-                            className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            {isSubmitting ? 'Saving...' : 'Save Changes'}
-                        </button>
-                    </div>
-                </form>
+                        {/* Actions */}
+                        <div className="flex justify-end gap-3 pt-4">
+                            <button
+                                type="button"
+                                onClick={onClose}
+                                className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100"
+                                disabled={isSubmitting}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                disabled={isSubmitting}
+                                className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {isSubmitting ? 'Saving...' : 'Save Changes'}
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
