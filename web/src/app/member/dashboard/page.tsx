@@ -7,6 +7,26 @@ import { fetchAndParse } from "@/lib/sanity/fetch"
 import { PEOPLE_BY_EMAIL_QUERY, People, type PeopleType } from "@/lib/sanity/query/people.query"
 import { isCoreTeamMember } from "@/lib/auth/core-team"
 import { TestResendEmail } from "@/components/TestResendEmail"
+import { MemberDirectory, type MemberDirectoryData } from "@/components/MemberDirectory"
+import { defineQuery } from "next-sanity"
+import { client } from "@/lib/sanity/live"
+
+const MEMBER_DIRECTORY_QUERY = defineQuery(`
+    {
+        "members": *[_type == "person" && isActive == true] | order(_createdAt desc, _id asc) {
+            _id,
+            name,
+            email,
+            isPublic,
+            "signupDate": _createdAt,
+            membershipType->{_id, title}
+        },
+        "membershipTypes": *[_type == "membershipType"] | order(order asc, title asc) {
+            _id,
+            title
+        }
+    }
+`)
 
 export default async function MemberDashboard() {
     const session = await auth()
@@ -20,9 +40,20 @@ export default async function MemberDashboard() {
     const person = session.user?.email
         ? await fetchAndParse(PEOPLE_BY_EMAIL_QUERY, { email: session.user.email }, People) as PeopleType | null
         : null
-    const canTestEmail = session.user?.email
+    const canManageMembers = session.user?.email
         ? await isCoreTeamMember(session.user.email)
         : false
+    let memberDirectory: MemberDirectoryData | null = null
+    if (canManageMembers) {
+        try {
+            memberDirectory = await client.withConfig({
+                useCdn: false,
+                perspective: "published",
+            }).fetch<MemberDirectoryData>(MEMBER_DIRECTORY_QUERY, {}, { cache: "no-store" })
+        } catch (error) {
+            console.error("Member directory lookup failed:", error)
+        }
+    }
 
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-8 px-4">
@@ -87,7 +118,19 @@ export default async function MemberDashboard() {
 
 
                     </div>
-                    {canTestEmail && <TestResendEmail />}
+                    {canManageMembers && (
+                        <section
+                            aria-labelledby="core-team-features-heading"
+                            className="mt-8 border-y-2 border-emerald-700 bg-emerald-50 px-4 py-6 dark:border-emerald-500 dark:bg-gray-900 sm:px-6"
+                        >
+                            <h2 id="core-team-features-heading" className="break-words text-xl font-semibold text-emerald-900 dark:text-emerald-300">
+                                Core Team Member features
+                            </h2>
+                            <MemberDirectory data={memberDirectory}>
+                                <TestResendEmail />
+                            </MemberDirectory>
+                        </section>
+                    )}
                 </div>
             </div>
         </div>

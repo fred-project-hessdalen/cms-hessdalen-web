@@ -37,10 +37,7 @@ export function TestResendEmail() {
     }
 
     return (
-        <section className="mt-8 border-t border-gray-200 pt-6 dark:border-gray-700">
-            <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">
-                Email diagnostics
-            </h2>
+        <div className="ml-auto w-full text-right sm:w-60">
             <button
                 type="button"
                 onClick={sendTestEmail}
@@ -54,6 +51,6 @@ export function TestResendEmail() {
                 {message && <p className="text-green-700 dark:text-green-400">{message}</p>}
                 {error && <p className="text-red-700 dark:text-red-400">{error}</p>}
             </div>
-        </section>
+        </div>
     )
 }
