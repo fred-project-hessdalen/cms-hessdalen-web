@@ -5,6 +5,8 @@ import { PeopleCard } from "@/components/PeopleCard"
 import type { PortableTextBlock } from "sanity"
 import { fetchAndParse } from "@/lib/sanity/fetch"
 import { PEOPLE_BY_EMAIL_QUERY, People, type PeopleType } from "@/lib/sanity/query/people.query"
+import { isCoreTeamMember } from "@/lib/auth/core-team"
+import { TestResendEmail } from "@/components/TestResendEmail"
 
 export default async function MemberDashboard() {
     const session = await auth()
@@ -18,6 +20,9 @@ export default async function MemberDashboard() {
     const person = session.user?.email
         ? await fetchAndParse(PEOPLE_BY_EMAIL_QUERY, { email: session.user.email }, People) as PeopleType | null
         : null
+    const canTestEmail = session.user?.email
+        ? await isCoreTeamMember(session.user.email)
+        : false
 
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-8 px-4">
@@ -82,6 +87,7 @@ export default async function MemberDashboard() {
 
 
                     </div>
+                    {canTestEmail && <TestResendEmail />}
                 </div>
             </div>
         </div>
