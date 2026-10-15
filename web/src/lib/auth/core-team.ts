@@ -20,7 +20,7 @@ export async function isCoreTeamMember(email: string): Promise<boolean> {
             { cache: "no-store" }
         )
 
-        return person?.membershipSlug === "core-team-member"
+        return person?.membershipSlug === "core"
     } catch (error) {
         console.error("Core Team membership verification failed:", error)
         return false

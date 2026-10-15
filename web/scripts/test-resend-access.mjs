@@ -62,7 +62,7 @@ function request(origin = "https://www.hessdalen.org") {
 }
 
 test("only the Core Team membership slug authorizes access, using a fresh published lookup", async () => {
-    for (const membershipSlug of ["core-team-member", "team-member", null, undefined]) {
+    for (const membershipSlug of ["core", "team", "project", "fascination", "curiosity", "core-team-member", null, undefined]) {
         const { isCoreTeamMember } = loadModule("lib/auth/core-team.ts", {
             "next-sanity": { defineQuery: query => query },
             "@/lib/sanity/live": {
@@ -82,7 +82,7 @@ test("only the Core Team membership slug authorizes access, using a fresh publis
                 }
             },
         })
-        assert.equal(await isCoreTeamMember(" MEMBER@EXAMPLE.COM "), membershipSlug === "core-team-member")
+        assert.equal(await isCoreTeamMember(" MEMBER@EXAMPLE.COM "), membershipSlug === "core")
     }
 })
 
