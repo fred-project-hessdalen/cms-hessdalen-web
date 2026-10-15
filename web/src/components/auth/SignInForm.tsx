@@ -31,7 +31,7 @@ export function SignInForm() {
                 callbackUrl: "/member/dashboard",
             })
 
-            if (result?.error) {
+            if (result?.error && result.error !== "AccessDenied") {
                 setError("Failed to send sign-in link. Please try again.")
             } else {
                 // Save email to localStorage for future use
@@ -67,7 +67,7 @@ export function SignInForm() {
                     Check your email
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400 mb-2">
-                    A sign-in link has been sent to <strong>{email}</strong>
+                    If <strong>{email}</strong> is registered, you will receive a sign-in link.
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-500 mb-4">
                     If you are registered as a member, you should receive an email within a few minutes.

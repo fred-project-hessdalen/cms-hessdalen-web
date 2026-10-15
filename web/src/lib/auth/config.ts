@@ -3,8 +3,17 @@ import EmailProvider from "next-auth/providers/email"
 import { Resend } from "resend"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { prisma } from "@/lib/prisma"
+import { client } from "@/lib/sanity/live"
+import { defineQuery } from "next-sanity"
 
 const resend = new Resend(process.env.RESEND_API_KEY)
+const membershipClient = client.withConfig({
+  useCdn: false,
+  perspective: "published",
+})
+const MEMBER_BY_EMAIL_QUERY = defineQuery(`
+  *[_type == "person" && lower(email) == $email][0]._id
+`)
 
 export const authConfig: NextAuthConfig = {
   adapter: PrismaAdapter(prisma),
@@ -38,6 +47,23 @@ export const authConfig: NextAuthConfig = {
     error: "/auth/error",
   },
   callbacks: {
+    async signIn({ user }) {
+      const email = user.email?.trim().toLowerCase()
+      if (!email) return false
+
+      try {
+        const personId = await membershipClient.fetch<string | null>(
+          MEMBER_BY_EMAIL_QUERY,
+          { email },
+          { cache: "no-store" }
+        )
+
+        return Boolean(personId)
+      } catch (error) {
+        console.error("Membership verification failed:", error)
+        return false
+      }
+    },
     async session({ session, user }) {
       if (session?.user) {
         session.user.id = user.id
