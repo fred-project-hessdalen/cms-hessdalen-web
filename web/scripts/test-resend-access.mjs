@@ -23,7 +23,7 @@ function loadModule(path, dependencies, env = {}) {
     vm.runInNewContext(compiled, {
         exports, Response, Request, URL, Date,
         process: { env },
-        console: { error() {} },
+        console: { error() { } },
         require(name) {
             if (name === "react/jsx-runtime") return require(name)
             assert.ok(name in dependencies, `Unexpected dependency: ${name}`)
@@ -38,13 +38,17 @@ function endpoint({ session = { user: { id: "user-1", email: "member@example.com
     const route = loadModule("app/api/test-resend/route.ts", {
         "@/lib/auth": { auth: async () => session },
         "@/lib/auth/core-team": { isCoreTeamMember: async () => allowed },
-        resend: { Resend: class {
-            emails = { send: async (...args) => {
-                sends.push(args)
-                if (throws) throw new Error("Network failure")
-                return result
-            } }
-        } },
+        resend: {
+            Resend: class {
+                emails = {
+                    send: async (...args) => {
+                        sends.push(args)
+                        if (throws) throw new Error("Network failure")
+                        return result
+                    }
+                }
+            }
+        },
     }, configured ? { RESEND_API_KEY: "test-only", EMAIL_FROM: "test@hessdalen.org" } : {})
     return { ...route, sends }
 }
@@ -61,16 +65,22 @@ test("only the Core Team membership slug authorizes access, using a fresh publis
     for (const membershipSlug of ["core-team-member", "team-member", null, undefined]) {
         const { isCoreTeamMember } = loadModule("lib/auth/core-team.ts", {
             "next-sanity": { defineQuery: query => query },
-            "@/lib/sanity/live": { client: { withConfig(options) {
-                assert.equal(options.useCdn, false)
-                assert.equal(options.perspective, "published")
-                return { fetch: async (query, params, fetchOptions) => {
-                    assert.match(query, /membershipType->slug.current/)
-                    assert.equal(params.email, "member@example.com")
-                    assert.equal(fetchOptions.cache, "no-store")
-                    return membershipSlug === undefined ? null : { membershipSlug }
-                } }
-            } } },
+            "@/lib/sanity/live": {
+                client: {
+                    withConfig(options) {
+                        assert.equal(options.useCdn, false)
+                        assert.equal(options.perspective, "published")
+                        return {
+                            fetch: async (query, params, fetchOptions) => {
+                                assert.match(query, /membershipType->slug.current/)
+                                assert.equal(params.email, "member@example.com")
+                                assert.equal(fetchOptions.cache, "no-store")
+                                return membershipSlug === undefined ? null : { membershipSlug }
+                            }
+                        }
+                    }
+                }
+            },
         })
         assert.equal(await isCoreTeamMember(" MEMBER@EXAMPLE.COM "), membershipSlug === "core-team-member")
     }
