@@ -22,10 +22,15 @@ const portableTextComponents: PortableTextComponents = {
         h1: ({ children }) => <h1 className="text-2xl font-bold mb-4">{children}</h1>,
         h2: ({ children }) => <h2 className="text-xl font-bold mb-3">{children}</h2>,
         h3: ({ children }) => <h3 className="text-lg font-semibold mb-2">{children}</h3>,
-        normal: ({ children }) => <p className="mt-0 mb-1">{children}</p>,
+        normal: ({ children, value }) => (
+            <p className="mt-0 mb-1">
+                {value.children.every(child => child._type === "span" && child.text === "") ? <br /> : children}
+            </p>
+        ),
     },
 
     marks: {
+        underline: ({ children }) => <u>{children}</u>,
         // Customize inline marks
         strong: ({ children }) => <strong className="font-bold text-indigo-600">{children}</strong>,
         em: ({ children }) => <em className="italic text-gray-700">{children}</em>,

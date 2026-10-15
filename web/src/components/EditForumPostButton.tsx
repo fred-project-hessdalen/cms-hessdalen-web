@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { EditForumItemModal } from './EditForumItemModal';
 import { useRouter } from 'next/navigation';
 import type { PortableTextBlock } from 'sanity';
+import { portableTextToHtml } from '@/lib/portableTextToHtml';
 
 interface ForumPost {
     _id: string;
@@ -46,18 +47,6 @@ export function EditForumPostButton({ post, session }: EditForumPostButtonProps)
         return null;
     }
 
-    // Convert Sanity blocks to HTML for editing
-    const bodyToHtml = (blocks: PortableTextBlock[]) => {
-        return blocks
-            .filter(block => block._type === 'block')
-            .map(block =>
-                (block.children as Array<Record<string, unknown>>)
-                    ?.map((child: Record<string, unknown>) => child.text)
-                    .join('')
-            )
-            .join('\n\n');
-    };
-
     const handleEditSuccess = () => {
         router.refresh(); // Refresh the page to show updated content
     };
@@ -71,16 +60,16 @@ export function EditForumPostButton({ post, session }: EditForumPostButtonProps)
                 Edit
             </button>
 
-            <EditForumItemModal
+            {isEditModalOpen && <EditForumItemModal
                 isOpen={isEditModalOpen}
                 onClose={() => setIsEditModalOpen(false)}
                 itemType="post"
                 itemId={post._id}
                 initialTitle={post.title}
-                initialBody={bodyToHtml(post.body)}
+                initialBody={portableTextToHtml(post.body)}
                 initialLinks={post.links || []}
                 onSuccess={handleEditSuccess}
-            />
+            />}
         </>
     );
 }

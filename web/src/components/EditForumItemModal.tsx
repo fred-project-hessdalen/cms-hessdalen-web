@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import RichTextEditor from './RichTextEditor';
 
 interface EditForumItemModalProps {
     isOpen: boolean;
@@ -122,14 +123,12 @@ export function EditForumItemModal({
                         <label htmlFor="body" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Content
                         </label>
-                        <textarea
+                        <RichTextEditor
                             id="body"
                             value={body}
-                            onChange={(e) => setBody(e.target.value)}
-                            rows={10}
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                            onChange={setBody}
+                            className="w-full"
                             placeholder="Write your content here..."
-                            required
                         />
                     </div>
 

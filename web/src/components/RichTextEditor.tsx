@@ -3,13 +3,14 @@
 import { useState, useRef, useEffect } from "react";
 
 interface RichTextEditorProps {
+    id?: string;
     value: string;
     onChange: (value: string) => void;
     placeholder?: string;
     className?: string;
 }
 
-export default function RichTextEditor({ value, onChange, placeholder, className }: RichTextEditorProps) {
+export default function RichTextEditor({ id, value, onChange, placeholder, className }: RichTextEditorProps) {
     const editorRef = useRef<HTMLDivElement>(null);
     const [isFocused, setIsFocused] = useState(false);
 
@@ -108,7 +109,10 @@ export default function RichTextEditor({ value, onChange, placeholder, className
 
             {/* Editor */}
             <div
+                id={id}
                 ref={editorRef}
+                role="textbox"
+                aria-multiline="true"
                 contentEditable
                 onInput={handleInput}
                 onFocus={() => setIsFocused(true)}
